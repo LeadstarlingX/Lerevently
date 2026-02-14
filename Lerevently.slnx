@@ -1,0 +1,17 @@
+<Solution>
+  <Folder Name="/SolutionItems/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/API/">
+    <Project Path="Lerevently.Api/Lerevently.Api.csproj" Id="a930396d-ab13-4b51-a8a0-54e2b9f27e7b" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Events/">
+    <Project Path="Lerevently.Modules.Events.Api/Lerevently.Modules.Events.Api.csproj" Id="e3d61551-77fe-4213-9c5f-a8067a49d85a" />
+  </Folder>
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+</Solution>

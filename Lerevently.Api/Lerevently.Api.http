@@ -1,0 +1,6 @@
+@Lerevently.Api_HostAddress = http://localhost:5030
+
+GET {{Lerevently.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

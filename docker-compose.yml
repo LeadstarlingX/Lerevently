@@ -1,0 +1,31 @@
+services:
+  lerevently.api:
+    image: ${DOCKER_REGISTRY-}lereventlyapi
+    container_name: Lerevently.Api
+    build:
+      context: .
+      dockerfile: Lerevently.Api/Dockerfile
+
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 5000:8080
+      - 5001:8081 
+    depends_on:
+      lerevently.db:
+        condition: service_healthy
+
+    restart: on-failure
+
+
+  lerevently.db:
+    image: postgres:18.0
+    container_name: Lerevently.Db
+    environment:
+      - POSTGRES_DB=lereventlydb_docker
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/db:/var/lib/postgresql
+    ports:
+      - 5433:5432
