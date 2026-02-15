@@ -10,6 +10,10 @@
   <Folder Name="/src/Modules/" />
   <Folder Name="/src/Modules/Events/">
     <Project Path="Lerevently.Modules.Events.Api/Lerevently.Modules.Events.Api.csproj" Id="e3d61551-77fe-4213-9c5f-a8067a49d85a" />
+    <Project Path="Lerevently.Modules.Events.Application/Lerevently.Modules.Events.Application.csproj" />
+    <Project Path="Lerevently.Modules.Events.Domain/Lerevently.Modules.Events.Domain.csproj" />
+    <Project Path="Lerevently.Modules.Events.Infrastructure/Lerevently.Modules.Events.Infrastructure.csproj" />
+    <Project Path="Lerevently.Modules.Events.Presentation/Lerevently.Modules.Events.Presentation.csproj" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />

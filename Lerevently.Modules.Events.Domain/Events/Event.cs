@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Lerevently.Modules.Events.Api.Events
+﻿namespace Lerevently.Modules.Events.Domain.Events
 {
     public sealed class Event
     {

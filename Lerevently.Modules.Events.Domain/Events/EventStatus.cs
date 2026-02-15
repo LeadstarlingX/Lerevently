@@ -1,4 +1,4 @@
-﻿namespace Lerevently.Modules.Events.Api.Events
+﻿namespace Lerevently.Modules.Events.Domain.Events
 {
     public enum EventStatus
     {

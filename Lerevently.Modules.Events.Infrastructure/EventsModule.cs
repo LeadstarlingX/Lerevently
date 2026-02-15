@@ -1,22 +1,22 @@
-﻿using Lerevently.Modules.Events.Api.Database;
-using Lerevently.Modules.Events.Api.Events;
+﻿using Lerevently.Modules.Events.Application.Abstractions.Data;
+using Lerevently.Modules.Events.Application.Events;
+using Lerevently.Modules.Events.Domain.Events;
+using Lerevently.Modules.Events.Infrastructure.Database;
+using Lerevently.Modules.Events.Infrastructure.Events;
+using Lerevently.Modules.Events.Presentation.Events;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Lerevently.Modules.Events.Api
+namespace Lerevently.Modules.Events.Infrastructure
 {
     public static class EventsModule
     {
         public static void MapEndpoints(IEndpointRouteBuilder app)
         {
-            GetEvent.MapEndpoint(app);
-            CreateEvent.MapEndpoint(app);
+            EventEndpoints.MapEndpoints(app);
         }
 
 
@@ -24,13 +24,17 @@ namespace Lerevently.Modules.Events.Api
         {
             string databaseConnectionString = configuration.GetConnectionString("Database")!;
 
-            services.AddDbContext<Database.EventsDbContext>(options =>
+            services.AddDbContext<EventsDbContext>(options =>
             {
                 options.UseNpgsql(databaseConnectionString,
                     npgsqlOptions => npgsqlOptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events));
             });
 
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
+            
             return services;
         }
+        
     }
 }

@@ -1,12 +1,10 @@
-﻿using Lerevently.Modules.Events.Api.Events;
+﻿using Lerevently.Modules.Events.Application.Abstractions.Data;
+using Lerevently.Modules.Events.Domain.Events;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Lerevently.Modules.Events.Api.Database
+namespace Lerevently.Modules.Events.Infrastructure.Database
 {
-    public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) : DbContext(options)
+    public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) : DbContext(options), IUnitOfWork
     {
 
         internal DbSet<Event> Events { get; set; }

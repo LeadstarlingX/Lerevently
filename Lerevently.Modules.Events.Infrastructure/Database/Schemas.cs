@@ -1,4 +1,4 @@
-﻿namespace Lerevently.Modules.Events.Api.Database
+﻿namespace Lerevently.Modules.Events.Infrastructure.Database
 {
     internal static class Schemas
     {

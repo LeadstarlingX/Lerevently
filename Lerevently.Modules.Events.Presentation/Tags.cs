@@ -1,4 +1,4 @@
-﻿namespace Lerevently.Modules.Events.Api
+﻿namespace Lerevently.Modules.Events.Presentation
 {
     internal static class Tags
     {

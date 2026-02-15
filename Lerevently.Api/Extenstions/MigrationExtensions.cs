@@ -1,4 +1,5 @@
 ﻿using Lerevently.Modules.Events.Api.Database;
+using Lerevently.Modules.Events.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lerevently.Api.Extenstions

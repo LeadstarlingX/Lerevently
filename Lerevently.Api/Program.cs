@@ -1,5 +1,6 @@
 using Lerevently.Api.Extenstions;
 using Lerevently.Modules.Events.Api;
+using Lerevently.Modules.Events.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
