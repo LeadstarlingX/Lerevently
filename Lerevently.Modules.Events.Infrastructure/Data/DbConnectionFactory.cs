@@ -1,0 +1,13 @@
+﻿using System.Data.Common;
+using Lerevently.Modules.Events.Application.Abstractions.Data;
+using Npgsql;
+
+namespace Lerevently.Modules.Events.Infrastructure.Data;
+
+internal sealed class DbConnectionFactory(NpgsqlDataSource dataSource) : IDbConnectionFactory
+{
+    public async ValueTask<DbConnection> GetDbConnectionAsync()
+    {
+        return await dataSource.OpenConnectionAsync();
+    }
+}

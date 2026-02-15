@@ -28,7 +28,6 @@
 
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Lerevently.Modules.Events.Api\Lerevently.Modules.Events.Api.csproj" />
 	  <ProjectReference Include="..\Lerevently.Modules.Events.Infrastructure\Lerevently.Modules.Events.Infrastructure.csproj" />
 	</ItemGroup>
 

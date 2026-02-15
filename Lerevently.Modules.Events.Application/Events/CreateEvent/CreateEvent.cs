@@ -2,7 +2,7 @@
 using Lerevently.Modules.Events.Domain.Events;
 using MediatR;
 
-namespace Lerevently.Modules.Events.Application.Events
+namespace Lerevently.Modules.Events.Application.Events.CreateEvent
 {
     internal sealed class CreateEventCommandHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork)
         : IRequestHandler<CreateEventCommand, Guid>
@@ -30,23 +30,4 @@ namespace Lerevently.Modules.Events.Application.Events
             return @event.Id;
         }
     }
-
-
-
-    public sealed record CreateEventCommand(
-        string Title,
-        string Description,
-        string Location,
-        DateTime StartsAtUtc,
-        DateTime? EndsAtUtc) : IRequest<Guid>;
-
-    /*internal sealed class Request
-    {
-        public string Title { get; set; } = null!;
-        public string Description { get; set; } = null!;
-        public string Location { get; set; } = null!;
-        public DateTime StartsAtUtc { get; set; }
-        public DateTime? EndsAtUtc { get; set; }
-
-    }*/
 }

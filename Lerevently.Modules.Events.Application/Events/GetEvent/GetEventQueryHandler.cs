@@ -3,11 +3,8 @@ using Dapper;
 using Lerevently.Modules.Events.Application.Abstractions.Data;
 using MediatR;
 
-namespace Lerevently.Modules.Events.Application.Events
+namespace Lerevently.Modules.Events.Application.Events.GetEvent
 {
-    
-    public sealed record GetEventQuery(Guid EventId) : IRequest<EventResponse?>;
-
     public sealed class GetEventQueryHandler(IDbConnectionFactory dbConnectionFactory) : IRequestHandler<GetEventQuery, EventResponse?>
     {
 

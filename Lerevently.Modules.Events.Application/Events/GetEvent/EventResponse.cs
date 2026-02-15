@@ -1,4 +1,4 @@
-﻿namespace Lerevently.Modules.Events.Application.Events
+﻿namespace Lerevently.Modules.Events.Application.Events.GetEvent
 {
     public sealed record EventResponse(
          Guid Id,

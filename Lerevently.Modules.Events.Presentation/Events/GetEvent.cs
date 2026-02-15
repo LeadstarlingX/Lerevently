@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Lerevently.Modules.Events.Application.Events.GetEvent;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -11,7 +12,7 @@ namespace Lerevently.Modules.Events.Presentation.Events
         {
             app.MapGet("events/{id}", async (Guid id, ISender sender) =>
             {
-                var @event = await sender.Send(new Application.Events.GetEventQuery(id));
+                var @event = await sender.Send(new GetEventQuery(id));
 
                 return @event is null ? Results.NotFound() : Results.Ok(@event);
 

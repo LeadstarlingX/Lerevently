@@ -1,4 +1,5 @@
 ﻿using Lerevently.Modules.Events.Application.Events;
+using Lerevently.Modules.Events.Application.Events.CreateEvent;
 using Lerevently.Modules.Events.Domain.Events;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
