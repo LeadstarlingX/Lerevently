@@ -15,7 +15,7 @@ services:
       lerevently.db:
         condition: service_healthy
 
-    restart: on-failure
+    restart: always
 
 
   lerevently.db:

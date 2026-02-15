@@ -1,4 +1,5 @@
 ﻿using System.Reflection.Metadata;
+using FluentValidation;
 using Lerevently.Modules.Events.Application.Abstractions.Data;
 using Lerevently.Modules.Events.Application.Events;
 using Lerevently.Modules.Events.Domain.Events;
@@ -28,6 +29,8 @@ namespace Lerevently.Modules.Events.Infrastructure
         {
             services.AddMediatR(config =>
                 config.RegisterServicesFromAssembly(Application.AssemblyReference.Assembly));
+            
+            services.AddValidatorsFromAssembly(Application.AssemblyReference.Assembly, includeInternalTypes: true);
             
             services.AddInfrastructure(configuration);
             

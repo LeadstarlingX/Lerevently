@@ -1,0 +1,14 @@
+﻿using Lerevently.Modules.Events.Domain.Events;
+using Lerevently.Modules.Events.Domain.TicktTypes;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Lerevently.Modules.Events.Infrastructure.TicketTypes;
+
+internal sealed class TicketTypeConfiguration : IEntityTypeConfiguration<TicketType>
+{
+    public void Configure(EntityTypeBuilder<TicketType> builder)
+    {
+        builder.HasOne<Event>().WithMany().HasForeignKey(t => t.EventId);
+    }
+}

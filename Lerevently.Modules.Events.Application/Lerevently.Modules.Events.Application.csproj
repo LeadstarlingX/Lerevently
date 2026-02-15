@@ -4,6 +4,7 @@
 
         <PackageReference Include="MediatR" />
         <PackageReference Include="Dapper" />
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
         
         <ProjectReference Include="..\Lerevently.Modules.Events.Domain\Lerevently.Modules.Events.Domain.csproj" />
     </ItemGroup>

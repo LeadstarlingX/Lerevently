@@ -15,7 +15,6 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
 COPY ["Lerevently.Api/Lerevently.Api.csproj", "Lerevently.Api/"]
-COPY ["Lerevently.Modules.Events.Api/Lerevently.Modules.Events.Api.csproj", "Lerevently.Modules.Events.Api/"]
 RUN dotnet restore "./Lerevently.Api/Lerevently.Api.csproj"
 COPY . .
 WORKDIR "/src/Lerevently.Api"

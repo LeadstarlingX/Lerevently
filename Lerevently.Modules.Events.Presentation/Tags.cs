@@ -1,7 +1,8 @@
-﻿namespace Lerevently.Modules.Events.Presentation
+﻿namespace Lerevently.Modules.Events.Presentation;
+
+internal static class Tags
 {
-    internal static class Tags
-    {
-        internal const string Events = "Events";
-    }
+    internal const string Events = "Events";
+    internal const string TicketTypes = "TicketTypes";
+    internal const string Categories = "Categories";
 }

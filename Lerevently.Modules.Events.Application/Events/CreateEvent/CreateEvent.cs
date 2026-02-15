@@ -1,33 +1,52 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Data;
+﻿using Lerevently.Modules.Events.Application.Abstractions.Clock;
+using Lerevently.Modules.Events.Application.Abstractions.Data;
+using Lerevently.Modules.Events.Application.Abstractions.Messaging;
+using Lerevently.Modules.Events.Domain.Abstractions;
+using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
 using MediatR;
 
 namespace Lerevently.Modules.Events.Application.Events.CreateEvent
 {
-    internal sealed class CreateEventCommandHandler(IEventRepository eventRepository, IUnitOfWork unitOfWork)
-        : IRequestHandler<CreateEventCommand, Guid>
+    internal sealed class CreateEventCommandHandler(
+        IDateTimeProvider dateTimeProvider,
+        ICategoryRepository categoryRepository,
+        IEventRepository eventRepository,
+        IUnitOfWork unitOfWork)
+        : ICommandHandler<CreateEventCommand, Guid>
     {
-
-        public async Task<Guid> Handle(CreateEventCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Guid>> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {
-            var @event = new Event
+            if (request.StartsAtUtc < dateTimeProvider.UtcNow)
             {
-                Id = Guid.NewGuid(),
-                Title = request.Title,
-                Description = request.Description,
-                Location = request.Location,
-                StartsAtUtc = request.StartsAtUtc,
-                EndsAtUtc = request.EndsAtUtc,
-                Status = EventStatus.Draft
-            };
+                return Result.Failure<Guid>(EventErrors.StartDateInPast);
+            }
 
-            eventRepository.Insert(@event);
+            Category? category = await categoryRepository.GetAsync(request.CategoryId, cancellationToken);
 
+            if (category is null)
+            {
+                return Result.Failure<Guid>(CategoryErrors.NotFound(request.CategoryId));
+            }
+
+            Result<Event> result = Event.Create(
+                category,
+                request.Title,
+                request.Description,
+                request.Location,
+                request.StartsAtUtc,
+                request.EndsAtUtc);
+
+            if (result.IsFailure)
+            {
+                return Result.Failure<Guid>(result.Error);
+            }
+
+            eventRepository.Insert(result.Value);
 
             await unitOfWork.SaveChangesAsync(cancellationToken);
 
-
-            return @event.Id;
+            return result.Value.Id;
         }
     }
 }
