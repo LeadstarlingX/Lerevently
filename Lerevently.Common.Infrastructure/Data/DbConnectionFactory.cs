@@ -2,7 +2,7 @@
 using Lerevently.Common.Application.Data;
 using Npgsql;
 
-namespace Lerevently.Modules.Events.Infrastructure.Data;
+namespace Lerevently.Common.Infrastructure.Data;
 
 internal sealed class DbConnectionFactory(NpgsqlDataSource dataSource) : IDbConnectionFactory
 {

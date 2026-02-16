@@ -1,6 +1,6 @@
 ﻿using Lerevently.Common.Application.Clock;
 
-namespace Lerevently.Modules.Events.Infrastructure.Clock;
+namespace Lerevently.Common.Infrastructure.Clock;
 
 internal sealed class DateTimeProvider : IDateTimeProvider
 {

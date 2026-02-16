@@ -1,5 +1,6 @@
 using Lerevently.Api.Extenstions;
 using Lerevently.Common.Application;
+using Lerevently.Common.Infrastructure;
 using Lerevently.Modules.Events.Application;
 using Lerevently.Modules.Events.Infrastructure;
 
@@ -15,6 +16,7 @@ builder.Services.AddOpenApi();
 
 
 builder.Services.AddApplication([AssemblyReference.Assembly]);
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddEventsModule(builder.Configuration);
 
 

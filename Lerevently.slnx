@@ -1,24 +1,25 @@
 <Solution>
     <Folder Name="/SolutionItems/">
-        <File Path="Directory.Build.props"/>
-        <File Path="Directory.Packages.props"/>
+        <File Path="Directory.Build.props" />
+        <File Path="Directory.Packages.props" />
     </Folder>
-    <Folder Name="/src/"/>
+    <Folder Name="/src/" />
     <Folder Name="/src/API/">
-        <Project Path="Lerevently.Api/Lerevently.Api.csproj" Id="a930396d-ab13-4b51-a8a0-54e2b9f27e7b"/>
+        <Project Path="Lerevently.Api/Lerevently.Api.csproj" Id="a930396d-ab13-4b51-a8a0-54e2b9f27e7b" />
     </Folder>
     <Folder Name="/src/Common/">
-        <Project Path="Lerevently.Common.Application/Lerevently.Common.Application.csproj"/>
-        <Project Path="Lerevently.Common.Domain/Lerevently.Common.Domain.csproj"/>
+        <Project Path="Lerevently.Common.Application/Lerevently.Common.Application.csproj" />
+        <Project Path="Lerevently.Common.Domain/Lerevently.Common.Domain.csproj" />
+        <Project Path="Lerevently.Common.Infrastructure/Lerevently.Common.Infrastructure.csproj" />
     </Folder>
-    <Folder Name="/src/Modules/"/>
+    <Folder Name="/src/Modules/" />
     <Folder Name="/src/Modules/Events/">
-        <Project Path="Lerevently.Modules.Events.Application/Lerevently.Modules.Events.Application.csproj"/>
-        <Project Path="Lerevently.Modules.Events.Domain/Lerevently.Modules.Events.Domain.csproj"/>
-        <Project Path="Lerevently.Modules.Events.Infrastructure/Lerevently.Modules.Events.Infrastructure.csproj"/>
-        <Project Path="Lerevently.Modules.Events.Presentation/Lerevently.Modules.Events.Presentation.csproj"/>
+        <Project Path="Lerevently.Modules.Events.Application/Lerevently.Modules.Events.Application.csproj" />
+        <Project Path="Lerevently.Modules.Events.Domain/Lerevently.Modules.Events.Domain.csproj" />
+        <Project Path="Lerevently.Modules.Events.Infrastructure/Lerevently.Modules.Events.Infrastructure.csproj" />
+        <Project Path="Lerevently.Modules.Events.Presentation/Lerevently.Modules.Events.Presentation.csproj" />
     </Folder>
     <Project Path="docker-compose.dcproj">
-        <Build/>
+        <Build />
     </Project>
 </Solution>

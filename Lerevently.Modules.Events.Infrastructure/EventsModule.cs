@@ -1,11 +1,7 @@
-﻿using Lerevently.Common.Application.Clock;
-using Lerevently.Common.Application.Data;
-using Lerevently.Modules.Events.Domain.Categories;
+﻿using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
 using Lerevently.Modules.Events.Domain.TicktTypes;
 using Lerevently.Modules.Events.Infrastructure.Categories;
-using Lerevently.Modules.Events.Infrastructure.Clock;
-using Lerevently.Modules.Events.Infrastructure.Data;
 using Lerevently.Modules.Events.Infrastructure.Database;
 using Lerevently.Modules.Events.Infrastructure.Events;
 using Lerevently.Modules.Events.Infrastructure.TicketTypes;
@@ -17,8 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Npgsql;
 using IUnitOfWork = Lerevently.Modules.Events.Application.Abstractions.Data.IUnitOfWork;
 
 namespace Lerevently.Modules.Events.Infrastructure;
@@ -45,13 +39,7 @@ public static class EventsModule
     {
         var databaseConnectionString = configuration.GetConnectionString("Database")!;
 
-        var npgsqlDataSource = new NpgsqlDataSourceBuilder(databaseConnectionString).Build();
-        services.TryAddSingleton(npgsqlDataSource);
-
-        services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
-
-        services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
-
+        
         services.AddDbContext<EventsDbContext>(options =>
             options
                 .UseNpgsql(
