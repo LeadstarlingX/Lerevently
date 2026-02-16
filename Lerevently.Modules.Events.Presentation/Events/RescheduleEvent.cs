@@ -12,7 +12,7 @@ internal static class RescheduleEvent
 {
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("events/{id}/reschedule", async (Guid id, Request request, ISender sender) =>
+        app.MapPut("events/{id}/reschedule", async (Guid id, RescheduleRequest request, ISender sender) =>
         {
             Result result = await sender.Send(
                 new RescheduleEventCommand(id, request.StartsAtUtc, request.EndsAtUtc));
@@ -22,7 +22,7 @@ internal static class RescheduleEvent
         .WithTags(Tags.Events);
     }
 
-    internal sealed class Request
+    internal sealed class RescheduleRequest
     {
         public DateTime StartsAtUtc { get; init; }
 

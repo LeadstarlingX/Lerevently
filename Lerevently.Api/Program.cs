@@ -14,7 +14,12 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddEventsModule(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(t => t.FullName?.Replace("+", "."));
+});
 
 var app = builder.Build();
 
