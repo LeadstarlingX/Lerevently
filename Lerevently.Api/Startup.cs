@@ -50,6 +50,7 @@ internal class Startup
         
         app.UseRouting();
         
+        
         app.UseEndpoints(endpoints =>
         {
             EventsModule.MapEndpoints(endpoints);  // endpoints is IEndpointRouteBuilder

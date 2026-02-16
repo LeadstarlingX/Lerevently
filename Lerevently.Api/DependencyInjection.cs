@@ -20,6 +20,13 @@ internal static class DependencyInjection
 
         return services;
     }
+
+    private static IServiceCollection AddModulesConfigurations(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+
+        return services;
+    }
     
     
 }
