@@ -1,41 +1,19 @@
+using Lerevently.Api;
 using Lerevently.Api.Extenstions;
-using Lerevently.Common.Application;
-using Lerevently.Common.Infrastructure;
-using Lerevently.Modules.Events.Application;
 using Lerevently.Modules.Events.Infrastructure;
 
-var builder = WebApplication.CreateBuilder(args);
-
-Console.WriteLine($"Connection String: {builder.Configuration.GetConnectionString("Database")}");
-
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-builder.Services.AddOpenApi();
-
-
-builder.Services.AddApplication([AssemblyReference.Assembly]);
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddEventsModule(builder.Configuration);
-
-
-builder.Services.AddEndpointsApiExplorer();
-
-
-builder.Services.AddSwaggerGen(options => { options.CustomSchemaIds(t => t.FullName?.Replace("+", ".")); });
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+public static class Program
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
 
-    app.ApplyMigrations();
+    public static void Main(string[] args)
+    {
+        CreateHostBuilder(args).Build().Run();
+    }
+
+    private static IHostBuilder CreateHostBuilder(string[] args)
+    {
+        return Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+    }
+
 }
-
-EventsModule.MapEndpoints(app);
-
-app.Run();
