@@ -1,4 +1,4 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Messaging;
+﻿using Lerevently.Common.Application.Messaging;
 
 namespace Lerevently.Modules.Events.Application.Categories.GetCategory;
 

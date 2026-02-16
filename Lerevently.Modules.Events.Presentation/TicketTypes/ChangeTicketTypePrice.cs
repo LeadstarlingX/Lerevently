@@ -1,5 +1,4 @@
 ﻿using Lerevently.Modules.Events.Application.TicketTypes.UpdateTicketTypePrice;
-using Lerevently.Modules.Events.Domain.Abstractions;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -14,7 +13,7 @@ internal static class ChangeTicketTypePrice
     {
         app.MapPut("ticket-types/{id}/price", async (Guid id, Request request, ISender sender) =>
             {
-                Result result = await sender.Send(new UpdateTicketTypePriceCommand(id, request.Price));
+                var result = await sender.Send(new UpdateTicketTypePriceCommand(id, request.Price));
 
                 return result.Match(Results.NoContent, ApiResults.ApiResults.Problem);
             })

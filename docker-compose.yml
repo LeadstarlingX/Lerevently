@@ -10,7 +10,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - 5000:8080
-      - 5001:8081 
+      - 5001:8081
     depends_on:
       lerevently.db:
         condition: service_healthy

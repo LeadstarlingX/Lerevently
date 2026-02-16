@@ -1,8 +1,7 @@
-﻿using System.Data.Common;
-using Dapper;
-using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
-using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Dapper;
+using Lerevently.Common.Application.Data;
+using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.Categories;
 
 namespace Lerevently.Modules.Events.Application.Categories.GetCategory;
@@ -12,7 +11,7 @@ internal sealed class GetCategoryQueryHandler(IDbConnectionFactory dbConnectionF
 {
     public async Task<Result<CategoryResponse>> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         const string sql =
             $"""
@@ -24,12 +23,9 @@ internal sealed class GetCategoryQueryHandler(IDbConnectionFactory dbConnectionF
              WHERE id = @CategoryId
              """;
 
-        CategoryResponse? category = await connection.QuerySingleOrDefaultAsync<CategoryResponse>(sql, request);
+        var category = await connection.QuerySingleOrDefaultAsync<CategoryResponse>(sql, request);
 
-        if (category is null)
-        {
-            return Result.Failure<CategoryResponse>(CategoryErrors.NotFound(request.CategoryId));
-        }
+        if (category is null) return Result.Failure<CategoryResponse>(CategoryErrors.NotFound(request.CategoryId));
 
         return category;
     }

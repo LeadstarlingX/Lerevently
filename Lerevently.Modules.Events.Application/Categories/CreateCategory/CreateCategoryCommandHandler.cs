@@ -1,6 +1,6 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
-using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Modules.Events.Application.Abstractions.Data;
 using Lerevently.Modules.Events.Domain.Categories;
 
 namespace Lerevently.Modules.Events.Application.Categories.CreateCategory;

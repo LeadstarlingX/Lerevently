@@ -1,5 +1,4 @@
 ﻿using Lerevently.Modules.Events.Application.Events.RescheduleEvent;
-using Lerevently.Modules.Events.Domain.Abstractions;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -13,13 +12,13 @@ internal static class RescheduleEvent
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("events/{id}/reschedule", async (Guid id, RescheduleRequest request, ISender sender) =>
-        {
-            Result result = await sender.Send(
-                new RescheduleEventCommand(id, request.StartsAtUtc, request.EndsAtUtc));
+            {
+                var result = await sender.Send(
+                    new RescheduleEventCommand(id, request.StartsAtUtc, request.EndsAtUtc));
 
-            return result.Match(Results.NoContent, ApiResults.ApiResults.Problem);
-        })
-        .WithTags(Tags.Events);
+                return result.Match(Results.NoContent, ApiResults.ApiResults.Problem);
+            })
+            .WithTags(Tags.Events);
     }
 
     internal sealed class RescheduleRequest

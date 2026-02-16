@@ -1,7 +1,8 @@
-﻿using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.Events;
 
 namespace Lerevently.Modules.Events.Domain.TicktTypes;
+
 public sealed class TicketType : Entity
 {
     private TicketType()
@@ -42,10 +43,7 @@ public sealed class TicketType : Entity
 
     public void UpdatePrice(decimal price)
     {
-        if (Price == price)
-        {
-            return;
-        }
+        if (Price == price) return;
 
         Price = price;
 

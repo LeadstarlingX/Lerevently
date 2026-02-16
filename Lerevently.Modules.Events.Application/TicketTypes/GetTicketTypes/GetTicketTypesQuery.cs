@@ -1,4 +1,4 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Messaging;
+﻿using Lerevently.Common.Application.Messaging;
 using Lerevently.Modules.Events.Application.TicketTypes.GetTicketType;
 
 namespace Lerevently.Modules.Events.Application.TicketTypes.GetTicketTypes;

@@ -1,4 +1,4 @@
-﻿namespace Lerevently.Modules.Events.Domain.Abstractions;
+﻿namespace Lerevently.Common.Domain.Abstractions;
 
 public interface IDomainEvent
 {

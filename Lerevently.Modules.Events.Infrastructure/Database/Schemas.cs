@@ -1,7 +1,6 @@
-﻿namespace Lerevently.Modules.Events.Infrastructure.Database
+﻿namespace Lerevently.Modules.Events.Infrastructure.Database;
+
+internal static class Schemas
 {
-    internal static class Schemas
-    {
-        public const string Events = "events";
-    }
+    public const string Events = "events";
 }

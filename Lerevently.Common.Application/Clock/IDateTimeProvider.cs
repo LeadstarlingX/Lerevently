@@ -1,4 +1,4 @@
-﻿namespace Lerevently.Modules.Events.Application.Abstractions.Clock;
+﻿namespace Lerevently.Common.Application.Clock;
 
 public interface IDateTimeProvider
 {

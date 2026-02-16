@@ -1,5 +1,5 @@
-﻿using Lerevently.Modules.Events.Application.Events.GetEvent;
-using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Modules.Events.Application.Events.GetEvent;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -13,11 +13,11 @@ internal static class GetEvent
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("events/{id}", async (Guid id, ISender sender) =>
-        {
-            Result<EventResponse> result = await sender.Send(new GetEventQuery(id));
+            {
+                Result<EventResponse> result = await sender.Send(new GetEventQuery(id));
 
-            return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
-        })
-        .WithTags(Tags.Events);
+                return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+            })
+            .WithTags(Tags.Events);
     }
 }

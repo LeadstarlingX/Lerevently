@@ -1,5 +1,4 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Messaging;
-using MediatR;
+﻿using Lerevently.Common.Application.Messaging;
 
 namespace Lerevently.Modules.Events.Application.Events.CreateEvent;
 

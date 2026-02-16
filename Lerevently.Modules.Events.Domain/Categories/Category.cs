@@ -1,4 +1,4 @@
-﻿using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Domain.Abstractions;
 
 namespace Lerevently.Modules.Events.Domain.Categories;
 
@@ -37,10 +37,7 @@ public sealed class Category : Entity
 
     public void ChangeName(string name)
     {
-        if (Name == name)
-        {
-            return;
-        }
+        if (Name == name) return;
 
         Name = name;
 

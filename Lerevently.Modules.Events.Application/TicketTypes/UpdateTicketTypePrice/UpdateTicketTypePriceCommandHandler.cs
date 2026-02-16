@@ -1,6 +1,6 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
-using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Modules.Events.Application.Abstractions.Data;
 using Lerevently.Modules.Events.Domain.TicktTypes;
 
 namespace Lerevently.Modules.Events.Application.TicketTypes.UpdateTicketTypePrice;
@@ -12,12 +12,9 @@ internal sealed class UpdateTicketTypePriceCommandHandler(
 {
     public async Task<Result> Handle(UpdateTicketTypePriceCommand request, CancellationToken cancellationToken)
     {
-        TicketType? ticketType = await ticketTypeRepository.GetAsync(request.TicketTypeId, cancellationToken);
+        var ticketType = await ticketTypeRepository.GetAsync(request.TicketTypeId, cancellationToken);
 
-        if (ticketType is null)
-        {
-            return Result.Failure(TicketTypeErrors.NotFound(request.TicketTypeId));
-        }
+        if (ticketType is null) return Result.Failure(TicketTypeErrors.NotFound(request.TicketTypeId));
 
         ticketType.UpdatePrice(request.Price);
 

@@ -1,6 +1,6 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
-using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Modules.Events.Application.Abstractions.Data;
 using Lerevently.Modules.Events.Domain.Events;
 using Lerevently.Modules.Events.Domain.TicktTypes;
 
@@ -14,24 +14,16 @@ internal sealed class PublishEventCommandHandler(
 {
     public async Task<Result> Handle(PublishEventCommand request, CancellationToken cancellationToken)
     {
-        Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
+        var @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 
-        if (@event is null)
-        {
-            return Result.Failure(EventErrors.NotFound(request.EventId));
-        }
+        if (@event is null) return Result.Failure(EventErrors.NotFound(request.EventId));
 
         if (!await ticketTypeRepository.ExistsAsync(@event.Id, cancellationToken))
-        {
             return Result.Failure(EventErrors.NoTicketsFound);
-        }
 
-        Result result = @event.Publish();
+        var result = @event.Publish();
 
-        if (result.IsFailure)
-        {
-            return Result.Failure(result.Error);
-        }
+        if (result.IsFailure) return Result.Failure(result.Error);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

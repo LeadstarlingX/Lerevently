@@ -1,5 +1,4 @@
 ﻿using Lerevently.Modules.Events.Application.Events.PublishEvent;
-using Lerevently.Modules.Events.Domain.Abstractions;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -13,11 +12,11 @@ internal static class PublishEvent
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("events/{id}/publish", async (Guid id, ISender sender) =>
-        {
-            Result result = await sender.Send(new PublishEventCommand(id));
+            {
+                var result = await sender.Send(new PublishEventCommand(id));
 
-            return result.Match(Results.NoContent, ApiResults.ApiResults.Problem);
-        })
-        .WithTags(Tags.Events);
+                return result.Match(Results.NoContent, ApiResults.ApiResults.Problem);
+            })
+            .WithTags(Tags.Events);
     }
 }

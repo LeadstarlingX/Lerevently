@@ -1,4 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+    <ItemGroup>
+
+        <PackageReference Include="MediatR"/>
+        <PackageReference Include="Dapper"/>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions"/>
+
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Lerevently.Common.Domain\Lerevently.Common.Domain.csproj"/>
+    </ItemGroup>
 
 </Project>

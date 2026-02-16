@@ -1,5 +1,5 @@
 ﻿using System.Data.Common;
-using Lerevently.Modules.Events.Application.Abstractions.Data;
+using Lerevently.Common.Application.Data;
 using Npgsql;
 
 namespace Lerevently.Modules.Events.Infrastructure.Data;

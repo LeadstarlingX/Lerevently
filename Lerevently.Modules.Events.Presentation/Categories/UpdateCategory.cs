@@ -1,5 +1,4 @@
 ﻿using Lerevently.Modules.Events.Application.Categories.UpdateCategory;
-using Lerevently.Modules.Events.Domain.Abstractions;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -13,16 +12,16 @@ internal static class UpdateCategory
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("categories/{id}", async (Guid id, UpdateRequest request, ISender sender) =>
-        {
-            Result result = await sender.Send(new UpdateCategoryCommand(id, request.Name));
+            {
+                var result = await sender.Send(new UpdateCategoryCommand(id, request.Name));
 
-            return result.Match(() => Results.Ok(), ApiResults.ApiResults.Problem);
-        })
-        .WithTags(Tags.Categories);
+                return result.Match(() => Results.Ok(), ApiResults.ApiResults.Problem);
+            })
+            .WithTags(Tags.Categories);
     }
 
     internal sealed class UpdateRequest
     {
-        public string Name { get; init; }
+        public string Name { get; init; } = string.Empty;
     }
 }

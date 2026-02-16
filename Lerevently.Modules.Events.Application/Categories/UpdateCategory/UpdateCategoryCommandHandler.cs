@@ -1,6 +1,6 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
-using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Modules.Events.Application.Abstractions.Data;
 using Lerevently.Modules.Events.Domain.Categories;
 
 namespace Lerevently.Modules.Events.Application.Categories.UpdateCategory;
@@ -10,12 +10,9 @@ internal sealed class UpdateCategoryCommandHandler(ICategoryRepository categoryR
 {
     public async Task<Result> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
-        Category? category = await categoryRepository.GetAsync(request.CategoryId, cancellationToken);
+        var category = await categoryRepository.GetAsync(request.CategoryId, cancellationToken);
 
-        if (category is null)
-        {
-            return Result.Failure(CategoryErrors.NotFound(request.CategoryId));
-        }
+        if (category is null) return Result.Failure(CategoryErrors.NotFound(request.CategoryId));
 
         category.ChangeName(request.Name);
 

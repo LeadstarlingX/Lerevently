@@ -1,6 +1,6 @@
-﻿using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Domain.Abstractions;
 
-namespace Lerevently.Modules.Events.Application.Abstractions.Exceptions;
+namespace Lerevently.Common.Application.Exceptions;
 
 public sealed class EventlyException : Exception
 {

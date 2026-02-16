@@ -1,7 +1,7 @@
-﻿using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Domain.Abstractions;
 using MediatR;
 
-namespace Lerevently.Modules.Events.Application.Abstractions.Messaging;
+namespace Lerevently.Common.Application.Messaging;
 
 public interface ICommand : IRequest<Result>, IBaseCommand;
 

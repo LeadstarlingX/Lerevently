@@ -1,6 +1,6 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
-using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Modules.Events.Application.Abstractions.Data;
 using Lerevently.Modules.Events.Domain.Events;
 using Lerevently.Modules.Events.Domain.TicktTypes;
 
@@ -14,12 +14,9 @@ internal sealed class CreateTicketTypeCommandHandler(
 {
     public async Task<Result<Guid>> Handle(CreateTicketTypeCommand request, CancellationToken cancellationToken)
     {
-        Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
+        var @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 
-        if (@event is null)
-        {
-            return Result.Failure<Guid>(EventErrors.NotFound(request.EventId));
-        }
+        if (@event is null) return Result.Failure<Guid>(EventErrors.NotFound(request.EventId));
 
         var ticketType = TicketType.Create(@event, request.Name, request.Price, request.Currency, request.Quantity);
 

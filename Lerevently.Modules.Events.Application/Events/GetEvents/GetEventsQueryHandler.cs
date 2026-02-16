@@ -1,8 +1,7 @@
-﻿using System.Data.Common;
-using Dapper;
-using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
-using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Dapper;
+using Lerevently.Common.Application.Data;
+using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
 
 namespace Lerevently.Modules.Events.Application.Events.GetEvents;
 
@@ -13,7 +12,7 @@ internal sealed class GetEventsQueryHandler(IDbConnectionFactory dbConnectionFac
         GetEventsQuery request,
         CancellationToken cancellationToken)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         const string sql =
             $"""
@@ -28,7 +27,7 @@ internal sealed class GetEventsQueryHandler(IDbConnectionFactory dbConnectionFac
              FROM events.events
              """;
 
-        List<EventResponse> events = (await connection.QueryAsync<EventResponse>(sql, request)).AsList();
+        var events = (await connection.QueryAsync<EventResponse>(sql, request)).AsList();
 
         return events;
     }

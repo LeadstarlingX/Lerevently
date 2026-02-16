@@ -1,7 +1,6 @@
-﻿using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Lerevently.Common.Domain.Abstractions;
 
 namespace Lerevently.Modules.Events.Domain.TicktTypes;
-
 
 public sealed class TicketTypeCreatedDomainEvent(Guid ticketTypeId) : DomainEvent
 {

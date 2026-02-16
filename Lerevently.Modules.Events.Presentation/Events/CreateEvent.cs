@@ -1,5 +1,4 @@
 ﻿using Lerevently.Modules.Events.Application.Events.CreateEvent;
-using Lerevently.Modules.Events.Domain.Abstractions;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -13,29 +12,29 @@ internal static class CreateEvent
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("events", async (CreateRequest request, ISender sender) =>
-        {
-            Result<Guid> result = await sender.Send(new CreateEventCommand(
-                request.CategoryId,
-                request.Title,
-                request.Description,
-                request.Location,
-                request.StartsAtUtc,
-                request.EndsAtUtc));
+            {
+                var result = await sender.Send(new CreateEventCommand(
+                    request.CategoryId,
+                    request.Title,
+                    request.Description,
+                    request.Location,
+                    request.StartsAtUtc,
+                    request.EndsAtUtc));
 
-            return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
-        })
-        .WithTags(Tags.Events);
+                return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+            })
+            .WithTags(Tags.Events);
     }
 
     internal sealed class CreateRequest
     {
         public Guid CategoryId { get; init; }
 
-        public string Title { get; init; }
+        public string Title { get; init; } = string.Empty;
 
-        public string Description { get; init; }
+        public string Description { get; init; } = string.Empty;
 
-        public string Location { get; init; }
+        public string Location { get; init; } = string.Empty;
 
         public DateTime StartsAtUtc { get; init; }
 

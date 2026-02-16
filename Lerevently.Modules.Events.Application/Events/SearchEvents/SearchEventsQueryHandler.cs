@@ -1,9 +1,9 @@
 ﻿using System.Data.Common;
 using Dapper;
-using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
+using Lerevently.Common.Application.Data;
+using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Application.Events.GetEvents;
-using Lerevently.Modules.Events.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.Events;
 
 namespace Lerevently.Modules.Events.Application.Events.SearchEvents;
@@ -11,12 +11,11 @@ namespace Lerevently.Modules.Events.Application.Events.SearchEvents;
 internal sealed class SearchEventsQueryHandler(IDbConnectionFactory dbConnectionFactory)
     : IQueryHandler<SearchEventsQuery, SearchEventsResponse>
 {
-
     public async Task<Result<SearchEventsResponse>> Handle(
         SearchEventsQuery request,
         CancellationToken cancellationToken)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         var parameters = new SearchEventsParameters(
             (int)EventStatus.Published,
@@ -26,9 +25,9 @@ internal sealed class SearchEventsQueryHandler(IDbConnectionFactory dbConnection
             request.PageSize,
             (request.Page - 1) * request.PageSize);
 
-        IReadOnlyCollection<EventResponse> events = await GetEventsAsync(connection, parameters);
+        var events = await GetEventsAsync(connection, parameters);
 
-        int totalCount = await CountEventsAsync(connection, parameters);
+        var totalCount = await CountEventsAsync(connection, parameters);
 
         return new SearchEventsResponse(request.Page, request.PageSize, totalCount, events);
     }
@@ -58,7 +57,7 @@ internal sealed class SearchEventsQueryHandler(IDbConnectionFactory dbConnection
              LIMIT @Take
              """;
 
-        List<EventResponse> events = (await connection.QueryAsync<EventResponse>(sql, parameters)).AsList();
+        var events = (await connection.QueryAsync<EventResponse>(sql, parameters)).AsList();
 
         return events;
     }
@@ -76,7 +75,7 @@ internal sealed class SearchEventsQueryHandler(IDbConnectionFactory dbConnection
                (@EndDate::timestamp IS NULL OR ends_at_utc >= @EndDate::timestamp)
             """;
 
-        int totalCount = await connection.ExecuteScalarAsync<int>(sql, parameters);
+        var totalCount = await connection.ExecuteScalarAsync<int>(sql, parameters);
 
         return totalCount;
     }

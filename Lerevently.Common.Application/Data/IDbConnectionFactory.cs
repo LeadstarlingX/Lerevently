@@ -1,6 +1,6 @@
 ﻿using System.Data.Common;
 
-namespace Lerevently.Modules.Events.Application.Abstractions.Data;
+namespace Lerevently.Common.Application.Data;
 
 public interface IDbConnectionFactory
 {

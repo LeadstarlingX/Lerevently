@@ -1,4 +1,4 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Clock;
+﻿using Lerevently.Common.Application.Clock;
 
 namespace Lerevently.Modules.Events.Infrastructure.Clock;
 

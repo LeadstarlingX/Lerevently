@@ -1,8 +1,7 @@
-﻿using System.Data.Common;
-using Dapper;
-using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
-using Lerevently.Modules.Events.Domain.Abstractions;
+﻿using Dapper;
+using Lerevently.Common.Application.Data;
+using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.TicktTypes;
 
 namespace Lerevently.Modules.Events.Application.TicketTypes.GetTicketType;
@@ -14,7 +13,7 @@ internal sealed class GetTicketTypeQueryHandler(IDbConnectionFactory dbConnectio
         GetTicketTypeQuery request,
         CancellationToken cancellationToken)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         const string sql =
             $"""
@@ -29,13 +28,11 @@ internal sealed class GetTicketTypeQueryHandler(IDbConnectionFactory dbConnectio
              WHERE id = @TicketTypeId
              """;
 
-        TicketTypeResponse? ticketType =
+        var ticketType =
             await connection.QuerySingleOrDefaultAsync<TicketTypeResponse>(sql, request);
 
         if (ticketType is null)
-        {
             return Result.Failure<TicketTypeResponse>(TicketTypeErrors.NotFound(request.TicketTypeId));
-        }
 
         return ticketType;
     }

@@ -1,9 +1,8 @@
-﻿using System.Data.Common;
-using Dapper;
-using Lerevently.Modules.Events.Application.Abstractions.Data;
-using Lerevently.Modules.Events.Application.Abstractions.Messaging;
+﻿using Dapper;
+using Lerevently.Common.Application.Data;
+using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Application.Categories.GetCategory;
-using Lerevently.Modules.Events.Domain.Abstractions;
 
 namespace Lerevently.Modules.Events.Application.Categories.GetCategories;
 
@@ -14,7 +13,7 @@ internal sealed class GetCategoriesQueryHandler(IDbConnectionFactory dbConnectio
         GetCategoriesQuery request,
         CancellationToken cancellationToken)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         const string sql =
             $"""
@@ -25,7 +24,7 @@ internal sealed class GetCategoriesQueryHandler(IDbConnectionFactory dbConnectio
              FROM events.categories
              """;
 
-        List<CategoryResponse> categories = (await connection.QueryAsync<CategoryResponse>(sql, request)).AsList();
+        var categories = (await connection.QueryAsync<CategoryResponse>(sql, request)).AsList();
 
         return categories;
     }
