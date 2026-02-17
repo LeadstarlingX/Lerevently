@@ -1,4 +1,5 @@
-﻿using Lerevently.Api.Extenstions;
+﻿using HealthChecks.UI.Client;
+using Lerevently.Api.Extenstions;
 using Lerevently.Common.Application;
 using Lerevently.Common.Infrastructure;
 using Lerevently.Modules.Events.Application;
@@ -26,11 +27,11 @@ internal class Startup
         
         Console.WriteLine($"\n******** Using connection string: {conn} ********\n");
 
-        services.AddApplication([AssemblyReference.Assembly])
-            .AddInfrastructure(Configuration)
-            .AddEventsModule(Configuration)
-            .AddApi(Configuration)
-            .AddControllers();
+        services.AddApplication([AssemblyReference.Assembly]);
+        services.AddInfrastructure(Configuration);
+        services.AddEventsModule(Configuration);
+        services.AddApi(Configuration);
+        services.AddControllers();
         
     }
     
@@ -59,11 +60,17 @@ internal class Startup
         app.UseEndpoints(endpoints =>
         {
             EventsModule.MapEndpoints(endpoints);  // endpoints is IEndpointRouteBuilder
+
+            endpoints.MapHealthChecks("/health", new HealthCheckOptions
+            {
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
         });
 
         app.UseSerilogRequestLogging();
 
         app.UseExceptionHandler();
+        
 
         // app.UseHttpsRedirection();
 

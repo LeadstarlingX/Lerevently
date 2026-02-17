@@ -1,5 +1,4 @@
 ﻿using Lerevently.Api.Middleware;
-
 namespace Lerevently.Api;
 
 internal static class DependencyInjection
@@ -9,11 +8,12 @@ internal static class DependencyInjection
     public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
     {
 
-        services.AddOpenApi()
-            .AddApiSwagger()
-            .AddEndpointsApiExplorer()
-            .AddExceptionHandler<GlobalExceptionHandler>()
-            .AddProblemDetails();
+        services.AddOpenApi();
+        services.AddApiSwagger();
+        services.AddEndpointsApiExplorer();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
+        services.AddMyHealthChecks(configuration);
 
         return services;
     }
@@ -22,6 +22,15 @@ internal static class DependencyInjection
     {
         services.AddSwaggerGen(options => { options.CustomSchemaIds(t => t.FullName?.Replace("+", ".")); });
 
+        return services;
+    }
+
+    private static IServiceCollection AddMyHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks()
+            .AddNpgSql(configuration.GetConnectionString("Database")!)
+            .AddRedis(configuration.GetConnectionString("Cache")!);
+        
         return services;
     }
     
