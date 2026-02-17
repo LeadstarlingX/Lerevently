@@ -1,4 +1,6 @@
-﻿namespace Lerevently.Api;
+﻿using Lerevently.Api.Middleware;
+
+namespace Lerevently.Api;
 
 internal static class DependencyInjection
 {
@@ -9,7 +11,9 @@ internal static class DependencyInjection
 
         services.AddOpenApi()
             .AddApiSwagger()
-            .AddEndpointsApiExplorer();
+            .AddEndpointsApiExplorer()
+            .AddExceptionHandler<GlobalExceptionHandler>()
+            .AddProblemDetails();
 
         return services;
     }
@@ -20,13 +24,5 @@ internal static class DependencyInjection
 
         return services;
     }
-
-    private static IServiceCollection AddModulesConfigurations(this IServiceCollection services,
-        IConfiguration configuration)
-    {
-
-        return services;
-    }
-    
     
 }

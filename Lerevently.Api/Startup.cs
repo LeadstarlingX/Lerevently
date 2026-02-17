@@ -4,6 +4,7 @@ using Lerevently.Common.Infrastructure;
 using Lerevently.Modules.Events.Application;
 using Lerevently.Modules.Events.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Serilog;
 
 namespace Lerevently.Api;
 
@@ -55,7 +56,11 @@ internal class Startup
         {
             EventsModule.MapEndpoints(endpoints);  // endpoints is IEndpointRouteBuilder
         });
-        
+
+        app.UseSerilogRequestLogging();
+
+        app.UseExceptionHandler();
+
         // app.UseHttpsRedirection();
 
         /*

@@ -1,6 +1,7 @@
-using Lerevently.Api;
 using Lerevently.Api.Extenstions;
-using Lerevently.Modules.Events.Infrastructure;
+using Serilog;
+
+namespace Lerevently.Api;
 
 public static class Program
 {
@@ -14,6 +15,8 @@ public static class Program
     private static IHostBuilder CreateHostBuilder(string[] args)
     {
         return Host.CreateDefaultBuilder(args)
+            .UseSerilog((context, configuration) =>
+                configuration.ReadFrom.Configuration(context.Configuration))
             .ConfigureAppConfiguration((context, config) =>
             {
                 // Add module-specific configuration files

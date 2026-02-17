@@ -29,3 +29,13 @@ services:
       - ./.containers/db:/var/lib/postgresql
     ports:
       - 5433:5432
+        
+  lerevently.seq:
+    image: datalust/seq:2025.2
+    container_name: Lerevently.Seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341
+      - 8080:80
+    restart: always

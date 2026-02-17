@@ -16,6 +16,8 @@
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools"/>
+        <PackageReference Include="Serilog.AspNetCore"/>
+        <PackageReference Include="Serilog.Sinks.Seq"/>
 
 
     </ItemGroup>
