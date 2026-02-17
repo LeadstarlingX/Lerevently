@@ -14,6 +14,13 @@ services:
     depends_on:
       lerevently.db:
         condition: service_healthy
+        
+      lerevently.seq:
+        condition: service_started
+        
+      lerevently.redis:
+        condition: service_started
+            
 
     restart: always
 
@@ -35,7 +42,16 @@ services:
     container_name: Lerevently.Seq
     environment:
       - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_NOAUTHENTICATION=True
     ports:
       - 5341:5341
       - 8080:80
     restart: always
+    
+    
+  lerevently.redis:
+    image: redis:8.4.0
+    container_name: Lerevently.Redis
+    restart: always
+    ports:
+      - "6379:6379"

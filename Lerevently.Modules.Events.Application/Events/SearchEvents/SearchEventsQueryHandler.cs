@@ -39,20 +39,20 @@ internal sealed class SearchEventsQueryHandler(IDbConnectionFactory dbConnection
         const string sql =
             $"""
              SELECT
-                 id AS {nameof(EventResponse.Id)},
-                 category_id AS {nameof(EventResponse.CategoryId)},
-                 title AS {nameof(EventResponse.Title)},
-                 description AS {nameof(EventResponse.Description)},
-                 location AS {nameof(EventResponse.Location)},
-                 starts_at_utc AS {nameof(EventResponse.StartsAtUtc)},
-                 ends_at_utc AS {nameof(EventResponse.EndsAtUtc)}
-             FROM events.events
+                 "Id" AS {nameof(EventResponse.Id)},
+                 "CategoryId" AS {nameof(EventResponse.CategoryId)},
+                 "Title" AS {nameof(EventResponse.Title)},
+                 "Description" AS {nameof(EventResponse.Description)},
+                 "Location" AS {nameof(EventResponse.Location)},
+                 "StartsAtUtc" AS {nameof(EventResponse.StartsAtUtc)},
+                 "EndsAtUtc" AS {nameof(EventResponse.EndsAtUtc)}
+             FROM events."Events"
              WHERE
-                status = @Status AND
-                (@CategoryId IS NULL OR category_id = @CategoryId) AND
-                (@StartDate::timestamp IS NULL OR starts_at_utc >= @StartDate::timestamp) AND
-                (@EndDate::timestamp IS NULL OR ends_at_utc >= @EndDate::timestamp)
-             ORDER BY starts_at_utc
+                "Status" = @Status AND
+                (@CategoryId IS NULL OR "CategoryId" = @CategoryId) AND
+                (@StartDate::timestamp IS NULL OR "StartsAtUtc" >= @StartDate::timestamp) AND
+                (@EndDate::timestamp IS NULL OR "EndsAtUtc" >= @EndDate::timestamp)
+             ORDER BY "StartsAtUtc"
              OFFSET @Skip
              LIMIT @Take
              """;

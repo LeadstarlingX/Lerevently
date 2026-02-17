@@ -1,4 +1,7 @@
-﻿using Lerevently.Modules.Events.Application.Categories.GetCategories;
+﻿using Lerevently.Common.Application.Caching;
+using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Modules.Events.Application.Categories.GetCategories;
+using Lerevently.Modules.Events.Application.Categories.GetCategory;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -11,10 +14,22 @@ internal static class GetCategories
 {
     public static void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapGet("categories", async (ISender sender) =>
+        app.MapGet("categories", async (ISender sender, ICacheService cacheService) =>
             {
+                var categoryResponses = await cacheService.GetAsync<IReadOnlyCollection<CategoryResponse>>("categories");
+
+                if (categoryResponses is not null)
+                {
+                    return Results.Ok(categoryResponses);
+                }
+                
                 var result = await sender.Send(new GetCategoriesQuery());
 
+                if (result.IsSuccess)
+                {
+                    await cacheService.SetAsync("categories", result.Value);
+                }
+                
                 return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
             })
             .WithTags(Tags.Categories);

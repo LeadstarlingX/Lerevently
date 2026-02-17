@@ -21,6 +21,10 @@ internal class Startup
     {
         var conn = $"Connection String: {Configuration.GetConnectionString("Database")}";
         Console.WriteLine($"\n******** Using connection string: {conn} ********\n");
+        
+        conn = $"Redis Connection String: {Configuration.GetConnectionString("Cache")}";
+        
+        Console.WriteLine($"\n******** Using connection string: {conn} ********\n");
 
         services.AddApplication([AssemblyReference.Assembly])
             .AddInfrastructure(Configuration)

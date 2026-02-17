@@ -17,14 +17,14 @@ internal sealed class GetEventsQueryHandler(IDbConnectionFactory dbConnectionFac
         const string sql =
             $"""
              SELECT
-                 id AS {nameof(EventResponse.Id)},
-                 category_id AS {nameof(EventResponse.CategoryId)},
-                 title AS {nameof(EventResponse.Title)},
-                 description AS {nameof(EventResponse.Description)},
-                 location AS {nameof(EventResponse.Location)},
-                 starts_at_utc AS {nameof(EventResponse.StartsAtUtc)},
-                 ends_at_utc AS {nameof(EventResponse.EndsAtUtc)}
-             FROM events.events
+                 "Id" AS {nameof(EventResponse.Id)},
+                 "CategoryId" AS {nameof(EventResponse.CategoryId)},
+                 "Title" AS {nameof(EventResponse.Title)},
+                 "Description" AS {nameof(EventResponse.Description)},
+                 "Location" AS {nameof(EventResponse.Location)},
+                 "StartsAtUtc" AS {nameof(EventResponse.StartsAtUtc)},
+                 "EndsAtUtc" AS {nameof(EventResponse.EndsAtUtc)}
+             FROM events."Events"
              """;
 
         var events = (await connection.QueryAsync<EventResponse>(sql, request)).AsList();
