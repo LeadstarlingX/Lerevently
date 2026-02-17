@@ -1,8 +1,8 @@
-﻿using Evently.Common.Presentation.Endpoints;
-using HealthChecks.UI.Client;
+﻿using HealthChecks.UI.Client;
 using Lerevently.Api.Extenstions;
 using Lerevently.Common.Application;
 using Lerevently.Common.Infrastructure;
+using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application;
 using Lerevently.Modules.Events.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;

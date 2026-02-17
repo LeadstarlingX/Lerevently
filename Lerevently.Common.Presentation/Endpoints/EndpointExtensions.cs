@@ -1,11 +1,9 @@
 ﻿using System.Reflection;
-using Lerevently.Common.Presentation.Endpoints;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Evently.Common.Presentation.Endpoints;
+namespace Lerevently.Common.Presentation.Endpoints;
 
 public static class EndpointExtensions
 {

@@ -1,9 +1,9 @@
 ﻿using Lerevently.Common.Application.Caching;
 using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Common.Presentation.ApiResults;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application.Categories.GetCategories;
 using Lerevently.Modules.Events.Application.Categories.GetCategory;
-using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -31,7 +31,7 @@ internal class GetCategories : IEndpoint
                     await cacheService.SetAsync("categories", result.Value);
                 }
                 
-                return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+                return result.Match(Results.Ok, ApiResults.Problem);
             })
             .WithTags(Tags.Categories);
     }

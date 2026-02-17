@@ -1,6 +1,6 @@
-﻿using Lerevently.Common.Presentation.Endpoints;
+﻿using Lerevently.Common.Presentation.ApiResults;
+using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application.Categories.CreateCategory;
-using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +16,7 @@ internal class CreateCategory : IEndpoint
             {
                 var result = await sender.Send(new CreateCategoryCommand(request.Name));
 
-                return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+                return result.Match(Results.Ok, ApiResults.Problem);
             })
             .WithTags(Tags.Categories);
     }

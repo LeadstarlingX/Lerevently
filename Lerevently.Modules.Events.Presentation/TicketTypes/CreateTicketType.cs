@@ -1,6 +1,6 @@
-﻿using Lerevently.Common.Presentation.Endpoints;
+﻿using Lerevently.Common.Presentation.ApiResults;
+using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application.TicketTypes.CreateTicketType;
-using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -21,7 +21,7 @@ internal class CreateTicketType : IEndpoint
                     request.Currency,
                     request.Quantity));
 
-                return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+                return result.Match(Results.Ok, ApiResults.Problem);
             })
             .WithTags(Tags.TicketTypes);
     }

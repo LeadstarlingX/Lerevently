@@ -1,6 +1,8 @@
-﻿namespace Lerevently.Common.Domain.Abstractions;
+﻿using MediatR;
 
-public interface IDomainEvent
+namespace Lerevently.Common.Domain.Abstractions;
+
+public interface IDomainEvent : INotification
 {
     Guid Id { get; }
     DateTime OccurredAtUtc { get; }

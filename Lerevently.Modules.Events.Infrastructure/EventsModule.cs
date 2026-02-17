@@ -1,4 +1,5 @@
-﻿using Evently.Common.Presentation.Endpoints;
+﻿using Lerevently.Common.Infrastructure.Interceptors;
+using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
 using Lerevently.Modules.Events.Domain.TicktTypes;
@@ -37,13 +38,13 @@ public static class EventsModule
         var databaseConnectionString = configuration.GetConnectionString("Database")!;
 
         
-        services.AddDbContext<EventsDbContext>(options =>
+        services.AddDbContext<EventsDbContext>((sp, options) =>
             options
                 .UseNpgsql(
                     databaseConnectionString,
                     npgsqlOptions => npgsqlOptions
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events))
-                .AddInterceptors());
+                .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>()));
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
 

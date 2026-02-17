@@ -1,6 +1,6 @@
 ﻿using Lerevently.Common.Domain.Abstractions;
 
-namespace Lerevently.Modules.Events.Presentation.ApiResults;
+namespace Lerevently.Common.Presentation.ApiResults;
 
 public static class ResultExtensions
 {

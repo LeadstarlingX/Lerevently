@@ -1,7 +1,7 @@
 ﻿using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Common.Presentation.ApiResults;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application.Events.GetEvent;
-using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +17,7 @@ internal class GetEvent : IEndpoint
             {
                 Result<EventResponse> result = await sender.Send(new GetEventQuery(id));
 
-                return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+                return result.Match(Results.Ok, ApiResults.Problem);
             })
             .WithTags(Tags.Events);
     }

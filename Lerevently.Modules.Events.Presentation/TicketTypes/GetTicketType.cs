@@ -1,6 +1,6 @@
-﻿using Lerevently.Common.Presentation.Endpoints;
+﻿using Lerevently.Common.Presentation.ApiResults;
+using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application.TicketTypes.GetTicketType;
-using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +16,7 @@ internal class GetTicketType : IEndpoint
             {
                 var result = await sender.Send(new GetTicketTypeQuery(id));
 
-                return result.Match(Results.Ok, ApiResults.ApiResults.Problem);
+                return result.Match(Results.Ok, ApiResults.Problem);
             })
             .WithTags(Tags.TicketTypes);
     }

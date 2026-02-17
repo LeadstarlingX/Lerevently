@@ -1,6 +1,6 @@
-﻿using Lerevently.Common.Presentation.Endpoints;
+﻿using Lerevently.Common.Presentation.ApiResults;
+using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application.Events.CancelEvent;
-using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +16,7 @@ internal class CancelEvent : IEndpoint
             {
                 var result = await sender.Send(new CancelEventCommand(id));
 
-                return result.Match(Results.NoContent, ApiResults.ApiResults.Problem);
+                return result.Match(Results.NoContent, ApiResults.Problem);
             })
             .WithTags(Tags.Events);
     }

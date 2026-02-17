@@ -4,6 +4,7 @@ using Lerevently.Common.Application.Data;
 using Lerevently.Common.Infrastructure.Caching;
 using Lerevently.Common.Infrastructure.Clock;
 using Lerevently.Common.Infrastructure.Data;
+using Lerevently.Common.Infrastructure.Interceptors;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -22,6 +23,8 @@ public static class InfrastructureConfiguration
         services.TryAddSingleton(npgsqlDataSource);
 
         services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
+
+        services.TryAddSingleton<PublishDomainEventsInterceptor>();
 
         services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
 
