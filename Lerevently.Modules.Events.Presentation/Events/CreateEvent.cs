@@ -1,4 +1,5 @@
-﻿using Lerevently.Modules.Events.Application.Events.CreateEvent;
+﻿using Lerevently.Common.Presentation.Endpoints;
+using Lerevently.Modules.Events.Application.Events.CreateEvent;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -7,9 +8,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Events;
 
-internal static class CreateEvent
+internal class CreateEvent : IEndpoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPost("events", async (CreateRequest request, ISender sender) =>
             {

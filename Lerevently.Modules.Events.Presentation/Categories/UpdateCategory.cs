@@ -1,4 +1,5 @@
-﻿using Lerevently.Modules.Events.Application.Categories.UpdateCategory;
+﻿using Lerevently.Common.Presentation.Endpoints;
+using Lerevently.Modules.Events.Application.Categories.UpdateCategory;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -7,9 +8,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Categories;
 
-internal static class UpdateCategory
+internal class UpdateCategory : IEndpoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("categories/{id}", async (Guid id, UpdateRequest request, ISender sender) =>
             {

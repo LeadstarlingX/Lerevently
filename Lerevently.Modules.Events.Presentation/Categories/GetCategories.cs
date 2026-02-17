@@ -1,5 +1,6 @@
 ﻿using Lerevently.Common.Application.Caching;
 using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application.Categories.GetCategories;
 using Lerevently.Modules.Events.Application.Categories.GetCategory;
 using Lerevently.Modules.Events.Presentation.ApiResults;
@@ -10,9 +11,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Categories;
 
-internal static class GetCategories
+internal class GetCategories : IEndpoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("categories", async (ISender sender, ICacheService cacheService) =>
             {

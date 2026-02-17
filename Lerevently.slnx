@@ -11,6 +11,7 @@
         <Project Path="Lerevently.Common.Application/Lerevently.Common.Application.csproj" />
         <Project Path="Lerevently.Common.Domain/Lerevently.Common.Domain.csproj" />
         <Project Path="Lerevently.Common.Infrastructure/Lerevently.Common.Infrastructure.csproj" />
+        <Project Path="Lerevently.Common.Presentation/Lerevently.Common.Presentation.csproj" />
     </Folder>
     <Folder Name="/src/Modules/" />
     <Folder Name="/src/Modules/Events/">

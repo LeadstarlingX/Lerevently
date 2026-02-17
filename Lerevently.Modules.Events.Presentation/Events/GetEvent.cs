@@ -1,4 +1,5 @@
 ﻿using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application.Events.GetEvent;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
@@ -8,9 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Events;
 
-internal static class GetEvent
+internal class GetEvent : IEndpoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("events/{id}", async (Guid id, ISender sender) =>
             {

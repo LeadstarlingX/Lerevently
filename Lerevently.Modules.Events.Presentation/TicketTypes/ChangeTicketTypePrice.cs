@@ -1,4 +1,5 @@
-﻿using Lerevently.Modules.Events.Application.TicketTypes.UpdateTicketTypePrice;
+﻿using Lerevently.Common.Presentation.Endpoints;
+using Lerevently.Modules.Events.Application.TicketTypes.UpdateTicketTypePrice;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -7,9 +8,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.TicketTypes;
 
-internal static class ChangeTicketTypePrice
+internal class ChangeTicketTypePrice : IEndpoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapPut("ticket-types/{id}/price", async (Guid id, Request request, ISender sender) =>
             {

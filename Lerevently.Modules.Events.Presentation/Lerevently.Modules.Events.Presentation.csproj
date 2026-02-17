@@ -3,7 +3,7 @@
 
     <ItemGroup>
 
-        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+        <ProjectReference Include="..\Lerevently.Common.Presentation\Lerevently.Common.Presentation.csproj" />
         <ProjectReference Include="..\Lerevently.Modules.Events.Application\Lerevently.Modules.Events.Application.csproj"/>
 
     </ItemGroup>

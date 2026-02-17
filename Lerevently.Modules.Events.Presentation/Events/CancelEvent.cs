@@ -1,4 +1,5 @@
-﻿using Lerevently.Modules.Events.Application.Events.CancelEvent;
+﻿using Lerevently.Common.Presentation.Endpoints;
+using Lerevently.Modules.Events.Application.Events.CancelEvent;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -7,9 +8,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Events;
 
-internal static class CancelEvent
+internal class CancelEvent : IEndpoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapDelete("events/{id}/cancel", async (Guid id, ISender sender) =>
             {

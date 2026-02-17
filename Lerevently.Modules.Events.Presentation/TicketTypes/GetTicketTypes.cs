@@ -1,4 +1,5 @@
-﻿using Lerevently.Modules.Events.Application.TicketTypes.GetTicketTypes;
+﻿using Lerevently.Common.Presentation.Endpoints;
+using Lerevently.Modules.Events.Application.TicketTypes.GetTicketTypes;
 using Lerevently.Modules.Events.Presentation.ApiResults;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
@@ -7,9 +8,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.TicketTypes;
 
-internal static class GetTicketTypes
+internal class GetTicketTypes : IEndpoint
 {
-    public static void MapEndpoint(IEndpointRouteBuilder app)
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("ticket-types", async (Guid eventId, ISender sender) =>
             {

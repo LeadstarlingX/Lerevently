@@ -1,4 +1,5 @@
-﻿using HealthChecks.UI.Client;
+﻿using Evently.Common.Presentation.Endpoints;
+using HealthChecks.UI.Client;
 using Lerevently.Api.Extenstions;
 using Lerevently.Common.Application;
 using Lerevently.Common.Infrastructure;
@@ -59,11 +60,12 @@ internal class Startup
         
         app.UseEndpoints(endpoints =>
         {
-            EventsModule.MapEndpoints(endpoints);  // endpoints is IEndpointRouteBuilder
-
+            endpoints.MapEndpoints();  // endpoints is IEndpointRouteBuilder
+            
             endpoints.MapHealthChecks("/health", new HealthCheckOptions
             {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                
             });
         });
 
