@@ -35,6 +35,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Lerevently.Modules.Events.Infrastructure\Lerevently.Modules.Events.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Users.Application\Lerevently.Modules.Users.Application.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Users.Domain\Lerevently.Modules.Users.Domain.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Users.Infrastructure\Lerevently.Modules.Users.Infrastructure.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Users.Presentation\Lerevently.Modules.Users.Presentation.csproj" />
     </ItemGroup>
 
 </Project>

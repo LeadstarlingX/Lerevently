@@ -1,4 +1,5 @@
 ﻿using Lerevently.Modules.Events.Infrastructure.Database;
+using Lerevently.Modules.Users.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lerevently.Api.Extenstions;
@@ -9,6 +10,7 @@ internal static class MigrationExtensions
     {
         using var scope = app.ApplicationServices.CreateScope();
         ApplyMigrations<EventsDbContext>(scope);
+        ApplyMigrations<UsersDbContext>(scope);
     }
 
 

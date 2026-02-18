@@ -5,7 +5,7 @@ namespace Lerevently.Api;
 
 public static class Program
 {
-    private static readonly string[] Modules = ["events"]; // Add your module names here
+    private static readonly string[] Modules = ["events", "users"]; // Add your module names here
 
     public static void Main(string[] args)
     {

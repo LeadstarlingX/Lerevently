@@ -27,13 +27,24 @@ public static class InfrastructureConfiguration
         services.TryAddSingleton<PublishDomainEventsInterceptor>();
 
         services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
-
-        var cacheConnectionString = configuration.GetConnectionString("Cache");
-        IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(cacheConnectionString!);
-        services.TryAddSingleton(connectionMultiplexer);
-        services.AddStackExchangeRedisCache(options => 
-            options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer));
         
+        
+        /// To solve the problem of not being able to resolve the connection multiplexer when
+        /// running the migrations, at real runtime the first part will always work.
+        try
+        {
+            var cacheConnectionString = configuration.GetConnectionString("Cache");
+            IConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(cacheConnectionString!);
+            services.TryAddSingleton(connectionMultiplexer);
+            services.AddStackExchangeRedisCache(options =>
+                options.ConnectionMultiplexerFactory = () => Task.FromResult(connectionMultiplexer));
+
+        }
+        catch
+        {
+            services.AddDistributedMemoryCache();
+        }
+
         services.TryAddSingleton<ICacheService, CacheService>();
 
         
