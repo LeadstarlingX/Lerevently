@@ -1,4 +1,4 @@
-﻿using Lerevently.Common.Application.Data;
+﻿﻿using Lerevently.Common.Application.Data;
 using Lerevently.Common.Infrastructure.Interceptors;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Users.Domain.Users;
@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using IUnitOfWork = Lerevently.Modules.Users.Application.Abstractions.Data.IUnitOfWork;
 
 namespace Lerevently.Modules.Users.Infrastructure;
 

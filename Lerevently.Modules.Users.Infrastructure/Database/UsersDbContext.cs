@@ -1,4 +1,4 @@
-﻿using Lerevently.Common.Application.Data;
+﻿﻿using Lerevently.Modules.Users.Application.Abstractions.Data;
 using Lerevently.Modules.Users.Domain.Users;
 using Lerevently.Modules.Users.Infrastructure.Users;
 using Microsoft.EntityFrameworkCore;
