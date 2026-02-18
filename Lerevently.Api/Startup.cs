@@ -5,6 +5,7 @@ using Lerevently.Common.Infrastructure;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Application;
 using Lerevently.Modules.Events.Infrastructure;
+using Lerevently.Modules.Ticketing.Infrastructure;
 using Lerevently.Modules.Users.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
@@ -31,7 +32,8 @@ internal class Startup
 
         services.AddApplication([
             Lerevently.Modules.Events.Application.AssemblyReference.Assembly,
-            Lerevently.Modules.Users.Application.AssemblyReference.Assembly]);
+            Lerevently.Modules.Users.Application.AssemblyReference.Assembly,
+            Lerevently.Modules.Ticketing.Application.AssemblyReference.Assembly]);
         
         services.AddInfrastructure(Configuration);
         services.AddApi(Configuration);
@@ -39,6 +41,7 @@ internal class Startup
         
         services.AddEventsModule(Configuration);
         services.AddUsersModule(Configuration);
+        services.AddTicketingModule(Configuration);
 
     }
     

@@ -1,4 +1,5 @@
-﻿using Lerevently.Common.Infrastructure.Interceptors;
+﻿using Evently.Modules.Events.PublicApi;
+using Lerevently.Common.Infrastructure.Interceptors;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
@@ -6,6 +7,7 @@ using Lerevently.Modules.Events.Domain.TicktTypes;
 using Lerevently.Modules.Events.Infrastructure.Categories;
 using Lerevently.Modules.Events.Infrastructure.Database;
 using Lerevently.Modules.Events.Infrastructure.Events;
+using Lerevently.Modules.Events.Infrastructure.PublicApi;
 using Lerevently.Modules.Events.Infrastructure.TicketTypes;
 using Lerevently.Modules.Events.Presentation.Categories;
 using Lerevently.Modules.Events.Presentation.Events;
@@ -51,5 +53,7 @@ public static class EventsModule
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+        services.AddScoped<IEventsApi, EventsApi>();
     }
 }

@@ -17,11 +17,11 @@ internal sealed class GetUserQueryHandler(IDbConnectionFactory dbConnectionFacto
         const string sql =
             $"""
              SELECT
-                 id AS {nameof(UserResponse.Id)},
-                 email AS {nameof(UserResponse.Email)},
-                 first_name AS {nameof(UserResponse.FirstName)},
-                 last_name AS {nameof(UserResponse.LastName)}
-             FROM users.users
+                 "Id" AS {nameof(UserResponse.Id)},
+                 "Email" AS {nameof(UserResponse.Email)},
+                 "FirstName" AS {nameof(UserResponse.FirstName)},
+                 "LastName" AS {nameof(UserResponse.LastName)}
+             FROM users."Users"
              WHERE id = @UserId
              """;
 
