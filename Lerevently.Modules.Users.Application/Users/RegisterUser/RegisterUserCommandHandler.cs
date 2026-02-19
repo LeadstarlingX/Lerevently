@@ -1,5 +1,6 @@
 ﻿using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
+using Lerevently.Modules.Ticketing.PublicApi;
 using Lerevently.Modules.Users.Application.Abstractions.Data;
 using Lerevently.Modules.Users.Domain.Users;
 
@@ -15,6 +16,7 @@ internal sealed class RegisterUserCommandHandler(IUserRepository userRepository,
         userRepository.Insert(user);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
+
 
         return user.Id;
     }
