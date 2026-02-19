@@ -35,7 +35,10 @@ internal class Startup
             Lerevently.Modules.Users.Application.AssemblyReference.Assembly,
             Lerevently.Modules.Ticketing.Application.AssemblyReference.Assembly]);
         
-        services.AddInfrastructure(Configuration);
+        services.AddInfrastructure(
+            [TicketingModule.ConfigureConsumers],
+            Configuration
+            );
         services.AddApi(Configuration);
         services.AddControllers();
         

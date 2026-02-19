@@ -7,6 +7,7 @@ using Lerevently.Common.Infrastructure.Clock;
 using Lerevently.Common.Infrastructure.Data;
 using Lerevently.Common.Infrastructure.Interceptors;
 using MassTransit;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -17,7 +18,10 @@ namespace Lerevently.Common.Infrastructure;
 
 public static class InfrastructureConfiguration
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        Action<IRegistrationConfigurator>[] moduleConfigureConsumers,
+        IConfiguration configuration)
     {
         var databaseConnectionString = configuration.GetConnectionString("Database")!;
         
@@ -53,6 +57,10 @@ public static class InfrastructureConfiguration
         
         services.AddMassTransit(configure =>
         {
+            foreach (var configureConsumer in moduleConfigureConsumers)
+            {
+                configureConsumer(configure);
+            }    
             
             configure.SetKebabCaseEndpointNameFormatter();
             
@@ -61,8 +69,9 @@ public static class InfrastructureConfiguration
                 cfg.ConfigureEndpoints(context);
             });
         });
-
         
         return services;
     }
+    
+    
 }

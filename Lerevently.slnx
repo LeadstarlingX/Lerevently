@@ -26,7 +26,6 @@
         <Project Path="Lerevently.Modules.Ticketing.Domain/Lerevently.Modules.Ticketing.Domain.csproj" />
         <Project Path="Lerevently.Modules.Ticketing.Infrastructure/Lerevently.Modules.Ticketing.Infrastructure.csproj" />
         <Project Path="Lerevently.Modules.Ticketing.Presentation/Lerevently.Modules.Ticketing.Presentation.csproj" />
-        <Project Path="Lerevently.Modules.Ticketing.PublicApi/Lerevently.Modules.Ticketing.PublicApi.csproj" />
     </Folder>
     <Folder Name="/src/Modules/Users/">
         <Project Path="Lerevently.Modules.Users.Application/Lerevently.Modules.Users.Application.csproj" />
