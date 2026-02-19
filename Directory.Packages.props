@@ -33,6 +33,7 @@
         <PackageVersion Include="MassTransit.Abstractions" Version="9.0.1"/>
         
         
+        <PackageVersion Include="Ulid" Version="1.4.1"/>
         
 
         <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1"/>

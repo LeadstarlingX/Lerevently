@@ -1,7 +1,15 @@
 ﻿using System.Data.Common;
-using Lerevently.Common.Application.Data;
+using Lerevently.Modules.Ticketing.Application.Abstractions.Data;
 using Lerevently.Modules.Ticketing.Domain.Customers;
+using Lerevently.Modules.Ticketing.Domain.Events;
+using Lerevently.Modules.Ticketing.Domain.Orders;
+using Lerevently.Modules.Ticketing.Domain.Payments;
+using Lerevently.Modules.Ticketing.Domain.Tickets;
 using Lerevently.Modules.Ticketing.Infrastructure.Customers;
+using Lerevently.Modules.Ticketing.Infrastructure.Events;
+using Lerevently.Modules.Ticketing.Infrastructure.Orders;
+using Lerevently.Modules.Ticketing.Infrastructure.Payments;
+using Lerevently.Modules.Ticketing.Infrastructure.Tickets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -12,11 +20,29 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
 {
     internal DbSet<Customer> Customers { get; set; }
 
+    internal DbSet<Event> Events { get; set; }
+
+    internal DbSet<TicketType> TicketTypes { get; set; }
+
+    internal DbSet<Order> Orders { get; set; }
+
+    internal DbSet<OrderItem> OrderItems { get; set; }
+
+    internal DbSet<Ticket> Tickets { get; set; }
+
+    internal DbSet<Payment> Payments { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schemas.Ticketing);
 
         modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+        modelBuilder.ApplyConfiguration(new EventConfiguration());
+        modelBuilder.ApplyConfiguration(new TicketTypeConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
+        modelBuilder.ApplyConfiguration(new TicketConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentConfiguration());
     }
 
     public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)

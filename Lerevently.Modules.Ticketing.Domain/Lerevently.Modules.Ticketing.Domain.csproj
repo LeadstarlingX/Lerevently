@@ -3,7 +3,10 @@
 
 
     <ItemGroup>
-      <ProjectReference Include="..\Lerevently.Common.Domain\Lerevently.Common.Domain.csproj" />
+        
+       <PackageReference Include="Ulid" /> 
+        
+       <ProjectReference Include="..\Lerevently.Common.Domain\Lerevently.Common.Domain.csproj" />
     </ItemGroup>
 
 </Project>
