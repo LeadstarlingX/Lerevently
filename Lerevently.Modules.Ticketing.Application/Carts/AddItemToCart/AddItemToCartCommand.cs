@@ -1,5 +1,4 @@
 ﻿using Evently.Modules.Events.PublicApi;
-using Evently.Modules.Users.PublicApi;
 using FluentValidation;
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;

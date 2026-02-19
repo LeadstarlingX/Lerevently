@@ -29,6 +29,8 @@
         
         <PackageVersion Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.3"/>
         
+        <PackageVersion Include="MassTransit" Version="9.0.1"/>
+        
         
         
 

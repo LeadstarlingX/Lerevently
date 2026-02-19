@@ -1,10 +1,12 @@
 ﻿using Lerevently.Common.Application.Caching;
 using Lerevently.Common.Application.Clock;
 using Lerevently.Common.Application.Data;
+using Lerevently.Common.Application.EventBus;
 using Lerevently.Common.Infrastructure.Caching;
 using Lerevently.Common.Infrastructure.Clock;
 using Lerevently.Common.Infrastructure.Data;
 using Lerevently.Common.Infrastructure.Interceptors;
+using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -46,6 +48,19 @@ public static class InfrastructureConfiguration
         }
 
         services.TryAddSingleton<ICacheService, CacheService>();
+        
+        services.TryAddSingleton<IEventBus, EventBus.EventBus>();
+        
+        services.AddMassTransit(configure =>
+        {
+            
+            configure.SetKebabCaseEndpointNameFormatter();
+            
+            configure.UsingInMemory((context, cfg) =>
+            {
+                cfg.ConfigureEndpoints(context);
+            });
+        });
 
         
         return services;

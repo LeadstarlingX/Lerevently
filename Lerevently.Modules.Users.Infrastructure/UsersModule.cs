@@ -1,10 +1,7 @@
-﻿﻿using Evently.Modules.Users.PublicApi;
- using Lerevently.Common.Application.Data;
-using Lerevently.Common.Infrastructure.Interceptors;
+﻿using Lerevently.Common.Infrastructure.Interceptors;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Users.Domain.Users;
 using Lerevently.Modules.Users.Infrastructure.Database;
-using Lerevently.Modules.Users.Infrastructure.PublicApi;
 using Lerevently.Modules.Users.Infrastructure.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -41,6 +38,5 @@ public static class UsersModule
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
 
-        services.AddScoped<IUsersApi, UsersApi>();
     }
 }
