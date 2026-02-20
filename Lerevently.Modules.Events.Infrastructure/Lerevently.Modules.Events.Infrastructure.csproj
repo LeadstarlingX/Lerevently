@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-
+    
     <ItemGroup>
+        
+        <PackageReference Include="Bogus" />
+        <PackageReference Include="Dapper" />
 
-
+        
         <ProjectReference Include="..\Evently.Modules.Events.PublicApi\Evently.Modules.Events.PublicApi.csproj" />
-
-
         <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj" />
-
         <ProjectReference Include="..\Lerevently.Modules.Events.Application\Lerevently.Modules.Events.Application.csproj"/>
         <ProjectReference Include="..\Lerevently.Modules.Events.Presentation\Lerevently.Modules.Events.Presentation.csproj"/>
+        
     </ItemGroup>
 
 </Project>

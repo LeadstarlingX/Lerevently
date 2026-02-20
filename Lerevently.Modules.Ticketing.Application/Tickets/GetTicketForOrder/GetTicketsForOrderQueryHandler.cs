@@ -19,15 +19,15 @@ internal sealed class GetTicketsForOrderQueryHandler(IDbConnectionFactory dbConn
         const string sql =
             $"""
             SELECT
-                id AS {nameof(TicketResponse.Id)},
-                customer_id AS {nameof(TicketResponse.CustomerId)},
-                order_id AS {nameof(TicketResponse.OrderId)},
-                event_id AS {nameof(TicketResponse.EventId)},
-                ticket_type_id AS {nameof(TicketResponse.TicketTypeId)},
-                code AS {nameof(TicketResponse.Code)},
-                created_at_utc AS {nameof(TicketResponse.CreatedAtUtc)}
-            FROM ticketing.tickets
-            WHERE order_id = @OrderId
+                "Id" AS {nameof(TicketResponse.Id)},
+                "CustomerId" AS {nameof(TicketResponse.CustomerId)},
+                "OrderId" AS {nameof(TicketResponse.OrderId)},
+                "EventId" AS {nameof(TicketResponse.EventId)},
+                "TicketTypeId" AS {nameof(TicketResponse.TicketTypeId)},
+                "Code" AS {nameof(TicketResponse.Code)},
+                "CreatedAtUtc" AS {nameof(TicketResponse.CreatedAtUtc)}
+            FROM ticketing."Tickets"
+            WHERE "OrderId" = @OrderId
             """;
 
         List<TicketResponse> tickets = (await connection.QueryAsync<TicketResponse>(sql, request)).AsList();

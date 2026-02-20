@@ -3,10 +3,15 @@
 
 
     <ItemGroup>
-      <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj" />
         
-      <ProjectReference Include="..\Lerevently.Modules.Ticketing.Application\Lerevently.Modules.Ticketing.Application.csproj" />
-      <ProjectReference Include="..\Lerevently.Modules.Ticketing.Presentation\Lerevently.Modules.Ticketing.Presentation.csproj" />
+        
+        <PackageReference Include="Bogus" />
+        <PackageReference Include="Dapper" />
+        
+        
+        <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Ticketing.Application\Lerevently.Modules.Ticketing.Application.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Ticketing.Presentation\Lerevently.Modules.Ticketing.Presentation.csproj" />
 
     </ItemGroup>
 

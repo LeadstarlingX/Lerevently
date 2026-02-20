@@ -58,6 +58,7 @@ internal class Startup
         
         
         app.ApplyMigrations();
+        app.SeedDataAsync().GetAwaiter().GetResult();
         
         // app.SeedData();
 
@@ -67,8 +68,18 @@ internal class Startup
             
         }
         
+
+        app.UseSerilogRequestLogging();
+
+        app.UseExceptionHandler();
+
+        
+        
         app.UseRouting();
         
+        app.UseAuthentication();
+        
+        app.UseAuthorization();
         
         app.UseEndpoints(endpoints =>
         {
@@ -80,12 +91,7 @@ internal class Startup
                 
             });
         });
-
-        app.UseSerilogRequestLogging();
-
-        app.UseExceptionHandler();
         
-
         // app.UseHttpsRedirection();
 
         /*

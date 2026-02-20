@@ -16,14 +16,14 @@ internal sealed class GetCustomerByIdQueryHandler(IDbConnectionFactory dbConnect
 
         const string sql =
             $"""
-             SELECT
-                 id AS {nameof(CustomerResponse.Id)},
-                 email AS {nameof(CustomerResponse.Email)},
-                 first_name AS {nameof(CustomerResponse.FirstName)},
-                 last_name AS {nameof(CustomerResponse.LastName)}
-             FROM ticketing.customers
-             WHERE id = @CustomerId
-             """;
+              SELECT
+                  "Id" AS {nameof(CustomerResponse.Id)},
+                  "Email" AS {nameof(CustomerResponse.Email)},
+                  "FirstName" AS {nameof(CustomerResponse.FirstName)},
+                  "LastName" AS {nameof(CustomerResponse.LastName)}
+              FROM ticketing."Customers"
+              WHERE "Id" = @CustomerId
+              """;
 
         CustomerResponse? customer = await connection.QuerySingleOrDefaultAsync<CustomerResponse>(sql, request);
 

@@ -17,15 +17,15 @@ internal sealed class GetOrdersQueryHandler(IDbConnectionFactory dbConnectionFac
 
         const string sql =
             $"""
-             SELECT
-                 id AS {nameof(OrderResponse.Id)},
-                 customer_id AS {nameof(OrderResponse.CustomerId)},
-                 status AS {nameof(OrderResponse.Status)},
-                 total_price AS {nameof(OrderResponse.TotalPrice)},
-                 created_at_utc AS {nameof(OrderResponse.CreatedAtUtc)}
-             FROM ticketing.orders
-             WHERE customer_id = @CustomerId
-             """;
+              SELECT
+                  "Id" AS {nameof(OrderResponse.Id)},
+                  "CustomerId" AS {nameof(OrderResponse.CustomerId)},
+                  "Status" AS {nameof(OrderResponse.Status)},
+                  "TotalPrice" AS {nameof(OrderResponse.TotalPrice)},
+                  "CreatedAtUtc" AS {nameof(OrderResponse.CreatedAtUtc)}
+              FROM ticketing."Orders"
+              WHERE "CustomerId" = @CustomerId
+              """;
 
         List<OrderResponse> orders = (await connection.QueryAsync<OrderResponse>(sql, request)).AsList();
 
