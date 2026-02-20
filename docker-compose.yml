@@ -21,7 +21,9 @@ services:
       lerevently.redis:
         condition: service_started
             
-
+      lerevently.identity:
+        condition: service_started
+      
     restart: always
 
 
@@ -31,7 +33,7 @@ services:
     environment:
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
-#      - KEYCLOAK_IMPORT=/tmp/filoshop-realm-export.json
+      - KEYCLOAK_IMPORT=/tmp/lerevently-realm-export.json
 
       - KC_DB=postgres
       - KC_DB_URL=jdbc:postgresql://lerevently.db:5432/lereventlydb_docker
