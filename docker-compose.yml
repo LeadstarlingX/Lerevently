@@ -25,6 +25,29 @@ services:
     restart: always
 
 
+  lerevently.identity:
+    image: keycloak/keycloak:26.4
+    container_name: Lerevently.Identity
+    environment:
+      - KC_BOOTSTRAP_ADMIN_USERNAME=admin
+      - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+#      - KEYCLOAK_IMPORT=/tmp/filoshop-realm-export.json
+
+      - KC_DB=postgres
+      - KC_DB_URL=jdbc:postgresql://lerevently.db:5432/lereventlydb_docker
+      - KC_DB_USERNAME=postgres
+      - KC_DB_PASSWORD=postgres
+    volumes:
+      - ./.containers/identity:/opt/jboss/keycloak/standalone/data
+    #      - ./.files/filoshop-realm-export.json:/opt/keycloak/data/import/realm.json
+    depends_on:
+      lerevently.db:
+        condition: service_healthy
+    ports:
+      - "8001:8080"  # <-- 3. FIXED: Internal port is 8080
+    command: start-dev
+
+
   lerevently.db:
     image: postgres:18.0
     container_name: Lerevently.Db

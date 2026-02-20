@@ -14,7 +14,38 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Directory.Packages.props", "."]
 COPY ["Directory.Build.props", "."]
-COPY ["Lerevently.Api/Lerevently.Api.csproj", "Lerevently.Api/"]
+
+# Copy API project
+COPY ["Lerevently.Api/*.csproj", "Lerevently.Api/"]
+
+# Copy Common projects
+COPY ["Lerevently.Common.Application/*.csproj", "Lerevently.Common.Application/"]
+COPY ["Lerevently.Common.Domain/*.csproj", "Lerevently.Common.Domain/"]
+COPY ["Lerevently.Common.Infrastructure/*.csproj", "Lerevently.Common.Infrastructure/"]
+COPY ["Lerevently.Common.Presentation/*.csproj", "Lerevently.Common.Presentation/"]
+
+# Copy Events Module projects
+COPY ["Evently.Modules.Events.PublicApi/*.csproj", "Evently.Modules.Events.PublicApi/"]
+#COPY ["Lerevently.Modules.Events.Api/*.csproj", "Lerevently.Modules.Events.Api/"]
+COPY ["Lerevently.Modules.Events.Application/*.csproj", "Lerevently.Modules.Events.Application/"]
+COPY ["Lerevently.Modules.Events.Domain/*.csproj", "Lerevently.Modules.Events.Domain/"]
+COPY ["Lerevently.Modules.Events.Infrastructure/*.csproj", "Lerevently.Modules.Events.Infrastructure/"]
+COPY ["Lerevently.Modules.Events.Presentation/*.csproj", "Lerevently.Modules.Events.Presentation/"]
+
+# Copy Ticketing Module projects
+COPY ["Lerevently.Modules.Ticketing.Application/*.csproj", "Lerevently.Modules.Ticketing.Application/"]
+COPY ["Lerevently.Modules.Ticketing.Domain/*.csproj", "Lerevently.Modules.Ticketing.Domain/"]
+COPY ["Lerevently.Modules.Ticketing.Infrastructure/*.csproj", "Lerevently.Modules.Ticketing.Infrastructure/"]
+COPY ["Lerevently.Modules.Ticketing.Presentation/*.csproj", "Lerevently.Modules.Ticketing.Presentation/"]
+
+# Copy Users Module projects
+COPY ["Lerevently.Modules.Users.IntegrationEvents/*.csproj", "Lerevently.Modules.Users.IntegrationEvents/"]
+COPY ["Lerevently.Modules.Users.Application/*.csproj", "Lerevently.Modules.Users.Application/"]
+COPY ["Lerevently.Modules.Users.Domain/*.csproj", "Lerevently.Modules.Users.Domain/"]
+COPY ["Lerevently.Modules.Users.Infrastructure/*.csproj", "Lerevently.Modules.Users.Infrastructure/"]
+COPY ["Lerevently.Modules.Users.Presentation/*.csproj", "Lerevently.Modules.Users.Presentation/"]
+
+
 RUN dotnet restore "./Lerevently.Api/Lerevently.Api.csproj"
 COPY . .
 WORKDIR "/src/Lerevently.Api"
