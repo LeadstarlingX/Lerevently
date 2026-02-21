@@ -1,4 +1,4 @@
-using Lerevently.Api.Extenstions;
+using Lerevently.Api.Extensions;
 using Serilog;
 
 namespace Lerevently.Api;

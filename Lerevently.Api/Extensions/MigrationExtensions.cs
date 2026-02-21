@@ -2,7 +2,7 @@
 using Lerevently.Modules.Users.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lerevently.Api.Extenstions;
+namespace Lerevently.Api.Extensions;
 
 internal static class MigrationExtensions
 {

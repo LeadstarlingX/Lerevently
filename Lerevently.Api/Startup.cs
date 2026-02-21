@@ -1,5 +1,5 @@
 ﻿using HealthChecks.UI.Client;
-using Lerevently.Api.Extenstions;
+using Lerevently.Api.Extensions;
 using Lerevently.Common.Application;
 using Lerevently.Common.Infrastructure;
 using Lerevently.Common.Presentation.Endpoints;

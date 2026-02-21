@@ -12,78 +12,94 @@ namespace Lerevently.Modules.Events.Infrastructure.DataSeeder;
 
 public static class DataSeeder
 {
-    public static async Task SeedDataAsync(IApplicationBuilder app, bool forceReseed = false)
+    public static async Task<(List<EventSeedData> Events, List<TicketTypeSeedData> TicketTypes)> SeedDataAsync(IApplicationBuilder app, bool forceReseed = false)
     {
         using var scope = app.ApplicationServices.CreateScope();
         var sqlConnectionFactory = scope.ServiceProvider.GetRequiredService<IDbConnectionFactory>();
         using var connection = await sqlConnectionFactory.GetDbConnectionAsync();
 
-        await SeedCategoriesAsync(connection, forceReseed);
-        var eventIds = await SeedEventsAsync(connection, forceReseed);
-        await SeedTicketTypesAsync(connection, eventIds, forceReseed);
+        var categoryIds = await SeedCategoriesAsync(connection, forceReseed);
+        var events = await SeedEventsAsync(connection, categoryIds, forceReseed);
+        var ticketTypes = await SeedTicketTypesAsync(connection, events.Select(e => e.Id).ToList(), forceReseed);
+        
+        return (events, ticketTypes);
     }
 
-    private static async Task SeedCategoriesAsync(IDbConnection connection, bool forceReseed)
+    private static async Task<List<Guid>> SeedCategoriesAsync(IDbConnection connection, bool forceReseed)
     {
         if (forceReseed)
         {
             const string sqlTruncate = """
-                                       TRUNCATE TABLE events."Category" RESTART IDENTITY CASCADE;
+                                       TRUNCATE TABLE events."Categories" RESTART IDENTITY CASCADE;
                                        """;
             await connection.ExecuteAsync(sqlTruncate);
         }
         else
         {
             var sqlCount = """
-                           SELECT COUNT(*) FROM events."Category"
+                           SELECT COUNT(*) FROM events."Categories"
                            """;
             var count = await connection.ExecuteScalarAsync<int>(sqlCount);
             if (count > 0)
             {
-                return;
+                return (await connection.QueryAsync<Guid>("SELECT \"Id\" FROM events.\"Categories\"")).AsList();
             }
         }
 
         var faker = new Faker();
         var categories = new List<CategorySeedData>();
+        var categoryIds = new List<Guid>();
 
         for (var i = 0; i < 5; i++)
         {
+            var id = Guid.NewGuid();
+            categoryIds.Add(id);
             categories.Add(new CategorySeedData(
-                Guid.NewGuid(),
+                id,
                 faker.Commerce.Categories(1)[0],
                 false
             ));
         }
 
         const string sql = """
-                           INSERT INTO events."Category"
+                           INSERT INTO events."Categories"
                            ("Id", "Name", "IsArchived")
                            VALUES(@Id, @Name, @IsArchived);
                            """;
 
         await connection.ExecuteAsync(sql, categories);
+        return categoryIds;
     }
 
-    private static async Task<List<Guid>> SeedEventsAsync(IDbConnection connection, bool forceReseed)
+    private static async Task<List<EventSeedData>> SeedEventsAsync(IDbConnection connection, List<Guid> categoryIds, bool forceReseed)
     {
         if (forceReseed)
         {
             const string sqlTruncate = """
-                                       TRUNCATE TABLE events."Event" RESTART IDENTITY CASCADE;
+                                       TRUNCATE TABLE events."Events" RESTART IDENTITY CASCADE;
                                        """;
             await connection.ExecuteAsync(sqlTruncate);
         }
         else
         {
             var sqlCount = """
-                           SELECT COUNT(*) FROM events."Event"
+                           SELECT COUNT(*) FROM events."Events"
                            """;
             var count = await connection.ExecuteScalarAsync<int>(sqlCount);
             if (count > 0)
             {
-                return (await connection.QueryAsync<Guid>("SELECT \"Id\" FROM events.\"Event\"")).AsList();
+                const string sqlSelect = """
+                                         SELECT "Id", "Title", "Description", "Location", "StartsAtUtc", "EndsAtUtc", "Status", "CategoryId" FROM events."Events"
+                                         """;
+                return (await connection.QueryAsync<EventSeedData>(sqlSelect)).AsList();
             }
+        }
+
+        if(!categoryIds.Any()) 
+        {
+            // If we have no categories, we can't create events properly. Or should we create some?
+            // Assuming categories were seeded or existed.
+            return [];
         }
 
         var faker = new Faker();
@@ -94,6 +110,9 @@ public static class DataSeeder
         {
             var id = Guid.NewGuid();
             eventIds.Add(id);
+            
+            var categoryId = categoryIds[faker.Random.Number(0, categoryIds.Count - 1)];
+
             events.Add(new EventSeedData(
                 id,
                 faker.Lorem.Sentence(3),
@@ -101,42 +120,46 @@ public static class DataSeeder
                 faker.Address.FullAddress(),
                 faker.Date.Future(),
                 faker.Date.Future().AddHours(2),
-                1 // Published? Assuming enum or status.
+                1, // Published? Assuming enum or status.
+                categoryId
             ));
         }
 
         const string sql = """
-                           INSERT INTO events."Event"
-                           ("Id", "Title", "Description", "Location", "StartsAtUtc", "EndsAtUtc", "Status")
-                           VALUES(@Id, @Title, @Description, @Location, @StartsAtUtc, @EndsAtUtc, @Status);
+                           INSERT INTO events."Events"
+                           ("Id", "Title", "Description", "Location", "StartsAtUtc", "EndsAtUtc", "Status", "CategoryId")
+                           VALUES(@Id, @Title, @Description, @Location, @StartsAtUtc, @EndsAtUtc, @Status, @CategoryId);
                            """;
 
         await connection.ExecuteAsync(sql, events);
-        return eventIds;
+        return events;
     }
 
-    private static async Task SeedTicketTypesAsync(IDbConnection connection, List<Guid> eventIds, bool forceReseed)
+    private static async Task<List<TicketTypeSeedData>> SeedTicketTypesAsync(IDbConnection connection, List<Guid> eventIds, bool forceReseed)
     {
         if (forceReseed)
         {
             const string sqlTruncate = """
-                                       TRUNCATE TABLE events."TicketType" RESTART IDENTITY CASCADE;
+                                       TRUNCATE TABLE events."TicketTypes" RESTART IDENTITY CASCADE;
                                        """;
             await connection.ExecuteAsync(sqlTruncate);
         }
         else
         {
             var sqlCount = """
-                           SELECT COUNT(*) FROM events."TicketType"
+                           SELECT COUNT(*) FROM events."TicketTypes"
                            """;
             var count = await connection.ExecuteScalarAsync<int>(sqlCount);
             if (count > 0)
             {
-                return;
+                const string sqlSelect = """
+                                         SELECT "Id", "EventId", "Name", "Price", "Currency", "Quantity" FROM events."TicketTypes"
+                                         """;
+                return (await connection.QueryAsync<TicketTypeSeedData>(sqlSelect)).AsList();
             }
         }
-
-        if(!eventIds.Any()) return;
+        
+        if(!eventIds.Any()) return [];
 
         var faker = new Faker();
         var ticketTypes = new List<TicketTypeSeedData>();
@@ -164,11 +187,13 @@ public static class DataSeeder
         }
 
         const string sql = """
-                           INSERT INTO events."TicketType"
+                           INSERT INTO events."TicketTypes"
                            ("Id", "EventId", "Name", "Price", "Currency", "Quantity")
                            VALUES(@Id, @EventId, @Name, @Price, @Currency, @Quantity);
                            """;
 
         await connection.ExecuteAsync(sql, ticketTypes);
+        
+        return ticketTypes;
     }
 }

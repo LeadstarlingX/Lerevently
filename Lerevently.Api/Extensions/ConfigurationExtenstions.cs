@@ -1,4 +1,4 @@
-﻿namespace Lerevently.Api.Extenstions;
+﻿namespace Lerevently.Api.Extensions;
 
 internal static class ConfigurationExtenstions
 {
