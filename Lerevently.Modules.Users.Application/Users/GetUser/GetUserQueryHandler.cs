@@ -22,13 +22,16 @@ internal sealed class GetUserQueryHandler(IDbConnectionFactory dbConnectionFacto
                  "FirstName" AS {nameof(UserResponse.FirstName)},
                  "LastName" AS {nameof(UserResponse.LastName)}
              FROM users."Users"
-             WHERE id = @UserId
+             WHERE "Id" = @UserId
              """;
 
         UserResponse? user = await connection.QuerySingleOrDefaultAsync<UserResponse>(sql, request);
-
+        
+        Console.WriteLine(user.Id);
+        
         if (user is null)
         {
+            Console.WriteLine("Executed");
             return Result.Failure<UserResponse>(UserErrors.NotFound(request.UserId));
         }
 

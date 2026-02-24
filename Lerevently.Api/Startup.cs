@@ -58,7 +58,7 @@ internal class Startup
         
         
         app.ApplyMigrations();
-        app.SeedDataAsync().GetAwaiter().GetResult();
+        // app.SeedDataAsync().GetAwaiter().GetResult();
         
         // app.SeedData();
 

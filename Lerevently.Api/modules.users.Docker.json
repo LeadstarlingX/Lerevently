@@ -1,8 +1,8 @@
 {
   "Users":{
     "KeyCloak": {
-      "AdminUrl": "http://localhost:8001/admin/realms/lerevently/",
-      "TokenUrl": "http://localhost:8001/realms/lerevently/protocol/openid-connect/token",
+      "AdminUrl": "http://lerevently.identity:8080/admin/realms/lerevently/",
+      "TokenUrl": "http://lerevently.identity:8080/realms/lerevently/protocol/openid-connect/token",
       "ConfidentialClientId": "lerevently-confidential-client",
       "ConfidentialClientSecret": "KqqFjNx0Jl7CHwcpIAlLGNwEExOe2miy",
       "PublicClientId": "lerevently-public-client"
