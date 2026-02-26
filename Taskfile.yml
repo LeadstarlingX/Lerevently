@@ -11,13 +11,13 @@ tasks:
   restore:
     desc: Restore .NET dependencies
     cmds:
-      - dotnet restore Lerevently.slnx
+      - dotnet restore Lerevently.slnx -v q
 
   build:
     desc: Build the solution
     deps: [ restore ]
     cmds:
-      - dotnet build Lerevently.slnx --no-restore --configuration Release
+      - dotnet build Lerevently.slnx --no-restore --configuration Release -p:WarningLevel=0 -v q
 
   test-all:
     desc: Run all tests in parallel
@@ -25,30 +25,25 @@ tasks:
 
   test-users:
     desc: Run tests for Users module
-    deps: [build]
     cmds:
       - dotnet run --project Lerevently.Modules.Users.ArchitectureTests/Lerevently.Modules.Users.ArchitectureTests.csproj --configuration Release --no-build -- --report-trx --report-trx-filename users-architecture-tests.trx --results-directory ./TestResults/UsersArchitecture
 
   test-ticketing:
     desc: Run tests for Ticketing module
-    deps: [build]
     cmds:
       - dotnet run --project Lerevently.Modules.Ticketing.ArchitectureTests/Lerevently.Modules.Ticketing.ArchitectureTests.csproj --configuration Release --no-build -- --report-trx --report-trx-filename ticketing-architecture-tests.trx --results-directory ./TestResults/TicketingArchitecture
 
   test-events:
     desc: Run tests for Events module
-    deps: [build]
     cmds:
       - dotnet run --project Lerevently.Modules.Events.ArchitectureTests/Lerevently.Modules.Events.ArchitectureTests.csproj --configuration Release --no-build -- --report-trx --report-trx-filename events-architecture-tests.trx --results-directory ./TestResults/EventsArchitecture
 
   test-attendance:
     desc: Run tests for Attendance module
-    deps: [build]
     cmds:
       - dotnet run --project Lerevently.Modules.Attendance.ArchitectureTests/Lerevently.Modules.Attendance.ArchitectureTests.csproj --configuration Release --no-build -- --report-trx --report-trx-filename attendance-architecture-tests.trx --results-directory ./TestResults/AttendanceArchitecture
 
   test-modules-architecture:
     desc: Run architecture tests (standalone)
-    deps: [build]
     cmds:
       - dotnet run --project Lerevently.ArchitectureTests/Lerevently.ArchitectureTests.csproj --configuration Release --no-build -- --report-trx --report-trx-filename architecture-tests.trx --results-directory ./TestResults/Architecture
