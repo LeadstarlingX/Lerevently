@@ -36,13 +36,7 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
     {
         modelBuilder.HasDefaultSchema(Schemas.Ticketing);
 
-        modelBuilder.ApplyConfiguration(new CustomerConfiguration());
-        modelBuilder.ApplyConfiguration(new EventConfiguration());
-        modelBuilder.ApplyConfiguration(new TicketTypeConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderItemConfiguration());
-        modelBuilder.ApplyConfiguration(new TicketConfiguration());
-        modelBuilder.ApplyConfiguration(new PaymentConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TicketingDbContext).Assembly);
     }
 
     public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)

@@ -13,6 +13,6 @@ public sealed class UsersDbContext(DbContextOptions<UsersDbContext> options) : D
     {
         modelBuilder.HasDefaultSchema(Schemas.Users);
 
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(UsersDbContext).Assembly);
     }
 }

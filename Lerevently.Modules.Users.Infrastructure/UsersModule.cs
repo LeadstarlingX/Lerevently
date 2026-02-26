@@ -1,7 +1,9 @@
-﻿using Lerevently.Common.Infrastructure.Interceptors;
+﻿using Lerevently.Common.Application.Authorization;
+using Lerevently.Common.Infrastructure.Interceptors;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Users.Application.Abstractions.Identity;
 using Lerevently.Modules.Users.Domain.Users;
+using Lerevently.Modules.Users.Infrastructure.Authorization;
 using Lerevently.Modules.Users.Infrastructure.Database;
 using Lerevently.Modules.Users.Infrastructure.Identity;
 using Lerevently.Modules.Users.Infrastructure.Users;
@@ -46,6 +48,8 @@ public static class UsersModule
         services.Configure<KeyCloakOptions>(configuration.GetSection("Users:KeyCloak"));
 
         services.AddTransient<KeyCloakAuthDelegatingHandler>();
+
+        services.AddScoped<IPermissionService, PermissionService>();
         
         services
             .AddHttpClient<KeyCloakClient>((serviceProvider, httpClient) =>

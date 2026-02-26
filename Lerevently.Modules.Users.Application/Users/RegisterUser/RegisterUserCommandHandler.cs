@@ -13,6 +13,13 @@ internal sealed class RegisterUserCommandHandler(IUserRepository userRepository,
 {
     public async Task<Result<Guid>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
+        var check = await identityProviderService.IsEmailUniqueAsync(request.Email, cancellationToken);
+
+        if (!check.IsSuccess)
+        {
+            return Result.Failure<Guid>(check.Error);
+        }
+        
         var result = await identityProviderService.RegisterUserAsync(new UserModel(
             request.Email, request.Password,request.FirstName, request.LastName), cancellationToken);
 
@@ -20,6 +27,8 @@ internal sealed class RegisterUserCommandHandler(IUserRepository userRepository,
         {
             return Result.Failure<Guid>(result.Error);
         }
+        
+        
         
         var user = User.Create(request.Email, request.FirstName, request.LastName, result.Value);
 

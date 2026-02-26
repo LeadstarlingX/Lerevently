@@ -35,4 +35,21 @@ internal sealed class IdentityProviderService(KeyCloakClient keyCloakClient, ILo
             return Result.Failure<string>(IdentityProviderErrors.EmailIsNotUnique);
         }
     }
+    
+    
+    public async Task<Result<bool>> IsEmailUniqueAsync(string email, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            bool isEmailUnique = await keyCloakClient.IsEmailUniqueAsync(email, cancellationToken);
+
+            return isEmailUnique;
+        }
+        catch (HttpRequestException exception)
+        {
+            logger.LogError(exception, "Failed to check if email is unique");
+
+            return Result.Failure<bool>(IdentityProviderErrors.EmailIsNotUnique);
+        }
+    }
 }

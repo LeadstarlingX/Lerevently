@@ -3,6 +3,7 @@ using Lerevently.Common.Application.Clock;
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.EventBus;
 using Lerevently.Common.Infrastructure.Authentication;
+using Lerevently.Common.Infrastructure.Authorization;
 using Lerevently.Common.Infrastructure.Caching;
 using Lerevently.Common.Infrastructure.Clock;
 using Lerevently.Common.Infrastructure.Data;
@@ -35,8 +36,10 @@ public static class InfrastructureConfiguration
 
         services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
 
-
         services.AddAuthenticationInternal();
+
+        services.AddAuthorizationInternal();
+
         
         /// To solve the problem of not being able to resolve the connection multiplexer when
         /// running the migrations, at real runtime the first part will always work.

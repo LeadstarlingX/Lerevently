@@ -21,7 +21,6 @@ public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) :
     {
         modelBuilder.HasDefaultSchema(Schemas.Events);
 
-        modelBuilder.ApplyConfiguration(new EventConfiguration());
-        modelBuilder.ApplyConfiguration(new TicketTypeConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventsDbContext).Assembly);
     }
 }
