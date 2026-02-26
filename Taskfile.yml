@@ -11,13 +11,13 @@ tasks:
   restore:
     desc: Restore .NET dependencies
     cmds:
-      - dotnet restore
+      - dotnet restore Lerevently.slnx
 
   build:
     desc: Build the solution
     deps: [ restore ]
     cmds:
-      - dotnet build --no-restore --configuration Release
+      - dotnet build Lerevently.slnx --no-restore --configuration Release
 
   test-all:
     desc: Run all tests in parallel
