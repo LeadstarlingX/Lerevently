@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj" />
+      <ProjectReference Include="..\Lerevently.Modules.Attendance.Application\Lerevently.Modules.Attendance.Application.csproj" />
+      <ProjectReference Include="..\Lerevently.Modules.Attendance.IntegrationEvents\Lerevently.Modules.Attendance.IntegrationEvents.csproj" />
+      <ProjectReference Include="..\Lerevently.Modules.Attendance.Presentation\Lerevently.Modules.Attendance.Presentation.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Database\Migrations\" />
+    </ItemGroup>
+
+</Project>

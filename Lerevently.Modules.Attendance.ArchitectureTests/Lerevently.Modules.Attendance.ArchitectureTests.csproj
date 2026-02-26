@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+
+        <PackageReference Include="NetArchTest.Rules" />
+        <PackageReference Include="TUnit" />
+
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Lerevently.Modules.Attendance.Infrastructure\Lerevently.Modules.Attendance.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

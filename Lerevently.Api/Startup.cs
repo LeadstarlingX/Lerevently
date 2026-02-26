@@ -3,6 +3,7 @@ using Lerevently.Api.Extensions;
 using Lerevently.Common.Application;
 using Lerevently.Common.Infrastructure;
 using Lerevently.Common.Presentation.Endpoints;
+using Lerevently.Modules.Attendance.Infrastructure;
 using Lerevently.Modules.Events.Application;
 using Lerevently.Modules.Events.Infrastructure;
 using Lerevently.Modules.Ticketing.Infrastructure;
@@ -33,7 +34,8 @@ internal class Startup
         services.AddApplication([
             Lerevently.Modules.Events.Application.AssemblyReference.Assembly,
             Lerevently.Modules.Users.Application.AssemblyReference.Assembly,
-            Lerevently.Modules.Ticketing.Application.AssemblyReference.Assembly]);
+            Lerevently.Modules.Ticketing.Application.AssemblyReference.Assembly,
+        Lerevently.Modules.Attendance.Application.AssemblyReference.Assembly]);
         
         services.AddInfrastructure(
             [TicketingModule.ConfigureConsumers],
@@ -45,6 +47,7 @@ internal class Startup
         services.AddEventsModule(Configuration);
         services.AddUsersModule(Configuration);
         services.AddTicketingModule(Configuration);
+        services.AddAttendanceModule(Configuration);
 
     }
     

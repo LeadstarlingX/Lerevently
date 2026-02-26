@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj" />
+      <ProjectReference Include="..\Lerevently.Common.Presentation\Lerevently.Common.Presentation.csproj" />
+      <ProjectReference Include="..\Lerevently.Modules.Attendance.Application\Lerevently.Modules.Attendance.Application.csproj" />
+    </ItemGroup>
+
+</Project>

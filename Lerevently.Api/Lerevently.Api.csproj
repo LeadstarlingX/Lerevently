@@ -34,6 +34,11 @@
 
 
     <ItemGroup>
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Application\Lerevently.Modules.Attendance.Application.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Domain\Lerevently.Modules.Attendance.Domain.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Infrastructure\Lerevently.Modules.Attendance.Infrastructure.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.IntegrationEvents\Lerevently.Modules.Attendance.IntegrationEvents.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Presentation\Lerevently.Modules.Attendance.Presentation.csproj" />
         <ProjectReference Include="..\Lerevently.Modules.Events.Infrastructure\Lerevently.Modules.Events.Infrastructure.csproj"/>
         <ProjectReference Include="..\Lerevently.Modules.Ticketing.Infrastructure\Lerevently.Modules.Ticketing.Infrastructure.csproj" />
         <ProjectReference Include="..\Lerevently.Modules.Users.Application\Lerevently.Modules.Users.Application.csproj" />

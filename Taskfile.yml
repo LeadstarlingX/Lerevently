@@ -1,0 +1,36 @@
+version: '3'
+
+tasks:
+  ci:
+    desc: Run CI pipeline (build and test all)
+    deps:
+      - test-users
+      - test-ticketing
+      - test-events
+      - test-attendance
+      - test-modules-architecture
+
+  test-users:
+    desc: Run tests for Users module
+    cmds:
+      - dotnet run --project Lerevently.Modules.Users.ArchitectureTests/Lerevently.Modules.Users.ArchitectureTests.csproj --configuration Release -- --report-trx --report-trx-filename users-architecture-tests.trx --results-directory ./TestResults/UsersArchitecture
+
+  test-ticketing:
+    desc: Run tests for Ticketing module
+    cmds:
+      - dotnet run --project Lerevently.Modules.Ticketing.ArchitectureTests/Lerevently.Modules.Ticketing.ArchitectureTests.csproj --configuration Release -- --report-trx --report-trx-filename ticketing-architecture-tests.trx --results-directory ./TestResults/TicketingArchitecture
+
+  test-events:
+    desc: Run tests for Events module
+    cmds:
+      - dotnet run --project Lerevently.Modules.Events.ArchitectureTests/Lerevently.Modules.Events.ArchitectureTests.csproj --configuration Release -- --report-trx --report-trx-filename events-architecture-tests.trx --results-directory ./TestResults/EventsArchitecture
+
+  test-attendance:
+    desc: Run tests for Attendance module
+    cmds:
+      - dotnet run --project Lerevently.Modules.Attendance.ArchitectureTests/Lerevently.Modules.Attendance.ArchitectureTests.csproj --configuration Release -- --report-trx --report-trx-filename attendance-architecture-tests.trx --results-directory ./TestResults/AttendanceArchitecture
+
+  test-modules-architecture:
+    desc: Run architecture tests (standalone)
+    cmds:
+      - dotnet run --project Lerevently.ArchitectureTests/Lerevently.ArchitectureTests.csproj --configuration Release -- --report-trx --report-trx-filename architecture-tests.trx --results-directory ./TestResults/Architecture

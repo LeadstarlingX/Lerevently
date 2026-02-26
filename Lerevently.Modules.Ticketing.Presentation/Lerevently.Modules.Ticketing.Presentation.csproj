@@ -5,9 +5,6 @@
         
         
         <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj" />
-        
-        
-        
         <ProjectReference Include="..\Lerevently.Common.Presentation\Lerevently.Common.Presentation.csproj" />
         <ProjectReference Include="..\Lerevently.Modules.Ticketing.Application\Lerevently.Modules.Ticketing.Application.csproj" />
         <ProjectReference Include="..\Lerevently.Modules.Users.IntegrationEvents\Lerevently.Modules.Users.IntegrationEvents.csproj" />
