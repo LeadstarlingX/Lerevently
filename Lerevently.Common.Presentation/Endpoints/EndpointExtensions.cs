@@ -9,7 +9,7 @@ public static class EndpointExtensions
 {
     public static IServiceCollection AddEndpoints(this IServiceCollection services, params Assembly[] assemblies)
     {
-        ServiceDescriptor[] serviceDescriptors = assemblies
+        var serviceDescriptors = assemblies
             .SelectMany(a => a.GetTypes())
             .Where(type => type is { IsAbstract: false, IsInterface: false } &&
                            type.IsAssignableTo(typeof(IEndpoint)))
@@ -25,18 +25,14 @@ public static class EndpointExtensions
         this IEndpointRouteBuilder app,
         RouteGroupBuilder? routeGroupBuilder = null)
     {
-        
-        var serviceProvider = app.ServiceProvider ?? 
+        var serviceProvider = app.ServiceProvider ??
                               throw new InvalidOperationException("ServiceProvider not available");
-        
-        IEnumerable<IEndpoint> endpoints = serviceProvider.GetRequiredService<IEnumerable<IEndpoint>>();
 
-        IEndpointRouteBuilder builder = routeGroupBuilder is null ? app : routeGroupBuilder;
+        var endpoints = serviceProvider.GetRequiredService<IEnumerable<IEndpoint>>();
 
-        foreach (IEndpoint endpoint in endpoints)
-        {
-            endpoint.MapEndpoint(builder);
-        }
+        var builder = routeGroupBuilder is null ? app : routeGroupBuilder;
+
+        foreach (var endpoint in endpoints) endpoint.MapEndpoint(builder);
 
         return app;
     }

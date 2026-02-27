@@ -23,18 +23,25 @@ COPY ["Lerevently.Common.Application/*.csproj", "Lerevently.Common.Application/"
 COPY ["Lerevently.Common.Domain/*.csproj", "Lerevently.Common.Domain/"]
 COPY ["Lerevently.Common.Infrastructure/*.csproj", "Lerevently.Common.Infrastructure/"]
 COPY ["Lerevently.Common.Presentation/*.csproj", "Lerevently.Common.Presentation/"]
+COPY ["Lerevently.Modules.Events.Presentation/*.csproj", "Lerevently.Modules.Events.Presentation/"]
 
 # Copy Events Module projects
-COPY ["Evently.Modules.Events.PublicApi/*.csproj", "Evently.Modules.Events.PublicApi/"]
-#COPY ["Lerevently.Modules.Events.Api/*.csproj", "Lerevently.Modules.Events.Api/"]
+COPY ["Lerevently.Modules.Attendance.Application/*.csproj", "Lerevently.Modules.Attendance.Application/"]
+COPY ["Lerevently.Modules.Attendance.Domain/*.csproj", "Lerevently.Modules.Attendance.Domain/"]
+COPY ["Lerevently.Modules.Attendance.Infrastructure/*.csproj", "Lerevently.Modules.Attendance.Infrastructure/"]
+COPY ["Lerevently.Modules.Attendance.IntegrationEvents/*.csproj", "Lerevently.Modules.Attendance.IntegrationEvents/"]
+COPY ["Lerevently.Modules.Attendance.Presentation/*.csproj", "Lerevently.Modules.Attendance.Presentation/"]
+
+# Copy Events Module projects
 COPY ["Lerevently.Modules.Events.Application/*.csproj", "Lerevently.Modules.Events.Application/"]
 COPY ["Lerevently.Modules.Events.Domain/*.csproj", "Lerevently.Modules.Events.Domain/"]
 COPY ["Lerevently.Modules.Events.Infrastructure/*.csproj", "Lerevently.Modules.Events.Infrastructure/"]
-COPY ["Lerevently.Modules.Events.Presentation/*.csproj", "Lerevently.Modules.Events.Presentation/"]
+COPY ["Lerevently.Modules.Events.IntegrationEvents/*.csproj", "Lerevently.Modules.Events.IntegrationEvents/"]
 
 # Copy Ticketing Module projects
 COPY ["Lerevently.Modules.Ticketing.Application/*.csproj", "Lerevently.Modules.Ticketing.Application/"]
 COPY ["Lerevently.Modules.Ticketing.Domain/*.csproj", "Lerevently.Modules.Ticketing.Domain/"]
+COPY ["Lerevently.Modules.Ticketing.IntegrationEvents/*.csproj", "Lerevently.Modules.Ticketing.IntegrationEvents/"]
 COPY ["Lerevently.Modules.Ticketing.Infrastructure/*.csproj", "Lerevently.Modules.Ticketing.Infrastructure/"]
 COPY ["Lerevently.Modules.Ticketing.Presentation/*.csproj", "Lerevently.Modules.Ticketing.Presentation/"]
 

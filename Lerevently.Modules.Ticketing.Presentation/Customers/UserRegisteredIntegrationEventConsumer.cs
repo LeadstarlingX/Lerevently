@@ -1,5 +1,4 @@
 ﻿using Lerevently.Common.Application.Exceptions;
-using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Ticketing.Application.Customers.CreateCustomer;
 using Lerevently.Modules.Users.IntegrationEvents;
 using MassTransit;
@@ -12,16 +11,14 @@ public sealed class UserRegisteredIntegrationEventConsumer(ISender sender)
 {
     public async Task Consume(ConsumeContext<UserRegisteredIntegrationEvent> context)
     {
-        Result result = await sender.Send(
+        var result = await sender.Send(
             new CreateCustomerCommand(
                 context.Message.UserId,
                 context.Message.Email,
                 context.Message.FirstName,
-                context.Message.LastName));
+                context.Message.LastName),
+            context.CancellationToken);
 
-        if (result.IsFailure)
-        {
-            throw new EventlyException(nameof(CreateCustomerCommand), result.Error);
-        }
+        if (result.IsFailure) throw new EventlyException(nameof(CreateCustomerCommand), result.Error);
     }
 }

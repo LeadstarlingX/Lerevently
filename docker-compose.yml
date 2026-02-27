@@ -14,16 +14,16 @@ services:
     depends_on:
       lerevently.db:
         condition: service_healthy
-        
+      
       lerevently.seq:
         condition: service_started
-        
+      
       lerevently.redis:
         condition: service_started
-            
+      
       lerevently.identity:
         condition: service_started
-      
+    
     restart: always
 
 
@@ -39,6 +39,8 @@ services:
       - KC_DB_URL=jdbc:postgresql://lerevently.db:5432/lereventlydb_docker
       - KC_DB_USERNAME=postgres
       - KC_DB_PASSWORD=postgres
+        
+      - KC_HEALTH_ENABLED=true
     volumes:
       - ./.containers/identity:/opt/jboss/keycloak/standalone/data
     #      - ./.files/filoshop-realm-export.json:/opt/keycloak/data/import/realm.json
@@ -67,7 +69,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-        
+  
   lerevently.seq:
     image: datalust/seq:2025.2
     container_name: Lerevently.Seq
@@ -78,8 +80,8 @@ services:
       - 5341:5341
       - 8080:80
     restart: always
-    
-    
+  
+  
   lerevently.redis:
     image: redis:8.4.0
     container_name: Lerevently.Redis

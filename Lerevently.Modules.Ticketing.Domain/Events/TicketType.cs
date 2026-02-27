@@ -51,17 +51,11 @@ public sealed class TicketType : Entity
 
     public Result UpdateQuantity(decimal quantity)
     {
-        if (AvailableQuantity < quantity)
-        {
-            return Result.Failure(TicketTypeErrors.NotEnoughQuantity(AvailableQuantity));
-        }
+        if (AvailableQuantity < quantity) return Result.Failure(TicketTypeErrors.NotEnoughQuantity(AvailableQuantity));
 
         AvailableQuantity -= quantity;
 
-        if (AvailableQuantity == 0)
-        {
-            Raise(new TicketTypeSoldOutDomainEvent(Id));
-        }
+        if (AvailableQuantity == 0) Raise(new TicketTypeSoldOutDomainEvent(Id));
 
         return Result.Success();
     }

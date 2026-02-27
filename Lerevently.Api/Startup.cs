@@ -21,80 +21,76 @@ internal class Startup
     }
 
     private IConfiguration Configuration { get; }
-    
+
     public void ConfigureServices(IServiceCollection services)
     {
         var conn = $"Connection String: {Configuration.GetConnectionString("Database")}";
         Console.WriteLine($"\n******** Using connection string: {conn} ********\n");
-        
+
         conn = $"Redis Connection String: {Configuration.GetConnectionString("Cache")}";
-        
+
         Console.WriteLine($"\n******** Using connection string: {conn} ********\n");
 
         services.AddApplication([
-            Lerevently.Modules.Events.Application.AssemblyReference.Assembly,
-            Lerevently.Modules.Users.Application.AssemblyReference.Assembly,
-            Lerevently.Modules.Ticketing.Application.AssemblyReference.Assembly,
-        Lerevently.Modules.Attendance.Application.AssemblyReference.Assembly]);
-        
+            AssemblyReference.Assembly,
+            Modules.Users.Application.AssemblyReference.Assembly,
+            Modules.Ticketing.Application.AssemblyReference.Assembly,
+            Modules.Attendance.Application.AssemblyReference.Assembly
+        ]);
+
         services.AddInfrastructure(
-            [TicketingModule.ConfigureConsumers],
+            [
+                TicketingModule.ConfigureConsumers,
+                AttendanceModule.ConfigureConsumers
+            ],
             Configuration
-            );
+        );
         services.AddApi(Configuration);
         services.AddControllers();
-        
+
         services.AddEventsModule(Configuration);
         services.AddUsersModule(Configuration);
         services.AddTicketingModule(Configuration);
         services.AddAttendanceModule(Configuration);
-
     }
-    
-    
-    
-    
+
+
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         app.UseSwagger();
         app.UseSwaggerUI();
-        
-        
+
+
         app.ApplyMigrations();
         // app.SeedDataAsync().GetAwaiter().GetResult();
-        
+
         // app.SeedData();
 
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-            
-        }
-        
+        if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+
 
         app.UseSerilogRequestLogging();
 
         app.UseExceptionHandler();
 
-        
-        
+
         app.UseRouting();
-        
+
         app.UseAuthentication();
-        
+
         app.UseAuthorization();
-        
+
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapEndpoints();  // endpoints is IEndpointRouteBuilder
-            
-            endpoints.MapHealthChecks("/health", new HealthCheckOptions
+            endpoints.MapHealthChecks("health", new HealthCheckOptions
             {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-                
             });
+            
+            endpoints.MapEndpoints(); // endpoints is IEndpointRouteBuilder
+
         });
-        
+
         // app.UseHttpsRedirection();
 
         /*
@@ -105,7 +101,5 @@ internal class Startup
 
         app.UseAuthorization();
         */
-
     }
-    
 }

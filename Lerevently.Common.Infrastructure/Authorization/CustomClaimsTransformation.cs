@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using Lerevently.Common.Application.Authorization;
 using Lerevently.Common.Application.Exceptions;
-using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Common.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,32 +11,25 @@ internal sealed class CustomClaimsTransformation(IServiceScopeFactory serviceSco
 {
     public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
     {
-        if (principal.HasClaim(c => c.Type == CustomClaims.Sub))
-        {
-            return principal;
-        }
+        if (principal.HasClaim(c => c.Type == CustomClaims.Sub)) return principal;
 
-        using IServiceScope scope = serviceScopeFactory.CreateScope();
+        using var scope = serviceScopeFactory.CreateScope();
 
-        IPermissionService permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
+        var permissionService = scope.ServiceProvider.GetRequiredService<IPermissionService>();
 
-        string identityId = principal.GetIdentityId();
+        var identityId = principal.GetIdentityId();
 
-        Result<PermissionsResponse> result = await permissionService.GetUserPermissionsAsync(identityId);
+        var result = await permissionService.GetUserPermissionsAsync(identityId);
 
         if (result.IsFailure)
-        {
             throw new EventlyException(nameof(IPermissionService.GetUserPermissionsAsync), result.Error);
-        }
 
         var claimsIdentity = new ClaimsIdentity();
 
         claimsIdentity.AddClaim(new Claim(CustomClaims.Sub, result.Value.UserId.ToString()));
 
-        foreach (string permission in result.Value.Permissions)
-        {
+        foreach (var permission in result.Value.Permissions)
             claimsIdentity.AddClaim(new Claim(CustomClaims.Permission, permission));
-        }
 
         principal.AddIdentity(claimsIdentity);
 

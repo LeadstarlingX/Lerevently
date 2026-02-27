@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Events;
 
-internal class PublishEvent : IEndpoint
+internal sealed class PublishEvent : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -18,6 +18,7 @@ internal class PublishEvent : IEndpoint
 
                 return result.Match(Results.NoContent, ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.ModifyEvents)
             .WithTags(Tags.Events);
     }
 }

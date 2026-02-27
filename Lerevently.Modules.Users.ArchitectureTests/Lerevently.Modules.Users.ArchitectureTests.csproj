@@ -2,14 +2,14 @@
 
     <ItemGroup>
 
-        <PackageReference Include="NetArchTest.Rules" />
-        <PackageReference Include="TUnit" />
+        <PackageReference Include="NetArchTest.Rules"/>
+        <PackageReference Include="TUnit"/>
 
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Lerevently.Modules.Users.Domain\Lerevently.Modules.Users.Domain.csproj" />
-      <ProjectReference Include="..\Lerevently.Modules.Users.Infrastructure\Lerevently.Modules.Users.Infrastructure.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Users.Domain\Lerevently.Modules.Users.Domain.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Users.Infrastructure\Lerevently.Modules.Users.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

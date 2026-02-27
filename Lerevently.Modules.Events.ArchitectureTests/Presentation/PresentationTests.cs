@@ -15,7 +15,7 @@ public class PresentationTests : BaseTest
             .Should()
             .BeSealed()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -28,7 +28,7 @@ public class PresentationTests : BaseTest
             .Should()
             .HaveNameEndingWith("Consumer")
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 }

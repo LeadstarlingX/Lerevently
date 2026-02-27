@@ -2,9 +2,9 @@
 
 
     <ItemGroup>
-      <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj" />
-      <ProjectReference Include="..\Lerevently.Common.Presentation\Lerevently.Common.Presentation.csproj" />
-      <ProjectReference Include="..\Lerevently.Modules.Users.Application\Lerevently.Modules.Users.Application.csproj" />
+        <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Lerevently.Common.Presentation\Lerevently.Common.Presentation.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Users.Application\Lerevently.Modules.Users.Application.csproj"/>
     </ItemGroup>
 
 </Project>

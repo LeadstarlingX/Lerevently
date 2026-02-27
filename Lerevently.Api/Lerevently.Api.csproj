@@ -11,8 +11,8 @@
 
 
     <ItemGroup>
-        
-        
+
+
         <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets"/>
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen"/>
         <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI"/>
@@ -20,11 +20,13 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools"/>
         <PackageReference Include="Serilog.AspNetCore"/>
         <PackageReference Include="Serilog.Sinks.Seq"/>
+
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql"/>
         <PackageReference Include="AspNetCore.HealthChecks.Redis"/>
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client"/>
-      
-        
+        <PackageReference Include="AspNetCore.HealthChecks.Uris"/>
+
+
     </ItemGroup>
 
 
@@ -34,17 +36,17 @@
 
 
     <ItemGroup>
-        <ProjectReference Include="..\Lerevently.Modules.Attendance.Application\Lerevently.Modules.Attendance.Application.csproj" />
-        <ProjectReference Include="..\Lerevently.Modules.Attendance.Domain\Lerevently.Modules.Attendance.Domain.csproj" />
-        <ProjectReference Include="..\Lerevently.Modules.Attendance.Infrastructure\Lerevently.Modules.Attendance.Infrastructure.csproj" />
-        <ProjectReference Include="..\Lerevently.Modules.Attendance.IntegrationEvents\Lerevently.Modules.Attendance.IntegrationEvents.csproj" />
-        <ProjectReference Include="..\Lerevently.Modules.Attendance.Presentation\Lerevently.Modules.Attendance.Presentation.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Application\Lerevently.Modules.Attendance.Application.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Domain\Lerevently.Modules.Attendance.Domain.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Infrastructure\Lerevently.Modules.Attendance.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.IntegrationEvents\Lerevently.Modules.Attendance.IntegrationEvents.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Presentation\Lerevently.Modules.Attendance.Presentation.csproj"/>
         <ProjectReference Include="..\Lerevently.Modules.Events.Infrastructure\Lerevently.Modules.Events.Infrastructure.csproj"/>
-        <ProjectReference Include="..\Lerevently.Modules.Ticketing.Infrastructure\Lerevently.Modules.Ticketing.Infrastructure.csproj" />
-        <ProjectReference Include="..\Lerevently.Modules.Users.Application\Lerevently.Modules.Users.Application.csproj" />
-        <ProjectReference Include="..\Lerevently.Modules.Users.Domain\Lerevently.Modules.Users.Domain.csproj" />
-        <ProjectReference Include="..\Lerevently.Modules.Users.Infrastructure\Lerevently.Modules.Users.Infrastructure.csproj" />
-        <ProjectReference Include="..\Lerevently.Modules.Users.Presentation\Lerevently.Modules.Users.Presentation.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Ticketing.Infrastructure\Lerevently.Modules.Ticketing.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Users.Application\Lerevently.Modules.Users.Application.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Users.Domain\Lerevently.Modules.Users.Domain.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Users.Infrastructure\Lerevently.Modules.Users.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Users.Presentation\Lerevently.Modules.Users.Presentation.csproj"/>
     </ItemGroup>
 
 </Project>

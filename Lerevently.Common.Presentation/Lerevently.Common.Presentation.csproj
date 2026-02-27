@@ -3,14 +3,14 @@
     <ItemGroup>
 
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>
-        
+
     </ItemGroup>
 
     <ItemGroup>
 
-        <PackageReference Include="MassTransit.Abstractions" />
-        
-        <ProjectReference Include="..\Lerevently.Common.Domain\Lerevently.Common.Domain.csproj" />
+        <PackageReference Include="MassTransit.Abstractions"/>
+
+        <ProjectReference Include="..\Lerevently.Common.Domain\Lerevently.Common.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

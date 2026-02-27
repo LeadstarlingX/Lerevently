@@ -13,10 +13,7 @@ public sealed class PublishDomainEventsInterceptor(IServiceScopeFactory serviceS
         int result,
         CancellationToken cancellationToken = default)
     {
-        if (eventData.Context is not null)
-        {
-            await PublishDomainEventsAsync(eventData.Context);
-        }
+        if (eventData.Context is not null) await PublishDomainEventsAsync(eventData.Context);
 
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
@@ -29,7 +26,7 @@ public sealed class PublishDomainEventsInterceptor(IServiceScopeFactory serviceS
             .Select(entry => entry.Entity)
             .SelectMany(entity =>
             {
-                IReadOnlyCollection<IDomainEvent> domainEvents = entity.DomainEvents;
+                var domainEvents = entity.DomainEvents;
 
                 entity.ClearEvents();
 
@@ -37,13 +34,10 @@ public sealed class PublishDomainEventsInterceptor(IServiceScopeFactory serviceS
             })
             .ToList();
 
-        using IServiceScope scope = serviceScopeFactory.CreateScope();
+        using var scope = serviceScopeFactory.CreateScope();
 
-        IPublisher publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
+        var publisher = scope.ServiceProvider.GetRequiredService<IPublisher>();
 
-        foreach (IDomainEvent domainEvent in domainEvents)
-        {
-            await publisher.Publish(domainEvent);
-        }
+        foreach (var domainEvent in domainEvents) await publisher.Publish(domainEvent);
     }
 }

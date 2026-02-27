@@ -8,21 +8,22 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Events;
 
-internal class RescheduleEvent : IEndpoint
+internal sealed class RescheduleEvent : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("events/{id}/reschedule", async (Guid id, RescheduleRequest request, ISender sender) =>
+        app.MapPut("events/{id}/reschedule", async (Guid id, Request request, ISender sender) =>
             {
                 var result = await sender.Send(
                     new RescheduleEventCommand(id, request.StartsAtUtc, request.EndsAtUtc));
 
                 return result.Match(Results.NoContent, ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.ModifyEvents)
             .WithTags(Tags.Events);
     }
 
-    internal sealed class RescheduleRequest
+    internal sealed class Request
     {
         public DateTime StartsAtUtc { get; init; }
 

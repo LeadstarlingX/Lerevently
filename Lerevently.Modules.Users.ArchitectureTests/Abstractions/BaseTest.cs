@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Lerevently.Modules.Users.Application;
 using Lerevently.Modules.Users.Domain.Users;
 using Lerevently.Modules.Users.Infrastructure;
 
@@ -6,7 +7,7 @@ namespace Lerevently.Modules.Users.ArchitectureTests.Abstractions;
 
 public abstract class BaseTest
 {
-    protected static readonly Assembly ApplicationAssembly = typeof(Users.Application.AssemblyReference).Assembly;
+    protected static readonly Assembly ApplicationAssembly = typeof(AssemblyReference).Assembly;
 
     protected static readonly Assembly DomainAssembly = typeof(User).Assembly;
 

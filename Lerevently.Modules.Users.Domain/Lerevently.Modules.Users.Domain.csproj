@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 
-
     <ItemGroup>
-      <ProjectReference Include="..\Lerevently.Common.Domain\Lerevently.Common.Domain.csproj" />
+        <ProjectReference Include="..\Lerevently.Common.Domain\Lerevently.Common.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

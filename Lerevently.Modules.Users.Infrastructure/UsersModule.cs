@@ -7,6 +7,7 @@ using Lerevently.Modules.Users.Infrastructure.Authorization;
 using Lerevently.Modules.Users.Infrastructure.Database;
 using Lerevently.Modules.Users.Infrastructure.Identity;
 using Lerevently.Modules.Users.Infrastructure.Users;
+using Lerevently.Modules.Users.Presentation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,7 @@ public static class UsersModule
     {
         services.AddInfrastructure(configuration);
 
-        services.AddEndpoints(Presentation.AssemblyReference.Assembly);
+        services.AddEndpoints(AssemblyReference.Assembly);
 
         return services;
     }
@@ -44,22 +45,21 @@ public static class UsersModule
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
 
         services.AddTransient<IIdentityProviderService, IdentityProviderService>();
-        
+
         services.Configure<KeyCloakOptions>(configuration.GetSection("Users:KeyCloak"));
 
         services.AddTransient<KeyCloakAuthDelegatingHandler>();
 
         services.AddScoped<IPermissionService, PermissionService>();
-        
+
         services
             .AddHttpClient<KeyCloakClient>((serviceProvider, httpClient) =>
             {
-                KeyCloakOptions keyCloakOptions = serviceProvider
+                var keyCloakOptions = serviceProvider
                     .GetRequiredService<IOptions<KeyCloakOptions>>().Value;
 
                 httpClient.BaseAddress = new Uri(keyCloakOptions.AdminUrl);
             })
             .AddHttpMessageHandler<KeyCloakAuthDelegatingHandler>();
-
     }
 }

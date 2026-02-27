@@ -1,5 +1,6 @@
 ﻿using Lerevently.Common.Infrastructure.Interceptors;
 using Lerevently.Common.Presentation.Endpoints;
+using Lerevently.Modules.Ticketing.Application.Abstractions.Authentication;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Data;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Payments;
 using Lerevently.Modules.Ticketing.Application.Carts;
@@ -8,13 +9,17 @@ using Lerevently.Modules.Ticketing.Domain.Events;
 using Lerevently.Modules.Ticketing.Domain.Orders;
 using Lerevently.Modules.Ticketing.Domain.Payments;
 using Lerevently.Modules.Ticketing.Domain.Tickets;
+using Lerevently.Modules.Ticketing.Infrastructure.Authentication;
 using Lerevently.Modules.Ticketing.Infrastructure.Customers;
 using Lerevently.Modules.Ticketing.Infrastructure.Database;
 using Lerevently.Modules.Ticketing.Infrastructure.Events;
 using Lerevently.Modules.Ticketing.Infrastructure.Orders;
 using Lerevently.Modules.Ticketing.Infrastructure.Payments;
 using Lerevently.Modules.Ticketing.Infrastructure.Tickets;
+using Lerevently.Modules.Ticketing.Presentation;
 using Lerevently.Modules.Ticketing.Presentation.Customers;
+using Lerevently.Modules.Ticketing.Presentation.Events;
+using Lerevently.Modules.Ticketing.Presentation.TicketTypes;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -31,7 +36,7 @@ public static class TicketingModule
     {
         services.AddInfrastructure(configuration);
 
-        services.AddEndpoints(Presentation.AssemblyReference.Assembly);
+        services.AddEndpoints(AssemblyReference.Assembly);
 
         return services;
     }
@@ -39,7 +44,11 @@ public static class TicketingModule
     public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)
     {
         registrationConfigurator.AddConsumer<UserRegisteredIntegrationEventConsumer>();
+        registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>();
+        registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>();
+        registrationConfigurator.AddConsumer<TicketTypePriceChangedIntegrationEventConsumer>();
     }
+
 
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
@@ -57,6 +66,8 @@ public static class TicketingModule
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<ITicketRepository, TicketRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
+
+        services.AddScoped<ICustomerContext, CustomerContext>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<TicketingDbContext>());
 

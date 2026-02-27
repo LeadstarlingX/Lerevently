@@ -8,11 +8,11 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Events;
 
-internal class CreateEvent : IEndpoint
+internal sealed class CreateEvent : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("events", async (CreateRequest request, ISender sender) =>
+        app.MapPost("events", async (Request request, ISender sender) =>
             {
                 var result = await sender.Send(new CreateEventCommand(
                     request.CategoryId,
@@ -24,18 +24,19 @@ internal class CreateEvent : IEndpoint
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.ModifyEvents)
             .WithTags(Tags.Events);
     }
 
-    internal sealed class CreateRequest
+    internal sealed class Request
     {
         public Guid CategoryId { get; init; }
 
-        public string Title { get; init; } = string.Empty;
+        public string Title { get; init; }
 
-        public string Description { get; init; } = string.Empty;
+        public string Description { get; init; }
 
-        public string Location { get; init; } = string.Empty;
+        public string Location { get; init; }
 
         public DateTime StartsAtUtc { get; init; }
 

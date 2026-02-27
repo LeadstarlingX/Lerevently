@@ -1,10 +1,10 @@
-﻿using Bogus;
+﻿using System.Data;
+using Bogus;
 using Dapper;
 using Lerevently.Common.Application.Data;
+using Lerevently.Modules.Users.Infrastructure.DataSeeder.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data;
-using Lerevently.Modules.Users.Infrastructure.DataSeeder.Contracts;
 
 namespace Lerevently.Modules.Users.Infrastructure.DataSeeder;
 
@@ -33,7 +33,7 @@ public static class DataSeeder
             var sqlCount = """
                            SELECT COUNT(*) FROM users."Users"
                            """;
-            
+
             var count = await connection.ExecuteScalarAsync<int>(sqlCount);
             if (count > 0)
             {
@@ -51,14 +51,12 @@ public static class DataSeeder
         var users = new List<UserSeedData>();
 
         for (var i = 0; i < 10; i++)
-        {
             users.Add(new UserSeedData(
                 Guid.NewGuid(),
                 faker.Name.FirstName(),
                 faker.Name.LastName(),
                 faker.Internet.Email()
             ));
-        }
 
         const string sql = """
                            INSERT INTO users."Users"
@@ -67,7 +65,7 @@ public static class DataSeeder
                            """;
 
         await connection.ExecuteAsync(sql, users);
-        
+
         return users;
     }
 }

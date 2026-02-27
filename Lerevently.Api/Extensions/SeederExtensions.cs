@@ -1,4 +1,5 @@
 ﻿using Lerevently.Modules.Ticketing.Infrastructure.DataSeeder.Contracts;
+using Lerevently.Modules.Users.Infrastructure.DataSeeder;
 
 namespace Lerevently.Api.Extensions;
 
@@ -6,8 +7,9 @@ public static class SeederExtensions
 {
     public static async Task SeedDataAsync(this IApplicationBuilder app, bool forceReseed = false)
     {
-        var users = await Lerevently.Modules.Users.Infrastructure.DataSeeder.DataSeeder.SeedDataAsync(app, forceReseed);
-        var (events, ticketTypes) = await Lerevently.Modules.Events.Infrastructure.DataSeeder.DataSeeder.SeedDataAsync(app, forceReseed);
+        var users = await DataSeeder.SeedDataAsync(app, forceReseed);
+        var (events, ticketTypes) =
+            await Modules.Events.Infrastructure.DataSeeder.DataSeeder.SeedDataAsync(app, forceReseed);
 
         var ticketingUsers = users.Select(u => new UserSeedData(
             u.Id,
@@ -36,11 +38,11 @@ public static class SeederExtensions
             tt.Quantity
         )).ToList();
 
-        await Lerevently.Modules.Ticketing.Infrastructure.DataSeeder.DataSeeder.SeedDataAsync(
-            app, 
-            ticketingUsers, 
-            ticketingEvents, 
-            ticketingTicketTypes, 
+        await Modules.Ticketing.Infrastructure.DataSeeder.DataSeeder.SeedDataAsync(
+            app,
+            ticketingUsers,
+            ticketingEvents,
+            ticketingTicketTypes,
             forceReseed);
     }
 }

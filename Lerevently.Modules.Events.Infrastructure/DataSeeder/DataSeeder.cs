@@ -1,18 +1,17 @@
+using System.Data;
 using Bogus;
 using Dapper;
 using Lerevently.Common.Application.Data;
+using Lerevently.Modules.Events.Infrastructure.DataSeeder.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data;
-using Lerevently.Modules.Events.Infrastructure.DataSeeder.Contracts;
 
 namespace Lerevently.Modules.Events.Infrastructure.DataSeeder;
 
-
-
 public static class DataSeeder
 {
-    public static async Task<(List<EventSeedData> Events, List<TicketTypeSeedData> TicketTypes)> SeedDataAsync(IApplicationBuilder app, bool forceReseed = false)
+    public static async Task<(List<EventSeedData> Events, List<TicketTypeSeedData> TicketTypes)> SeedDataAsync(
+        IApplicationBuilder app, bool forceReseed = false)
     {
         using var scope = app.ApplicationServices.CreateScope();
         var sqlConnectionFactory = scope.ServiceProvider.GetRequiredService<IDbConnectionFactory>();
@@ -21,7 +20,7 @@ public static class DataSeeder
         var categoryIds = await SeedCategoriesAsync(connection, forceReseed);
         var events = await SeedEventsAsync(connection, categoryIds, forceReseed);
         var ticketTypes = await SeedTicketTypesAsync(connection, events.Select(e => e.Id).ToList(), forceReseed);
-        
+
         return (events, ticketTypes);
     }
 
@@ -41,9 +40,7 @@ public static class DataSeeder
                            """;
             var count = await connection.ExecuteScalarAsync<int>(sqlCount);
             if (count > 0)
-            {
                 return (await connection.QueryAsync<Guid>("SELECT \"Id\" FROM events.\"Categories\"")).AsList();
-            }
         }
 
         var faker = new Faker();
@@ -71,7 +68,8 @@ public static class DataSeeder
         return categoryIds;
     }
 
-    private static async Task<List<EventSeedData>> SeedEventsAsync(IDbConnection connection, List<Guid> categoryIds, bool forceReseed)
+    private static async Task<List<EventSeedData>> SeedEventsAsync(IDbConnection connection, List<Guid> categoryIds,
+        bool forceReseed)
     {
         if (forceReseed)
         {
@@ -95,12 +93,10 @@ public static class DataSeeder
             }
         }
 
-        if(!categoryIds.Any()) 
-        {
+        if (!categoryIds.Any())
             // If we have no categories, we can't create events properly. Or should we create some?
             // Assuming categories were seeded or existed.
             return [];
-        }
 
         var faker = new Faker();
         var events = new List<EventSeedData>();
@@ -110,7 +106,7 @@ public static class DataSeeder
         {
             var id = Guid.NewGuid();
             eventIds.Add(id);
-            
+
             var categoryId = categoryIds[faker.Random.Number(0, categoryIds.Count - 1)];
 
             events.Add(new EventSeedData(
@@ -135,7 +131,8 @@ public static class DataSeeder
         return events;
     }
 
-    private static async Task<List<TicketTypeSeedData>> SeedTicketTypesAsync(IDbConnection connection, List<Guid> eventIds, bool forceReseed)
+    private static async Task<List<TicketTypeSeedData>> SeedTicketTypesAsync(IDbConnection connection,
+        List<Guid> eventIds, bool forceReseed)
     {
         if (forceReseed)
         {
@@ -158,32 +155,32 @@ public static class DataSeeder
                 return (await connection.QueryAsync<TicketTypeSeedData>(sqlSelect)).AsList();
             }
         }
-        
-        if(!eventIds.Any()) return [];
+
+        if (!eventIds.Any()) return [];
 
         var faker = new Faker();
         var ticketTypes = new List<TicketTypeSeedData>();
 
         foreach (var eventId in eventIds)
         {
-             // Add a few ticket types per event
-             ticketTypes.Add(new TicketTypeSeedData(
-                 Guid.NewGuid(),
-                 eventId,
-                 "General Admission",
-                 decimal.Parse(faker.Commerce.Price(10, 100)),
-                 "USD",
-                 100
-             ));
-             
-             ticketTypes.Add(new TicketTypeSeedData(
-                 Guid.NewGuid(),
-                 eventId,
-                 "VIP",
-                 decimal.Parse(faker.Commerce.Price(100, 500)),
-                 "USD",
-                 20
-             ));
+            // Add a few ticket types per event
+            ticketTypes.Add(new TicketTypeSeedData(
+                Guid.NewGuid(),
+                eventId,
+                "General Admission",
+                decimal.Parse(faker.Commerce.Price(10, 100)),
+                "USD",
+                100
+            ));
+
+            ticketTypes.Add(new TicketTypeSeedData(
+                Guid.NewGuid(),
+                eventId,
+                "VIP",
+                decimal.Parse(faker.Commerce.Price(100, 500)),
+                "USD",
+                20
+            ));
         }
 
         const string sql = """
@@ -193,7 +190,7 @@ public static class DataSeeder
                            """;
 
         await connection.ExecuteAsync(sql, ticketTypes);
-        
+
         return ticketTypes;
     }
 }

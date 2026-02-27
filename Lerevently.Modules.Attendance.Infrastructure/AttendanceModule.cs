@@ -1,7 +1,7 @@
-﻿using Lerevently.Modules.Attendance.Application.Abstractions.Data;
-using Lerevently.Common.Infrastructure.Interceptors;
+﻿using Lerevently.Common.Infrastructure.Interceptors;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Attendance.Application.Abstractions.Authentication;
+using Lerevently.Modules.Attendance.Application.Abstractions.Data;
 using Lerevently.Modules.Attendance.Domain.Attendees;
 using Lerevently.Modules.Attendance.Domain.Events;
 using Lerevently.Modules.Attendance.Domain.Tickets;
@@ -10,6 +10,11 @@ using Lerevently.Modules.Attendance.Infrastructure.Authentication;
 using Lerevently.Modules.Attendance.Infrastructure.Database;
 using Lerevently.Modules.Attendance.Infrastructure.Events;
 using Lerevently.Modules.Attendance.Infrastructure.Tickets;
+using Lerevently.Modules.Attendance.Presentation;
+using Lerevently.Modules.Attendance.Presentation.Attendees;
+using Lerevently.Modules.Attendance.Presentation.Events;
+using Lerevently.Modules.Attendance.Presentation.Tickets;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -25,9 +30,17 @@ public static class AttendanceModule
     {
         services.AddInfrastructure(configuration);
 
-        services.AddEndpoints(Presentation.AssemblyReference.Assembly);
+        services.AddEndpoints(AssemblyReference.Assembly);
 
         return services;
+    }
+
+    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)
+    {
+        registrationConfigurator.AddConsumer<UserRegisteredIntegrationEventConsumer>();
+        registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>();
+        registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>();
+        registrationConfigurator.AddConsumer<TicketIssuedIntegrationEventConsumer>();
     }
 
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)

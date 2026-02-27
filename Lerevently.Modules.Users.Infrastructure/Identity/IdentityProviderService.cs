@@ -24,7 +24,7 @@ internal sealed class IdentityProviderService(KeyCloakClient keyCloakClient, ILo
 
         try
         {
-            string identityId = await keyCloakClient.RegisterUserAsync(userRepresentation, cancellationToken);
+            var identityId = await keyCloakClient.RegisterUserAsync(userRepresentation, cancellationToken);
 
             return identityId;
         }
@@ -35,13 +35,13 @@ internal sealed class IdentityProviderService(KeyCloakClient keyCloakClient, ILo
             return Result.Failure<string>(IdentityProviderErrors.EmailIsNotUnique);
         }
     }
-    
-    
+
+
     public async Task<Result<bool>> IsEmailUniqueAsync(string email, CancellationToken cancellationToken = default)
     {
         try
         {
-            bool isEmailUnique = await keyCloakClient.IsEmailUniqueAsync(email, cancellationToken);
+            var isEmailUnique = await keyCloakClient.IsEmailUniqueAsync(email, cancellationToken);
 
             return isEmailUnique;
         }

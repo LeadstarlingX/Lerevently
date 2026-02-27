@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Events;
 
-internal class GetEvents : IEndpoint
+internal sealed class GetEvents : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -18,6 +18,7 @@ internal class GetEvents : IEndpoint
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.GetEvents)
             .WithTags(Tags.Events);
     }
 }

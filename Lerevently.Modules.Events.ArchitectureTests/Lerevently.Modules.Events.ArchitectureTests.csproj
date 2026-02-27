@@ -2,13 +2,13 @@
 
     <ItemGroup>
 
-        <PackageReference Include="NetArchTest.Rules" />
-        <PackageReference Include="TUnit" />
+        <PackageReference Include="NetArchTest.Rules"/>
+        <PackageReference Include="TUnit"/>
 
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Lerevently.Modules.Events.Infrastructure\Lerevently.Modules.Events.Infrastructure.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Events.Infrastructure\Lerevently.Modules.Events.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -23,7 +23,7 @@ internal sealed class CreateEventCommandHandler(
 
         eventRepository.Insert(@event);
 
-        IEnumerable<TicketType> ticketTypes = request.TicketTypes
+        var ticketTypes = request.TicketTypes
             .Select(t => TicketType.Create(t.TicketTypeId, t.EventId, t.Name, t.Price, t.Currency, t.Quantity));
 
         ticketTypeRepository.InsertRange(ticketTypes);

@@ -16,31 +16,22 @@ internal sealed class CreateTicketBatchCommandHandler(
 {
     public async Task<Result> Handle(CreateTicketBatchCommand request, CancellationToken cancellationToken)
     {
-        Order? order = await orderRepository.GetAsync(request.OrderId, cancellationToken);
+        var order = await orderRepository.GetAsync(request.OrderId, cancellationToken);
 
-        if (order is null)
-        {
-            return Result.Failure(OrderErrors.NotFound(request.OrderId));
-        }
+        if (order is null) return Result.Failure(OrderErrors.NotFound(request.OrderId));
 
-        Result result = order.IssueTickets();
+        var result = order.IssueTickets();
 
-        if (result.IsFailure)
-        {
-            return Result.Failure(result.Error);
-        }
+        if (result.IsFailure) return Result.Failure(result.Error);
 
         List<Ticket> tickets = [];
-        foreach (OrderItem orderItem in order.OrderItems)
+        foreach (var orderItem in order.OrderItems)
         {
-            TicketType? ticketType = await ticketTypeRepository.GetAsync(orderItem.TicketTypeId, cancellationToken);
+            var ticketType = await ticketTypeRepository.GetAsync(orderItem.TicketTypeId, cancellationToken);
 
-            if (ticketType is null)
-            {
-                return Result.Failure(TicketTypeErrors.NotFound(orderItem.TicketTypeId));
-            }
+            if (ticketType is null) return Result.Failure(TicketTypeErrors.NotFound(orderItem.TicketTypeId));
 
-            for (int i = 0; i < orderItem.Quantity; i++)
+            for (var i = 0; i < orderItem.Quantity; i++)
             {
                 var ticket = Ticket.Create(order, ticketType);
 

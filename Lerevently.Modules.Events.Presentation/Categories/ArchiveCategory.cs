@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Categories;
 
-internal class ArchiveCategory : IEndpoint
+internal sealed class ArchiveCategory : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -18,6 +18,7 @@ internal class ArchiveCategory : IEndpoint
 
                 return result.Match(() => Results.Ok(), ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.ModifyCategories)
             .WithTags(Tags.Categories);
     }
 }

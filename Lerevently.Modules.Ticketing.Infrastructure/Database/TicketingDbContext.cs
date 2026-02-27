@@ -5,11 +5,6 @@ using Lerevently.Modules.Ticketing.Domain.Events;
 using Lerevently.Modules.Ticketing.Domain.Orders;
 using Lerevently.Modules.Ticketing.Domain.Payments;
 using Lerevently.Modules.Ticketing.Domain.Tickets;
-using Lerevently.Modules.Ticketing.Infrastructure.Customers;
-using Lerevently.Modules.Ticketing.Infrastructure.Events;
-using Lerevently.Modules.Ticketing.Infrastructure.Orders;
-using Lerevently.Modules.Ticketing.Infrastructure.Payments;
-using Lerevently.Modules.Ticketing.Infrastructure.Tickets;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -32,20 +27,17 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
 
     internal DbSet<Payment> Payments { get; set; }
 
+    public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
+    {
+        if (Database.CurrentTransaction is not null) await Database.CurrentTransaction.DisposeAsync();
+
+        return (await Database.BeginTransactionAsync(cancellationToken)).GetDbTransaction();
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schemas.Ticketing);
 
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TicketingDbContext).Assembly);
-    }
-
-    public async Task<DbTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
-    {
-        if (Database.CurrentTransaction is not null)
-        {
-            await Database.CurrentTransaction.DisposeAsync();
-        }
-
-        return (await Database.BeginTransactionAsync(cancellationToken)).GetDbTransaction();
     }
 }

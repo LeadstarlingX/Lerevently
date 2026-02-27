@@ -16,19 +16,13 @@ internal sealed class CreateTicketCommandHandler(
 {
     public async Task<Result> Handle(CreateTicketCommand request, CancellationToken cancellationToken)
     {
-        Attendee? attendee = await attendeeRepository.GetAsync(request.AttendeeId, cancellationToken);
+        var attendee = await attendeeRepository.GetAsync(request.AttendeeId, cancellationToken);
 
-        if (attendee is null)
-        {
-            return Result.Failure(AttendeeErrors.NotFound(request.AttendeeId));
-        }
+        if (attendee is null) return Result.Failure(AttendeeErrors.NotFound(request.AttendeeId));
 
-        Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
+        var @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 
-        if (@event is null)
-        {
-            return Result.Failure(EventErrors.NotFound(request.EventId));
-        }
+        if (@event is null) return Result.Failure(EventErrors.NotFound(request.EventId));
 
         var ticket = Ticket.Create(request.TicketId, attendee, @event, request.Code);
 

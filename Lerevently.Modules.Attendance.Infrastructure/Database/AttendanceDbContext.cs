@@ -1,11 +1,6 @@
-﻿using Lerevently.Common.Application.Data;
-using Lerevently.Modules.Attendance.Application.Abstractions.Data;
-using Lerevently.Modules.Attendance.Domain.Attendees;
+﻿using Lerevently.Modules.Attendance.Domain.Attendees;
 using Lerevently.Modules.Attendance.Domain.Events;
 using Lerevently.Modules.Attendance.Domain.Tickets;
-using Lerevently.Modules.Attendance.Infrastructure.Attendees;
-using Lerevently.Modules.Attendance.Infrastructure.Events;
-using Lerevently.Modules.Attendance.Infrastructure.Tickets;
 using Microsoft.EntityFrameworkCore;
 using IUnitOfWork = Lerevently.Modules.Attendance.Application.Abstractions.Data.IUnitOfWork;
 

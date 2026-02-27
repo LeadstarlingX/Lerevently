@@ -44,26 +44,16 @@ public sealed class Payment : Entity
 
     public Result Refund(decimal refundAmount)
     {
-        if (AmountRefunded.HasValue && AmountRefunded == Amount)
-        {
-            return Result.Failure(PaymentErrors.AlreadyRefunded);
-        }
+        if (AmountRefunded.HasValue && AmountRefunded == Amount) return Result.Failure(PaymentErrors.AlreadyRefunded);
 
-        if (AmountRefunded + refundAmount > Amount)
-        {
-            return Result.Failure(PaymentErrors.NotEnoughFunds);
-        }
+        if (AmountRefunded + refundAmount > Amount) return Result.Failure(PaymentErrors.NotEnoughFunds);
 
         AmountRefunded += refundAmount;
 
         if (Amount == AmountRefunded)
-        {
             Raise(new PaymentRefundedDomainEvent(Id, TransactionId, refundAmount));
-        }
         else
-        {
             Raise(new PaymentPartiallyRefundedDomainEvent(Id, TransactionId, refundAmount));
-        }
 
         return Result.Success();
     }

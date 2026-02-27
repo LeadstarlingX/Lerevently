@@ -6,7 +6,8 @@ using Lerevently.Modules.Users.Domain.Users;
 
 namespace Lerevently.Modules.Users.Application.Users.RegisterUser;
 
-internal sealed class RegisterUserCommandHandler(IUserRepository userRepository,
+internal sealed class RegisterUserCommandHandler(
+    IUserRepository userRepository,
     IUnitOfWork unitOfWork,
     IIdentityProviderService identityProviderService)
     : ICommandHandler<RegisterUserCommand, Guid>
@@ -15,21 +16,14 @@ internal sealed class RegisterUserCommandHandler(IUserRepository userRepository,
     {
         var check = await identityProviderService.IsEmailUniqueAsync(request.Email, cancellationToken);
 
-        if (!check.IsSuccess)
-        {
-            return Result.Failure<Guid>(check.Error);
-        }
-        
-        var result = await identityProviderService.RegisterUserAsync(new UserModel(
-            request.Email, request.Password,request.FirstName, request.LastName), cancellationToken);
+        if (!check.IsSuccess) return Result.Failure<Guid>(check.Error);
 
-        if (result.IsFailure)
-        {
-            return Result.Failure<Guid>(result.Error);
-        }
-        
-        
-        
+        var result = await identityProviderService.RegisterUserAsync(new UserModel(
+            request.Email, request.Password, request.FirstName, request.LastName), cancellationToken);
+
+        if (result.IsFailure) return Result.Failure<Guid>(result.Error);
+
+
         var user = User.Create(request.Email, request.FirstName, request.LastName, result.Value);
 
         userRepository.Insert(user);

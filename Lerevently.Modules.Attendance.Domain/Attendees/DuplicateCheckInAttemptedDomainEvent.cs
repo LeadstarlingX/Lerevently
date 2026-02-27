@@ -2,7 +2,11 @@
 
 namespace Lerevently.Modules.Attendance.Domain.Attendees;
 
-public sealed class DuplicateCheckInAttemptedDomainEvent(Guid attendeeId, Guid eventId, Guid ticketId, string ticketCode)
+public sealed class DuplicateCheckInAttemptedDomainEvent(
+    Guid attendeeId,
+    Guid eventId,
+    Guid ticketId,
+    string ticketCode)
     : DomainEvent
 {
     public Guid AttendeeId { get; init; } = attendeeId;

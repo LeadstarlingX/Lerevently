@@ -7,14 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj" />
-      <ProjectReference Include="..\Lerevently.Modules.Attendance.Application\Lerevently.Modules.Attendance.Application.csproj" />
-      <ProjectReference Include="..\Lerevently.Modules.Attendance.IntegrationEvents\Lerevently.Modules.Attendance.IntegrationEvents.csproj" />
-      <ProjectReference Include="..\Lerevently.Modules.Attendance.Presentation\Lerevently.Modules.Attendance.Presentation.csproj" />
+        <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Application\Lerevently.Modules.Attendance.Application.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.IntegrationEvents\Lerevently.Modules.Attendance.IntegrationEvents.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Presentation\Lerevently.Modules.Attendance.Presentation.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Database\Migrations\" />
+        <Folder Include="Database\Migrations\"/>
     </ItemGroup>
 
 </Project>

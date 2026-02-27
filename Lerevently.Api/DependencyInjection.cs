@@ -1,13 +1,12 @@
-﻿using Lerevently.Api.Middleware;
+﻿using Lerevently.Api.Extensions;
+using Lerevently.Api.Middleware;
+
 namespace Lerevently.Api;
 
 internal static class DependencyInjection
 {
-    
-    
     public static IServiceCollection AddApi(this IServiceCollection services, IConfiguration configuration)
     {
-
         services.AddOpenApi();
         services.AddApiSwagger();
         services.AddEndpointsApiExplorer();
@@ -17,7 +16,7 @@ internal static class DependencyInjection
 
         return services;
     }
-    
+
     private static IServiceCollection AddApiSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(options => { options.CustomSchemaIds(t => t.FullName?.Replace("+", ".")); });
@@ -27,11 +26,13 @@ internal static class DependencyInjection
 
     private static IServiceCollection AddMyHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
+        var keyCloakHealthUrl = configuration.GetKeyCloakHealthUrl();
+
         services.AddHealthChecks()
             .AddNpgSql(configuration.GetConnectionString("Database")!)
-            .AddRedis(configuration.GetConnectionString("Cache")!);
-        
+            .AddRedis(configuration.GetConnectionString("Cache")!)
+            .AddKeyCloak(keyCloakHealthUrl);
+
         return services;
     }
-    
 }

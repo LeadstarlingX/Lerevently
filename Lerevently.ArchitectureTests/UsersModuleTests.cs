@@ -6,6 +6,7 @@ using Lerevently.Modules.Events.Domain.Events;
 using Lerevently.Modules.Events.Infrastructure;
 using Lerevently.Modules.Ticketing.Domain.Orders;
 using Lerevently.Modules.Ticketing.Infrastructure;
+using Lerevently.Modules.Users.Application;
 using Lerevently.Modules.Users.Domain.Users;
 using Lerevently.Modules.Users.Infrastructure;
 using NetArchTest.Rules;
@@ -28,7 +29,7 @@ public class ModulesTests : BaseTest
         List<Assembly> usersAssemblies =
         [
             typeof(User).Assembly,
-            Modules.Users.Application.AssemblyReference.Assembly,
+            AssemblyReference.Assembly,
             Modules.Users.Presentation.AssemblyReference.Assembly,
             typeof(UsersModule).Assembly
         ];
@@ -42,8 +43,8 @@ public class ModulesTests : BaseTest
 
         await Assert.That(result.IsSuccessful).IsTrue();
     }
-    
-    
+
+
     [Test]
     public async Task EventsModule_ShouldNotHaveDependencyOn_AnyOtherModule()
     {
@@ -72,8 +73,8 @@ public class ModulesTests : BaseTest
 
         await Assert.That(result.IsSuccessful).IsTrue();
     }
-    
-    
+
+
     [Test]
     public async Task TicketingModule_ShouldNotHaveDependencyOn_AnyOtherModule()
     {
@@ -102,8 +103,8 @@ public class ModulesTests : BaseTest
 
         await Assert.That(result.IsSuccessful).IsTrue();
     }
-    
-    
+
+
     [Test]
     public async Task AttendanceModule_ShouldNotHaveDependencyOn_AnyOtherModule()
     {
@@ -122,7 +123,7 @@ public class ModulesTests : BaseTest
             Modules.Attendance.Presentation.AssemblyReference.Assembly,
             typeof(AttendanceModule).Assembly
         ];
-        
+
 
         var result = Types.InAssemblies(attendanceAssemblies)
             .That()
@@ -133,5 +134,4 @@ public class ModulesTests : BaseTest
 
         await Assert.That(result.IsSuccessful).IsTrue();
     }
-    
 }

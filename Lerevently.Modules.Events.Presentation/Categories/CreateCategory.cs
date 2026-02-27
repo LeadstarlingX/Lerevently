@@ -8,21 +8,22 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.Categories;
 
-internal class CreateCategory : IEndpoint
+internal sealed class CreateCategory : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPost("categories", async (CreateRequest request, ISender sender) =>
+        app.MapPost("categories", async (Request request, ISender sender) =>
             {
                 var result = await sender.Send(new CreateCategoryCommand(request.Name));
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.ModifyCategories)
             .WithTags(Tags.Categories);
     }
 
-    internal sealed class CreateRequest
+    internal sealed class Request
     {
-        public string Name { get; init; } = string.Empty;
+        public string Name { get; init; }
     }
 }

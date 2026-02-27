@@ -1,4 +1,5 @@
-﻿using Lerevently.Common.Domain.Abstractions;
+﻿using System.Security.Claims;
+using Lerevently.Common.Infrastructure.Authentication;
 using Lerevently.Common.Presentation.ApiResults;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Users.Application.Users.UpdateUser;
@@ -13,16 +14,17 @@ internal sealed class UpdateUserProfile : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        app.MapPut("users/{id}/profile", async (Guid id, Request request,  ISender sender) =>
-        {
-            Result result = await sender.Send(new UpdateUserCommand(
-                id,
-                request.FirstName,
-                request.LastName));
+        app.MapPut("users/profile", async (Request request, ClaimsPrincipal claims, ISender sender) =>
+            {
+                var result = await sender.Send(new UpdateUserCommand(
+                    claims.GetUserId(),
+                    request.FirstName,
+                    request.LastName));
 
-            return result.Match(Results.NoContent, ApiResults.Problem);
-        })
-        .WithTags(Tags.Users);
+                return result.Match(Results.NoContent, ApiResults.Problem);
+            })
+            .RequireAuthorization(Permissions.ModifyUser)
+            .WithTags(Tags.Users);
     }
 
     internal sealed class Request

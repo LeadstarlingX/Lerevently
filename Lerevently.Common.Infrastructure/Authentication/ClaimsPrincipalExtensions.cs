@@ -7,11 +7,11 @@ public static class ClaimsPrincipalExtensions
 {
     public static Guid GetUserId(this ClaimsPrincipal? principal)
     {
-        string? userId = principal?.FindFirst(CustomClaims.Sub)?.Value;
+        var userId = principal?.FindFirst(CustomClaims.Sub)?.Value;
 
-        return Guid.TryParse(userId, out Guid parsedUserId) ?
-            parsedUserId :
-            throw new EventlyException("User identifier is unavailable");
+        return Guid.TryParse(userId, out var parsedUserId)
+            ? parsedUserId
+            : throw new EventlyException("User identifier is unavailable");
     }
 
     public static string GetIdentityId(this ClaimsPrincipal? principal)
@@ -22,8 +22,8 @@ public static class ClaimsPrincipalExtensions
 
     public static HashSet<string> GetPermissions(this ClaimsPrincipal? principal)
     {
-        IEnumerable<Claim> permissionClaims = principal?.FindAll(CustomClaims.Permission) ??
-                                              throw new EventlyException("Permissions are unavailable");
+        var permissionClaims = principal?.FindAll(CustomClaims.Permission) ??
+                               throw new EventlyException("Permissions are unavailable");
 
         return permissionClaims.Select(c => c.Value).ToHashSet();
     }

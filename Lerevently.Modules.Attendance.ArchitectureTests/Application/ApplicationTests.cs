@@ -33,7 +33,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .HaveNameEndingWith("Command")
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -48,7 +48,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .NotBePublic()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -63,7 +63,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .BeSealed()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -78,7 +78,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .HaveNameEndingWith("CommandHandler")
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -91,7 +91,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .BeSealed()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -104,7 +104,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .HaveNameEndingWith("Query")
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -117,7 +117,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .NotBePublic()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -130,7 +130,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .BeSealed()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -143,7 +143,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .HaveNameEndingWith("QueryHandler")
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -156,7 +156,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .NotBePublic()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -169,7 +169,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .BeSealed()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -182,7 +182,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .HaveNameEndingWith("Validator")
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -195,7 +195,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .NotBePublic()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -208,7 +208,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .BeSealed()
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -221,7 +221,7 @@ public class ApplicationTests : BaseTest
             .Should()
             .HaveNameEndingWith("DomainEventHandler")
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 }

@@ -5,7 +5,7 @@ namespace Lerevently.Api;
 
 public static class Program
 {
-    private static readonly string[] Modules = ["events", "users", "ticketing"]; // Add your module names here
+    private static readonly string[] Modules = ["events", "users", "ticketing", "attendance"]; // Add your module names here
 
     public static void Main(string[] args)
     {
@@ -24,5 +24,4 @@ public static class Program
             })
             .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
     }
-
 }

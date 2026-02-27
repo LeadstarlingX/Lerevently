@@ -1,5 +1,4 @@
-﻿using Lerevently.Common.Domain.Abstractions;
-using Lerevently.Common.Presentation.ApiResults;
+﻿using Lerevently.Common.Presentation.ApiResults;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Ticketing.Application.Tickets.GetTicket;
 using MediatR;
@@ -14,11 +13,12 @@ internal sealed class GetTicket : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
         app.MapGet("tickets/{id}", async (Guid id, ISender sender) =>
-        {
-            Result<TicketResponse> result = await sender.Send(new GetTicketQuery(id));
+            {
+                var result = await sender.Send(new GetTicketQuery(id));
 
-            return result.Match(Results.Ok, ApiResults.Problem);
-        })
-        .WithTags(Tags.Tickets);
+                return result.Match(Results.Ok, ApiResults.Problem);
+            })
+            .RequireAuthorization(Permissions.GetTickets)
+            .WithTags(Tags.Tickets);
     }
 }

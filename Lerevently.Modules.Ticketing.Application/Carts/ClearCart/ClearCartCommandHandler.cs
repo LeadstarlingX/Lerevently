@@ -9,12 +9,9 @@ internal sealed class ClearCartCommandHandler(ICustomerRepository customerReposi
 {
     public async Task<Result> Handle(ClearCartCommand request, CancellationToken cancellationToken)
     {
-        Customer? customer = await customerRepository.GetAsync(request.CustomerId, cancellationToken);
+        var customer = await customerRepository.GetAsync(request.CustomerId, cancellationToken);
 
-        if (customer is null)
-        {
-            return Result.Failure(CustomerErrors.NotFound(request.CustomerId));
-        }
+        if (customer is null) return Result.Failure(CustomerErrors.NotFound(request.CustomerId));
 
         await cartService.ClearAsync(customer.Id, cancellationToken);
 

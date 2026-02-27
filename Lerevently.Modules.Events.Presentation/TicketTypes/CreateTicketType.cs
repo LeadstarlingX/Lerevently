@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.TicketTypes;
 
-internal class CreateTicketType : IEndpoint
+internal sealed class CreateTicketType : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -23,6 +23,7 @@ internal class CreateTicketType : IEndpoint
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.ModifyTicketTypes)
             .WithTags(Tags.TicketTypes);
     }
 
@@ -30,11 +31,11 @@ internal class CreateTicketType : IEndpoint
     {
         public Guid EventId { get; init; }
 
-        public string Name { get; init; } = string.Empty;
+        public string Name { get; init; }
 
         public decimal Price { get; init; }
 
-        public string Currency { get; init; } = string.Empty;
+        public string Currency { get; init; }
 
         public decimal Quantity { get; init; }
     }

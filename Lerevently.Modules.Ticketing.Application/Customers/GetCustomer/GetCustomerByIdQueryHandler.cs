@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Dapper;
+﻿using Dapper;
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
@@ -12,25 +11,22 @@ internal sealed class GetCustomerByIdQueryHandler(IDbConnectionFactory dbConnect
 {
     public async Task<Result<CustomerResponse>> Handle(GetCustomerQuery request, CancellationToken cancellationToken)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         const string sql =
             $"""
-              SELECT
-                  "Id" AS {nameof(CustomerResponse.Id)},
-                  "Email" AS {nameof(CustomerResponse.Email)},
-                  "FirstName" AS {nameof(CustomerResponse.FirstName)},
-                  "LastName" AS {nameof(CustomerResponse.LastName)}
-              FROM ticketing."Customers"
-              WHERE "Id" = @CustomerId
-              """;
+             SELECT
+                 "Id" AS {nameof(CustomerResponse.Id)},
+                 "Email" AS {nameof(CustomerResponse.Email)},
+                 "FirstName" AS {nameof(CustomerResponse.FirstName)},
+                 "LastName" AS {nameof(CustomerResponse.LastName)}
+             FROM ticketing."Customers"
+             WHERE "Id" = @CustomerId
+             """;
 
-        CustomerResponse? customer = await connection.QuerySingleOrDefaultAsync<CustomerResponse>(sql, request);
+        var customer = await connection.QuerySingleOrDefaultAsync<CustomerResponse>(sql, request);
 
-        if (customer is null)
-        {
-            return Result.Failure<CustomerResponse>(CustomerErrors.NotFound(request.CustomerId));
-        }
+        if (customer is null) return Result.Failure<CustomerResponse>(CustomerErrors.NotFound(request.CustomerId));
 
         return customer;
     }

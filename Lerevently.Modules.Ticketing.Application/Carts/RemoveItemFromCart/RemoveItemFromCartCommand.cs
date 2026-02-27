@@ -1,6 +1,4 @@
-﻿
-
-using Lerevently.Common.Application.Messaging;
+﻿using Lerevently.Common.Application.Messaging;
 
 namespace Lerevently.Modules.Ticketing.Application.Carts.RemoveItemFromCart;
 

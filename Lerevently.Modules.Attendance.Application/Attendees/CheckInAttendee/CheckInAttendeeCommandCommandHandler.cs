@@ -16,32 +16,24 @@ internal sealed class CheckInAttendeeCommandCommandHandler(
 {
     public async Task<Result> Handle(CheckInAttendeeCommand request, CancellationToken cancellationToken)
     {
-        Attendee? attendee = await attendeeRepository.GetAsync(request.AttendeeId, cancellationToken);
+        var attendee = await attendeeRepository.GetAsync(request.AttendeeId, cancellationToken);
 
-        if (attendee is null)
-        {
-            return Result.Failure(AttendeeErrors.NotFound(request.AttendeeId));
-        }
+        if (attendee is null) return Result.Failure(AttendeeErrors.NotFound(request.AttendeeId));
 
-        Ticket? ticket = await ticketRepository.GetAsync(request.TicketId, cancellationToken);
+        var ticket = await ticketRepository.GetAsync(request.TicketId, cancellationToken);
 
-        if (ticket is null)
-        {
-            return Result.Failure(TicketErrors.NotFound);
-        }
+        if (ticket is null) return Result.Failure(TicketErrors.NotFound);
 
-        Result result = attendee.CheckIn(ticket);
+        var result = attendee.CheckIn(ticket);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 
         if (result.IsFailure)
-        {
             logger.LogWarning(
                 "Check in failed: {AttendeeId}, {TicketId}, {@Error}",
                 attendee.Id,
                 ticket.Id,
                 result.Error);
-        }
 
         return result;
     }

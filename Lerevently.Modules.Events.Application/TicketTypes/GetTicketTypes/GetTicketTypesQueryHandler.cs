@@ -17,16 +17,16 @@ internal sealed class GetTicketTypesQueryHandler(IDbConnectionFactory dbConnecti
 
         const string sql =
             $"""
-              SELECT
-                  "Id" AS {nameof(TicketTypeResponse.Id)},
-                  "EventId" AS {nameof(TicketTypeResponse.EventId)},
-                  "Name" AS {nameof(TicketTypeResponse.Name)},
-                  "Price" AS {nameof(TicketTypeResponse.Price)},
-                  "Currency" AS {nameof(TicketTypeResponse.Currency)},
-                  "Quantity" AS {nameof(TicketTypeResponse.Quantity)}
-              FROM events."TicketTypes"
-              WHERE "EventId" = @EventId
-              """;
+             SELECT
+                 "Id" AS {nameof(TicketTypeResponse.Id)},
+                 "EventId" AS {nameof(TicketTypeResponse.EventId)},
+                 "Name" AS {nameof(TicketTypeResponse.Name)},
+                 "Price" AS {nameof(TicketTypeResponse.Price)},
+                 "Currency" AS {nameof(TicketTypeResponse.Currency)},
+                 "Quantity" AS {nameof(TicketTypeResponse.Quantity)}
+             FROM events."TicketTypes"
+             WHERE "EventId" = @EventId
+             """;
 
         var ticketTypes =
             (await connection.QueryAsync<TicketTypeResponse>(sql, request)).AsList();

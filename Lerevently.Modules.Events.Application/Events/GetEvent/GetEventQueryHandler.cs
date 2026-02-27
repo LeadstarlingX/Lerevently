@@ -13,16 +13,16 @@ public sealed class GetEventQueryHandler(IDbConnectionFactory dbConnectionFactor
 
         const string sql =
             $"""
-              SELECT
-                  "Id" AS {nameof(EventResponse.Id)},
-                  "Title" AS {nameof(EventResponse.Title)},
-                  "Description" AS {nameof(EventResponse.Description)},
-                  "Location" AS {nameof(EventResponse.Location)},
-                  "StartsAtUtc" AS {nameof(EventResponse.StartsAtUtc)},
-                  "EndsAtUtc" AS {nameof(EventResponse.EndsAtUtc)}
-              FROM events."Events"
-              WHERE "Id" = @EventId
-              """;
+             SELECT
+                 "Id" AS {nameof(EventResponse.Id)},
+                 "Title" AS {nameof(EventResponse.Title)},
+                 "Description" AS {nameof(EventResponse.Description)},
+                 "Location" AS {nameof(EventResponse.Location)},
+                 "StartsAtUtc" AS {nameof(EventResponse.StartsAtUtc)},
+                 "EndsAtUtc" AS {nameof(EventResponse.EndsAtUtc)}
+             FROM events."Events"
+             WHERE "Id" = @EventId
+             """;
 
         var @event = await dbConnection.QuerySingleOrDefaultAsync<EventResponse>(sql, request);
 

@@ -6,8 +6,8 @@ tasks:
     cmds:
       - task: build
       - task: test-all
-        
-        
+  
+  
   restore:
     desc: Restore .NET dependencies
     cmds:

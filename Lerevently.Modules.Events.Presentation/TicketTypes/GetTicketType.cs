@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Lerevently.Modules.Events.Presentation.TicketTypes;
 
-internal class GetTicketType : IEndpoint
+internal sealed class GetTicketType : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -18,6 +18,7 @@ internal class GetTicketType : IEndpoint
 
                 return result.Match(Results.Ok, ApiResults.Problem);
             })
+            .RequireAuthorization(Permissions.GetTicketTypes)
             .WithTags(Tags.TicketTypes);
     }
 }

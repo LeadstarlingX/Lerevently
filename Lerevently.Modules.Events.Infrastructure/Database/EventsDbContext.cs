@@ -2,8 +2,6 @@
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
 using Lerevently.Modules.Events.Domain.TicktTypes;
-using Lerevently.Modules.Events.Infrastructure.Events;
-using Lerevently.Modules.Events.Infrastructure.TicketTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lerevently.Modules.Events.Infrastructure.Database;

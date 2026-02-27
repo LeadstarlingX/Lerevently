@@ -1,5 +1,4 @@
-﻿using Evently.Modules.Events.PublicApi;
-using Lerevently.Common.Infrastructure.Interceptors;
+﻿using Lerevently.Common.Infrastructure.Interceptors;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
@@ -7,12 +6,8 @@ using Lerevently.Modules.Events.Domain.TicktTypes;
 using Lerevently.Modules.Events.Infrastructure.Categories;
 using Lerevently.Modules.Events.Infrastructure.Database;
 using Lerevently.Modules.Events.Infrastructure.Events;
-using Lerevently.Modules.Events.Infrastructure.PublicApi;
 using Lerevently.Modules.Events.Infrastructure.TicketTypes;
-using Lerevently.Modules.Events.Presentation.Categories;
-using Lerevently.Modules.Events.Presentation.Events;
-using Lerevently.Modules.Events.Presentation.TicketTypes;
-using Microsoft.AspNetCore.Routing;
+using Lerevently.Modules.Events.Presentation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -23,13 +18,12 @@ namespace Lerevently.Modules.Events.Infrastructure;
 
 public static class EventsModule
 {
-
     public static IServiceCollection AddEventsModule(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddEndpoints(Presentation.AssemblyReference.Assembly);
-        
+        services.AddEndpoints(AssemblyReference.Assembly);
+
         services.AddInfrastructure(configuration);
 
         return services;
@@ -39,7 +33,7 @@ public static class EventsModule
     {
         var databaseConnectionString = configuration.GetConnectionString("Database")!;
 
-        
+
         services.AddDbContext<EventsDbContext>((sp, options) =>
             options
                 .UseNpgsql(
@@ -53,7 +47,5 @@ public static class EventsModule
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
-
-        services.AddScoped<IEventsApi, EventsApi>();
     }
 }

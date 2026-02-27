@@ -46,10 +46,7 @@ public sealed class Ticket : Entity
 
     public void Archive()
     {
-        if (Archived)
-        {
-            return;
-        }
+        if (Archived) return;
 
         Archived = true;
 

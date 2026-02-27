@@ -12,7 +12,7 @@ public class LayerTests : BaseTest
             .Should()
             .NotHaveDependencyOn(ApplicationAssembly.GetName().Name)
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -23,7 +23,7 @@ public class LayerTests : BaseTest
             .Should()
             .NotHaveDependencyOn(InfrastructureAssembly.GetName().Name)
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -34,7 +34,7 @@ public class LayerTests : BaseTest
             .Should()
             .NotHaveDependencyOn(InfrastructureAssembly.GetName().Name)
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -45,7 +45,7 @@ public class LayerTests : BaseTest
             .Should()
             .NotHaveDependencyOn(PresentationAssembly.GetName().Name)
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 
@@ -56,7 +56,7 @@ public class LayerTests : BaseTest
             .Should()
             .NotHaveDependencyOn(InfrastructureAssembly.GetName().Name)
             .GetResult();
-        
+
         await Assert.That(result.IsSuccessful).IsTrue();
     }
 }

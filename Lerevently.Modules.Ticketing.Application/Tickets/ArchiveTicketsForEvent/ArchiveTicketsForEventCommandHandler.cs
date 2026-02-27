@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Lerevently.Common.Application.Messaging;
+﻿using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Data;
 using Lerevently.Modules.Ticketing.Domain.Events;
@@ -15,21 +14,15 @@ internal sealed class ArchiveTicketsForEventCommandHandler(
 {
     public async Task<Result> Handle(ArchiveTicketsForEventCommand request, CancellationToken cancellationToken)
     {
-        await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
+        await using var transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
+        var @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 
-        if (@event is null)
-        {
-            return Result.Failure(EventErrors.NotFound(request.EventId));
-        }
+        if (@event is null) return Result.Failure(EventErrors.NotFound(request.EventId));
 
-        IEnumerable<Ticket> tickets = await ticketRepository.GetForEventAsync(@event, cancellationToken);
+        var tickets = await ticketRepository.GetForEventAsync(@event, cancellationToken);
 
-        foreach (Ticket ticket in tickets)
-        {
-            ticket.Archive();
-        }
+        foreach (var ticket in tickets) ticket.Archive();
 
         @event.TicketsArchived();
 

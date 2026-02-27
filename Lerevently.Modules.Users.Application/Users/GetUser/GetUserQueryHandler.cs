@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Dapper;
+﻿using Dapper;
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
@@ -12,7 +11,7 @@ internal sealed class GetUserQueryHandler(IDbConnectionFactory dbConnectionFacto
 {
     public async Task<Result<UserResponse>> Handle(GetUserQuery request, CancellationToken cancellationToken)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         const string sql =
             $"""
@@ -25,10 +24,10 @@ internal sealed class GetUserQueryHandler(IDbConnectionFactory dbConnectionFacto
              WHERE "Id" = @UserId
              """;
 
-        UserResponse? user = await connection.QuerySingleOrDefaultAsync<UserResponse>(sql, request);
-        
+        var user = await connection.QuerySingleOrDefaultAsync<UserResponse>(sql, request);
+
         Console.WriteLine(user.Id);
-        
+
         if (user is null)
         {
             Console.WriteLine("Executed");

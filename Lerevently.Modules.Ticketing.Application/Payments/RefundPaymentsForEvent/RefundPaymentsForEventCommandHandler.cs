@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Lerevently.Common.Application.Messaging;
+﻿using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Data;
 using Lerevently.Modules.Ticketing.Domain.Events;
@@ -15,21 +14,15 @@ internal sealed class RefundPaymentsForEventCommandHandler(
 {
     public async Task<Result> Handle(RefundPaymentsForEventCommand request, CancellationToken cancellationToken)
     {
-        await using DbTransaction transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
+        await using var transaction = await unitOfWork.BeginTransactionAsync(cancellationToken);
 
-        Event? @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
+        var @event = await eventRepository.GetAsync(request.EventId, cancellationToken);
 
-        if (@event is null)
-        {
-            return Result.Failure(EventErrors.NotFound(request.EventId));
-        }
+        if (@event is null) return Result.Failure(EventErrors.NotFound(request.EventId));
 
-        IEnumerable<Payment> payments = await paymentRepository.GetForEventAsync(@event, cancellationToken);
+        var payments = await paymentRepository.GetForEventAsync(@event, cancellationToken);
 
-        foreach (Payment payment in payments)
-        {
-            payment.Refund(payment.Amount - (payment.AmountRefunded ?? decimal.Zero));
-        }
+        foreach (var payment in payments) payment.Refund(payment.Amount - (payment.AmountRefunded ?? decimal.Zero));
 
         @event.PaymentsRefunded();
 

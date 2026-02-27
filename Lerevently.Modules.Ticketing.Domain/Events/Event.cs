@@ -53,10 +53,7 @@ public sealed class Event : Entity
 
     public void Cancel()
     {
-        if (Canceled)
-        {
-            return;
-        }
+        if (Canceled) return;
 
         Canceled = true;
 

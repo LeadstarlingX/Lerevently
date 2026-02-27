@@ -7,9 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj" />
-      <ProjectReference Include="..\Lerevently.Common.Presentation\Lerevently.Common.Presentation.csproj" />
-      <ProjectReference Include="..\Lerevently.Modules.Attendance.Application\Lerevently.Modules.Attendance.Application.csproj" />
+        <ProjectReference Include="..\Lerevently.Common.Infrastructure\Lerevently.Common.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Lerevently.Common.Presentation\Lerevently.Common.Presentation.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Attendance.Application\Lerevently.Modules.Attendance.Application.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Events.IntegrationEvents\Lerevently.Modules.Events.IntegrationEvents.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Ticketing.IntegrationEvents\Lerevently.Modules.Ticketing.IntegrationEvents.csproj"/>
+        <ProjectReference Include="..\Lerevently.Modules.Users.IntegrationEvents\Lerevently.Modules.Users.IntegrationEvents.csproj"/>
     </ItemGroup>
 
 </Project>
