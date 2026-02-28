@@ -4,9 +4,12 @@ namespace Lerevently.Modules.Events.Domain.Categories;
 
 public sealed class Category : Entity
 {
+    
+#pragma warning disable CS8618
     private Category()
     {
     }
+#pragma warning restore CS8618
 
     public Guid Id { get; private set; }
 

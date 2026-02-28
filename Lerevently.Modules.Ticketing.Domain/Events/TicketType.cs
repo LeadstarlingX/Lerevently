@@ -4,9 +4,12 @@ namespace Lerevently.Modules.Ticketing.Domain.Events;
 
 public sealed class TicketType : Entity
 {
+    
+#pragma warning disable CS8618
     private TicketType()
     {
     }
+#pragma warning restore CS8618
 
     public Guid Id { get; private set; }
 

@@ -4,9 +4,12 @@ namespace Lerevently.Modules.Ticketing.Domain.Customers;
 
 public sealed class Customer : Entity
 {
+    
+#pragma warning disable CS8618
     private Customer()
     {
     }
+#pragma warning restore CS8618
 
     public Guid Id { get; private set; }
 

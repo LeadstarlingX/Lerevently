@@ -5,9 +5,12 @@ namespace Lerevently.Modules.Ticketing.Domain.Payments;
 
 public sealed class Payment : Entity
 {
+    
+#pragma warning disable CS8618
     private Payment()
     {
     }
+#pragma warning restore CS8618
 
     public Guid Id { get; private set; }
 

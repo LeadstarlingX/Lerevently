@@ -8,9 +8,11 @@ public sealed class Order : Entity
 {
     private readonly List<OrderItem> _orderItems = [];
 
+#pragma warning disable CS8618
     private Order()
     {
     }
+#pragma warning restore CS8618
 
     public Guid Id { get; private set; }
 

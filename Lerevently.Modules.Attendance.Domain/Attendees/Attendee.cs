@@ -5,9 +5,12 @@ namespace Lerevently.Modules.Attendance.Domain.Attendees;
 
 public sealed class Attendee : Entity
 {
+    
+#pragma warning disable CS8618
     private Attendee()
     {
     }
+#pragma warning restore CS8618
 
     public Guid Id { get; private set; }
 

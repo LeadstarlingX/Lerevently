@@ -6,10 +6,12 @@ public sealed class User : Entity
 {
     private readonly List<Role> _roles = [];
 
+#pragma warning disable CS8618
     private User()
     {
     }
-
+#pragma warning restore CS8618
+    
     public Guid Id { get; private set; }
 
     public string Email { get; private set; }

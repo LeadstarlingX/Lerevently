@@ -5,9 +5,12 @@ namespace Lerevently.Modules.Events.Domain.Events;
 
 public sealed class Event : Entity
 {
+    
+#pragma warning disable CS8618
     private Event()
     {
     }
+#pragma warning restore CS8618
 
     public Guid Id { get; private set; }
 

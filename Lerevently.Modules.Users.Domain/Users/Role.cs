@@ -9,10 +9,11 @@ public sealed class Role
     {
         Name = name;
     }
-
+#pragma warning disable CS8618
     private Role()
     {
     }
+#pragma warning restore CS8618
 
     public string Name { get; private set; }
 }

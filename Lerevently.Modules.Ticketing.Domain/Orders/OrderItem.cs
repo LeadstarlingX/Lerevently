@@ -2,9 +2,12 @@
 
 public sealed class OrderItem
 {
+    
+#pragma warning disable CS8618
     private OrderItem()
     {
     }
+#pragma warning restore CS8618
 
     public Guid Id { get; private set; }
 
