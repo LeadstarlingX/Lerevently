@@ -6,9 +6,10 @@ using Lerevently.Modules.Ticketing.IntegrationEvents;
 namespace Lerevently.Modules.Ticketing.Application.Tickets.ArchiveTicket;
 
 internal sealed class TicketArchivedDomainEventHandler(IEventBus eventBus)
-    : IDomainEventHandler<TicketArchivedDomainEvent>
+    : DomainEventHandler<TicketArchivedDomainEvent>
 {
-    public async Task Handle(TicketArchivedDomainEvent domainEvent, CancellationToken cancellationToken)
+    public override async Task Handle(TicketArchivedDomainEvent domainEvent,
+        CancellationToken cancellationToken = default)
     {
         await eventBus.PublishAsync(
             new TicketArchivedIntegrationEvent(

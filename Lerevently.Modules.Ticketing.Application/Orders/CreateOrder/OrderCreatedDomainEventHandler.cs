@@ -9,9 +9,10 @@ using MediatR;
 namespace Lerevently.Modules.Ticketing.Application.Orders.CreateOrder;
 
 internal sealed class OrderCreatedDomainEventHandler(ISender sender, IEventBus eventBus)
-    : IDomainEventHandler<OrderCreatedDomainEvent>
+    : DomainEventHandler<OrderCreatedDomainEvent>
 {
-    public async Task Handle(OrderCreatedDomainEvent notification, CancellationToken cancellationToken)
+    public override async Task Handle(OrderCreatedDomainEvent notification,
+        CancellationToken cancellationToken = default)
     {
         var result = await sender.Send(new GetOrderQuery(notification.OrderId), cancellationToken);
 

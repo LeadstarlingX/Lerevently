@@ -28,12 +28,12 @@ internal sealed class RegisterUser : IEndpoint
 
     internal sealed class Request
     {
-        public string Email { get; init; }
+        public string Email { get; init; } = string.Empty;
 
-        public string Password { get; init; }
+        public string Password { get; init; } = string.Empty;
 
-        public string FirstName { get; init; }
+        public string FirstName { get; init; } = string.Empty;
 
-        public string LastName { get; init; }
+        public string LastName { get; init; } = string.Empty;
     }
 }

@@ -6,9 +6,10 @@ using Lerevently.Modules.Events.IntegrationEvents;
 namespace Lerevently.Modules.Events.Application.TicketTypes.UpdateTicketTypePrice;
 
 internal sealed class TicketTypePriceChangedDomainEventHandler(IEventBus eventBus)
-    : IDomainEventHandler<TicketTypePriceChangedDomainEvent>
+    : DomainEventHandler<TicketTypePriceChangedDomainEvent>
 {
-    public async Task Handle(TicketTypePriceChangedDomainEvent domainEvent, CancellationToken cancellationToken)
+    public override async Task Handle(TicketTypePriceChangedDomainEvent domainEvent,
+        CancellationToken cancellationToken = default)
     {
         await eventBus.PublishAsync(
             new TicketTypePriceChangedIntegrationEvent(

@@ -32,11 +32,11 @@ internal sealed class CreateEvent : IEndpoint
     {
         public Guid CategoryId { get; init; }
 
-        public string Title { get; init; }
+        public string Title { get; init; } = string.Empty;
 
-        public string Description { get; init; }
+        public string Description { get; init; } = string.Empty;
 
-        public string Location { get; init; }
+        public string Location { get; init; } = string.Empty;
 
         public DateTime StartsAtUtc { get; init; }
 

@@ -14,5 +14,5 @@ public sealed class OrderItemModel
 
     public decimal Price { get; init; }
 
-    public string Currency { get; init; }
+    public string Currency { get; init; } = string.Empty;
 }

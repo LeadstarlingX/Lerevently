@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace Lerevently.Common.Infrastructure.Outbox;
 
-public sealed class InsertOutboxMessagesInterceptor(IServiceScopeFactory serviceScopeFactory) : SaveChangesInterceptor
+public sealed class InsertOutboxMessagesInterceptor() : SaveChangesInterceptor
 {
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,

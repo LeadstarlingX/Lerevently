@@ -26,7 +26,6 @@ internal sealed class GetUserQueryHandler(IDbConnectionFactory dbConnectionFacto
 
         var user = await connection.QuerySingleOrDefaultAsync<UserResponse>(sql, request);
 
-        Console.WriteLine(user.Id);
 
         if (user is null)
         {

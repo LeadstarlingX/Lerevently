@@ -27,10 +27,10 @@ internal sealed class UpdateUserProfile : IEndpoint
             .WithTags(Tags.Users);
     }
 
-    internal sealed class Request
+    private sealed class Request
     {
-        public string FirstName { get; init; }
+        public string FirstName { get; init; } = string.Empty;
 
-        public string LastName { get; init; }
+        public string LastName { get; init; } = string.Empty;
     }
 }

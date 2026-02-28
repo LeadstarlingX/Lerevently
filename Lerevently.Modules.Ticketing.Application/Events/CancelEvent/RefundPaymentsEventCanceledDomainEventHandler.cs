@@ -7,9 +7,10 @@ using MediatR;
 namespace Lerevently.Modules.Ticketing.Application.Events.CancelEvent;
 
 internal sealed class RefundPaymentsEventCanceledDomainEventHandler(ISender sender)
-    : IDomainEventHandler<EventCanceledDomainEvent>
+    : DomainEventHandler<EventCanceledDomainEvent>
 {
-    public async Task Handle(EventCanceledDomainEvent domainEvent, CancellationToken cancellationToken)
+    public override async Task Handle(EventCanceledDomainEvent domainEvent,
+        CancellationToken cancellationToken = default)
     {
         var result = await sender.Send(new RefundPaymentsForEventCommand(domainEvent.EventId), cancellationToken);
 

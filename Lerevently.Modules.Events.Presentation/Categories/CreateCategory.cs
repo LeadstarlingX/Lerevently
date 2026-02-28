@@ -22,8 +22,8 @@ internal sealed class CreateCategory : IEndpoint
             .WithTags(Tags.Categories);
     }
 
-    internal sealed class Request
+    private sealed class Request
     {
-        public string Name { get; init; }
+        public string Name { get; init; } = string.Empty;
     }
 }
