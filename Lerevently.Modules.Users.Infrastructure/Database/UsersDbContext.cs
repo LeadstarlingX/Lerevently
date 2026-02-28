@@ -1,4 +1,5 @@
-﻿using Lerevently.Modules.Users.Application.Abstractions.Data;
+﻿using Lerevently.Common.Infrastructure.Outbox;
+using Lerevently.Modules.Users.Application.Abstractions.Data;
 using Lerevently.Modules.Users.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,8 @@ public sealed class UsersDbContext(DbContextOptions<UsersDbContext> options) : D
     {
         modelBuilder.HasDefaultSchema(Schemas.Users);
 
+
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UsersDbContext).Assembly);
     }
 }

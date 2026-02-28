@@ -1,4 +1,5 @@
-﻿using Lerevently.Modules.Attendance.Domain.Attendees;
+﻿using Lerevently.Common.Infrastructure.Outbox;
+using Lerevently.Modules.Attendance.Domain.Attendees;
 using Lerevently.Modules.Attendance.Domain.Events;
 using Lerevently.Modules.Attendance.Domain.Tickets;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,8 @@ public sealed class AttendanceDbContext(DbContextOptions<AttendanceDbContext> op
     {
         modelBuilder.HasDefaultSchema(Schemas.Attendance);
 
+        
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AttendanceDbContext).Assembly);
     }
 }

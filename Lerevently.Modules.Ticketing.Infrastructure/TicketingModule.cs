@@ -1,4 +1,4 @@
-﻿using Lerevently.Common.Infrastructure.Interceptors;
+﻿using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Authentication;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Data;
@@ -14,6 +14,7 @@ using Lerevently.Modules.Ticketing.Infrastructure.Customers;
 using Lerevently.Modules.Ticketing.Infrastructure.Database;
 using Lerevently.Modules.Ticketing.Infrastructure.Events;
 using Lerevently.Modules.Ticketing.Infrastructure.Orders;
+using Lerevently.Modules.Ticketing.Infrastructure.Outbox;
 using Lerevently.Modules.Ticketing.Infrastructure.Payments;
 using Lerevently.Modules.Ticketing.Infrastructure.Tickets;
 using Lerevently.Modules.Ticketing.Presentation;
@@ -58,7 +59,12 @@ public static class TicketingModule
                     configuration.GetConnectionString("Database"),
                     npgsqlOptions => npgsqlOptions
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Ticketing))
-                .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>()));
+                .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
+        
+        
+        services.Configure<OutboxOptions>(configuration.GetSection("Ticketing:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
 
         services.AddScoped<ICustomerRepository, CustomerRepository>();
         services.AddScoped<IEventRepository, EventRepository>();

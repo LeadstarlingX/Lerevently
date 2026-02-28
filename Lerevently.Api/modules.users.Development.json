@@ -1,5 +1,9 @@
 {
   "Users": {
+    "Outbox": {
+      "IntervalInSeconds": 15,
+      "BatchSize": 20
+    },
     "KeyCloak": {
       "AdminUrl": "http://localhost:8001/admin/realms/lerevently/",
       "TokenUrl": "http://localhost:8001/realms/lerevently/protocol/openid-connect/token",

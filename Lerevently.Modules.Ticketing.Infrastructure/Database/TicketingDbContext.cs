@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Data;
 using Lerevently.Modules.Ticketing.Domain.Customers;
 using Lerevently.Modules.Ticketing.Domain.Events;
@@ -38,6 +39,8 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
     {
         modelBuilder.HasDefaultSchema(Schemas.Ticketing);
 
+        
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TicketingDbContext).Assembly);
     }
 }

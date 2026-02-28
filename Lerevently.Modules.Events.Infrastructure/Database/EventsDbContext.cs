@@ -1,4 +1,5 @@
-﻿using Lerevently.Modules.Events.Application.Abstractions.Data;
+﻿using Lerevently.Common.Infrastructure.Outbox;
+using Lerevently.Modules.Events.Application.Abstractions.Data;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
 using Lerevently.Modules.Events.Domain.TicktTypes;
@@ -19,6 +20,8 @@ public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) :
     {
         modelBuilder.HasDefaultSchema(Schemas.Events);
 
+        
+        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventsDbContext).Assembly);
     }
 }

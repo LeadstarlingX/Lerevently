@@ -7,12 +7,13 @@ using Lerevently.Common.Infrastructure.Authorization;
 using Lerevently.Common.Infrastructure.Caching;
 using Lerevently.Common.Infrastructure.Clock;
 using Lerevently.Common.Infrastructure.Data;
-using Lerevently.Common.Infrastructure.Interceptors;
+using Lerevently.Common.Infrastructure.Outbox;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
+using Quartz;
 using StackExchange.Redis;
 
 namespace Lerevently.Common.Infrastructure;
@@ -31,7 +32,7 @@ public static class InfrastructureConfiguration
 
         services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
 
-        services.TryAddSingleton<PublishDomainEventsInterceptor>();
+        services.TryAddSingleton<InsertOutboxMessagesInterceptor>();
 
         services.TryAddSingleton<IDateTimeProvider, DateTimeProvider>();
 
@@ -39,6 +40,10 @@ public static class InfrastructureConfiguration
 
         services.AddAuthorizationInternal();
 
+
+        services.AddQuartz();
+        
+        services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
         /// To solve the problem of not being able to resolve the connection multiplexer when
         /// running the migrations, at real runtime the first part will always work.

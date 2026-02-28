@@ -1,11 +1,12 @@
 ﻿using Lerevently.Common.Application.Authorization;
-using Lerevently.Common.Infrastructure.Interceptors;
+using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Users.Application.Abstractions.Identity;
 using Lerevently.Modules.Users.Domain.Users;
 using Lerevently.Modules.Users.Infrastructure.Authorization;
 using Lerevently.Modules.Users.Infrastructure.Database;
 using Lerevently.Modules.Users.Infrastructure.Identity;
+using Lerevently.Modules.Users.Infrastructure.Outbox;
 using Lerevently.Modules.Users.Infrastructure.Users;
 using Lerevently.Modules.Users.Presentation;
 using Microsoft.EntityFrameworkCore;
@@ -38,11 +39,15 @@ public static class UsersModule
                     configuration.GetConnectionString("Database"),
                     npgsqlOptions => npgsqlOptions
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Users))
-                .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>()));
+                .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
 
         services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
+        
+        services.Configure<OutboxOptions>(configuration.GetSection("Users:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
 
         services.AddTransient<IIdentityProviderService, IdentityProviderService>();
 

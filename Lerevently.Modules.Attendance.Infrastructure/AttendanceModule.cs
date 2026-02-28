@@ -1,4 +1,4 @@
-﻿using Lerevently.Common.Infrastructure.Interceptors;
+﻿using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Attendance.Application.Abstractions.Authentication;
 using Lerevently.Modules.Attendance.Application.Abstractions.Data;
@@ -9,6 +9,7 @@ using Lerevently.Modules.Attendance.Infrastructure.Attendees;
 using Lerevently.Modules.Attendance.Infrastructure.Authentication;
 using Lerevently.Modules.Attendance.Infrastructure.Database;
 using Lerevently.Modules.Attendance.Infrastructure.Events;
+using Lerevently.Modules.Attendance.Infrastructure.Outbox;
 using Lerevently.Modules.Attendance.Infrastructure.Tickets;
 using Lerevently.Modules.Attendance.Presentation;
 using Lerevently.Modules.Attendance.Presentation.Attendees;
@@ -51,7 +52,12 @@ public static class AttendanceModule
                     configuration.GetConnectionString("Database"),
                     npgsqlOptions => npgsqlOptions
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Attendance))
-                .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>()));
+                .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
+        
+        
+        services.Configure<OutboxOptions>(configuration.GetSection("Attendance:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AttendanceDbContext>());
 

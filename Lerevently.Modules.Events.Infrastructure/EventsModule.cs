@@ -1,4 +1,4 @@
-﻿using Lerevently.Common.Infrastructure.Interceptors;
+﻿using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
@@ -6,6 +6,7 @@ using Lerevently.Modules.Events.Domain.TicktTypes;
 using Lerevently.Modules.Events.Infrastructure.Categories;
 using Lerevently.Modules.Events.Infrastructure.Database;
 using Lerevently.Modules.Events.Infrastructure.Events;
+using Lerevently.Modules.Events.Infrastructure.Outbox;
 using Lerevently.Modules.Events.Infrastructure.TicketTypes;
 using Lerevently.Modules.Events.Presentation;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +41,11 @@ public static class EventsModule
                     databaseConnectionString,
                     npgsqlOptions => npgsqlOptions
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events))
-                .AddInterceptors(sp.GetRequiredService<PublishDomainEventsInterceptor>()));
+                .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
+        
+        services.Configure<OutboxOptions>(configuration.GetSection("Events:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
 
