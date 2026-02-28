@@ -41,6 +41,7 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
 
         
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TicketingDbContext).Assembly);
     }
 }

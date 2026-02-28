@@ -1,14 +1,12 @@
 ﻿using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Common.Infrastructure.Serialization;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 
 namespace Lerevently.Common.Infrastructure.Outbox;
 
-public sealed class InsertOutboxMessagesInterceptor() : SaveChangesInterceptor
+public sealed class InsertOutboxMessagesInterceptor : SaveChangesInterceptor
 {
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
@@ -19,10 +17,9 @@ public sealed class InsertOutboxMessagesInterceptor() : SaveChangesInterceptor
         {
             InsertOutboxMessages(eventData.Context);
         }
-        
-        return await base.SavingChangesAsync(eventData, result, cancellationToken);  
+
+        return await base.SavingChangesAsync(eventData, result, cancellationToken);
     }
-    
 
     private static void InsertOutboxMessages(DbContext context)
     {
@@ -38,7 +35,7 @@ public sealed class InsertOutboxMessagesInterceptor() : SaveChangesInterceptor
 
                 return domainEvents;
             })
-            .Select(domainEvent =>  new OutboxMessage
+            .Select(domainEvent => new OutboxMessage
             {
                 Id = domainEvent.Id,
                 Type = domainEvent.GetType().Name,
@@ -46,8 +43,7 @@ public sealed class InsertOutboxMessagesInterceptor() : SaveChangesInterceptor
                 OccurredOnUtc = domainEvent.OccurredAtUtc
             })
             .ToList();
-            
-            context.Set<OutboxMessage>().AddRange(outboxMessages);
-        
+
+        context.Set<OutboxMessage>().AddRange(outboxMessages);
     }
 }

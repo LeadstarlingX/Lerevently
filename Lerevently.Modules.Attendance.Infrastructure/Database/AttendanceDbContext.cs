@@ -22,6 +22,7 @@ public sealed class AttendanceDbContext(DbContextOptions<AttendanceDbContext> op
 
         
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AttendanceDbContext).Assembly);
     }
 }

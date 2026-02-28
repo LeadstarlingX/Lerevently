@@ -22,6 +22,7 @@ public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) :
 
         
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventsDbContext).Assembly);
     }
 }

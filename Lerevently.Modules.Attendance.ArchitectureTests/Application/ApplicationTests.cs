@@ -192,6 +192,8 @@ public class ApplicationTests : BaseTest
         var result = Types.InAssembly(ApplicationAssembly)
             .That()
             .ImplementInterface(typeof(IDomainEventHandler<>))
+            .Or()
+            .Inherit(typeof(DomainEventHandler<>))
             .Should()
             .NotBePublic()
             .GetResult();
@@ -205,6 +207,8 @@ public class ApplicationTests : BaseTest
         var result = Types.InAssembly(ApplicationAssembly)
             .That()
             .ImplementInterface(typeof(IDomainEventHandler<>))
+            .Or()
+            .Inherit(typeof(DomainEventHandler<>))
             .Should()
             .BeSealed()
             .GetResult();
@@ -218,6 +222,8 @@ public class ApplicationTests : BaseTest
         var result = Types.InAssembly(ApplicationAssembly)
             .That()
             .ImplementInterface(typeof(IDomainEventHandler<>))
+            .Or()
+            .Inherit(typeof(DomainEventHandler<>))
             .Should()
             .HaveNameEndingWith("DomainEventHandler")
             .GetResult();

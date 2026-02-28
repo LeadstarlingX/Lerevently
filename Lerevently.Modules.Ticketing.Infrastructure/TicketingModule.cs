@@ -1,4 +1,5 @@
-﻿using Lerevently.Common.Infrastructure.Outbox;
+﻿using Lerevently.Common.Application.Messaging;
+using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Authentication;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Data;
@@ -26,6 +27,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Lerevently.Modules.Ticketing.Infrastructure;
 
@@ -35,6 +37,8 @@ public static class TicketingModule
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddDomainEventHandlers();
+        
         services.AddInfrastructure(configuration);
 
         services.AddEndpoints(AssemblyReference.Assembly);
@@ -79,5 +83,28 @@ public static class TicketingModule
 
         services.AddSingleton<CartService>();
         services.AddSingleton<IPaymentService, PaymentService>();
+    }
+    
+    private static void AddDomainEventHandlers(this IServiceCollection services)
+    {
+        Type[] domainEventHandlers = Application.AssemblyReference.Assembly
+            .GetTypes()
+            .Where(t => t.IsAssignableTo(typeof(IDomainEventHandler)))
+            .ToArray();
+
+        foreach (Type domainEventHandler in domainEventHandlers)
+        {
+            services.TryAddScoped(domainEventHandler);
+
+            Type domainEvent = domainEventHandler
+                .GetInterfaces()
+                .Single(i => i.IsGenericType)
+                .GetGenericArguments()
+                .Single();
+
+            Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
+
+            services.Decorate(domainEventHandler, closedIdempotentHandler);
+        }
     }
 }

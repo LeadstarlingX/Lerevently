@@ -52,6 +52,20 @@ namespace Lerevently.Modules.Events.Api.Database.Migrations
                     b.ToTable("OutboxMessage", "events");
                 });
 
+            modelBuilder.Entity("Lerevently.Common.Infrastructure.Outbox.OutboxMessageConsumer", b =>
+                {
+                    b.Property<Guid>("OutboxMessageId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.HasKey("OutboxMessageId", "Name");
+
+                    b.ToTable("OutboxMessageConsumer", "events");
+                });
+
             modelBuilder.Entity("Lerevently.Modules.Events.Domain.Categories.Category", b =>
                 {
                     b.Property<Guid>("Id")

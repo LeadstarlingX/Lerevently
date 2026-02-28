@@ -15,6 +15,7 @@ public sealed class UsersDbContext(DbContextOptions<UsersDbContext> options) : D
 
 
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UsersDbContext).Assembly);
     }
 }
