@@ -1,4 +1,5 @@
-﻿using Lerevently.Common.Application.Messaging;
+﻿using Lerevently.Common.Application.EventBus;
+using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Domain.Categories;
@@ -7,6 +8,7 @@ using Lerevently.Modules.Events.Domain.TicktTypes;
 using Lerevently.Modules.Events.Infrastructure.Categories;
 using Lerevently.Modules.Events.Infrastructure.Database;
 using Lerevently.Modules.Events.Infrastructure.Events;
+using Lerevently.Modules.Events.Infrastructure.Inbox;
 using Lerevently.Modules.Events.Infrastructure.Outbox;
 using Lerevently.Modules.Events.Infrastructure.TicketTypes;
 using Lerevently.Modules.Events.Presentation;
@@ -26,6 +28,8 @@ public static class EventsModule
         IConfiguration configuration)
     {
         services.AddDomainEventHandlers();
+        
+        services.AddIntegrationEventHandlers();
         
         services.AddEndpoints(AssemblyReference.Assembly);
 
@@ -47,17 +51,31 @@ public static class EventsModule
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events))
                 .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
         
-        services.Configure<OutboxOptions>(configuration.GetSection("Events:Outbox"));
-
-        services.ConfigureOptions<ConfigureProcessOutboxJob>();
+        services.AddMyOut_InBoxConfiguration(configuration);
+        services.AddMyRepositories();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
 
+    }
+    
+    private static void AddMyOut_InBoxConfiguration(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<OutboxOptions>(configuration.GetSection("Events:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
+        
+        services.Configure<InboxOptions>(configuration.GetSection("Events:Inbox"));
+
+        services.ConfigureOptions<ConfigureProcessInboxJob>();
+    }
+
+    private static void AddMyRepositories(this IServiceCollection services)
+    {
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
     }
-    
     
     private static void AddDomainEventHandlers(this IServiceCollection services)
     {
@@ -79,6 +97,30 @@ public static class EventsModule
             Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
 
             services.Decorate(domainEventHandler, closedIdempotentHandler);
+        }
+    }
+    
+    private static void AddIntegrationEventHandlers(this IServiceCollection services)
+    {
+        Type[] integrationEventHandlers = Presentation.AssemblyReference.Assembly
+            .GetTypes()
+            .Where(t => t.IsAssignableTo(typeof(IIntegrationEventHandler)))
+            .ToArray();
+
+        foreach (Type integrationEventHandler in integrationEventHandlers)
+        {
+            services.TryAddScoped(integrationEventHandler);
+
+            Type integrationEvent = integrationEventHandler
+                .GetInterfaces()
+                .Single(i => i.IsGenericType)
+                .GetGenericArguments()
+                .Single();
+
+            Type closedIdempotentHandler =
+                typeof(IdempotentIntegrationEventHandler<>).MakeGenericType(integrationEvent);
+
+            services.Decorate(integrationEventHandler, closedIdempotentHandler);
         }
     }
 }

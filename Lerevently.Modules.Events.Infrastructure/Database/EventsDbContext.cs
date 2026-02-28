@@ -1,4 +1,5 @@
-﻿using Lerevently.Common.Infrastructure.Outbox;
+﻿using Lerevently.Common.Infrastructure.Inbox;
+using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Modules.Events.Application.Abstractions.Data;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
@@ -23,6 +24,10 @@ public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) :
         
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
+        
+        modelBuilder.ApplyConfiguration(new InboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new InboxMessageConsumerConfiguration());
+        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventsDbContext).Assembly);
     }
 }

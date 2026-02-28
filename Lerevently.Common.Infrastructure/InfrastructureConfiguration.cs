@@ -1,4 +1,5 @@
-﻿using Lerevently.Common.Application.Caching;
+﻿using Dapper;
+using Lerevently.Common.Application.Caching;
 using Lerevently.Common.Application.Clock;
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.EventBus;
@@ -39,6 +40,8 @@ public static class InfrastructureConfiguration
         services.AddAuthenticationInternal();
 
         services.AddAuthorizationInternal();
+
+        SqlMapper.AddTypeHandler(new GenericArrayHandler<string>());
 
 
         services.AddQuartz();

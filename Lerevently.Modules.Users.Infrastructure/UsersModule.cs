@@ -1,4 +1,5 @@
 ﻿using Lerevently.Common.Application.Authorization;
+using Lerevently.Common.Application.EventBus;
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
@@ -7,6 +8,7 @@ using Lerevently.Modules.Users.Domain.Users;
 using Lerevently.Modules.Users.Infrastructure.Authorization;
 using Lerevently.Modules.Users.Infrastructure.Database;
 using Lerevently.Modules.Users.Infrastructure.Identity;
+using Lerevently.Modules.Users.Infrastructure.Inbox;
 using Lerevently.Modules.Users.Infrastructure.Outbox;
 using Lerevently.Modules.Users.Infrastructure.Users;
 using Lerevently.Modules.Users.Presentation;
@@ -27,6 +29,8 @@ public static class UsersModule
         IConfiguration configuration)
     {
         services.AddDomainEventHandlers();
+
+        services.AddIntegrationEventHandlers();
         
         services.AddInfrastructure(configuration);
 
@@ -35,7 +39,8 @@ public static class UsersModule
         return services;
     }
 
-    private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    private static void AddInfrastructure(this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddDbContext<UsersDbContext>((sp, options) =>
             options
@@ -45,14 +50,29 @@ public static class UsersModule
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Users))
                 .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
 
+        services.AddMyOut_InBoxConfiguration(configuration);
+        services.AddMyKeyCloack(configuration);
+        
         services.AddScoped<IUserRepository, UserRepository>();
-
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
         
+    }
+
+    private static void AddMyOut_InBoxConfiguration(this IServiceCollection services,
+        IConfiguration configuration)
+    {
         services.Configure<OutboxOptions>(configuration.GetSection("Users:Outbox"));
 
         services.ConfigureOptions<ConfigureProcessOutboxJob>();
+        
+        services.Configure<InboxOptions>(configuration.GetSection("Users:Inbox"));
 
+        services.ConfigureOptions<ConfigureProcessInboxJob>();
+    }
+    
+    private static void AddMyKeyCloack(this IServiceCollection services,
+        IConfiguration configuration)
+    {
         services.AddTransient<IIdentityProviderService, IdentityProviderService>();
 
         services.Configure<KeyCloakOptions>(configuration.GetSection("Users:KeyCloak"));
@@ -93,6 +113,30 @@ public static class UsersModule
             Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
 
             services.Decorate(domainEventHandler, closedIdempotentHandler);
+        }
+    }
+    
+    private static void AddIntegrationEventHandlers(this IServiceCollection services)
+    {
+        Type[] integrationEventHandlers = Presentation.AssemblyReference.Assembly
+            .GetTypes()
+            .Where(t => t.IsAssignableTo(typeof(IIntegrationEventHandler)))
+            .ToArray();
+
+        foreach (Type integrationEventHandler in integrationEventHandlers)
+        {
+            services.TryAddScoped(integrationEventHandler);
+
+            Type integrationEvent = integrationEventHandler
+                .GetInterfaces()
+                .Single(i => i.IsGenericType)
+                .GetGenericArguments()
+                .Single();
+
+            Type closedIdempotentHandler =
+                typeof(IdempotentIntegrationEventHandler<>).MakeGenericType(integrationEvent);
+
+            services.Decorate(integrationEventHandler, closedIdempotentHandler);
         }
     }
 }

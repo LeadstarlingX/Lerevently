@@ -1,4 +1,5 @@
-﻿using Lerevently.Common.Infrastructure.Outbox;
+﻿using Lerevently.Common.Infrastructure.Inbox;
+using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Modules.Attendance.Domain.Attendees;
 using Lerevently.Modules.Attendance.Domain.Events;
 using Lerevently.Modules.Attendance.Domain.Tickets;
@@ -23,6 +24,10 @@ public sealed class AttendanceDbContext(DbContextOptions<AttendanceDbContext> op
         
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
+        
+        modelBuilder.ApplyConfiguration(new InboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new InboxMessageConsumerConfiguration());
+        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AttendanceDbContext).Assembly);
     }
 }

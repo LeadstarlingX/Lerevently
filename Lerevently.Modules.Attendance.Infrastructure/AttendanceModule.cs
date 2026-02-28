@@ -1,4 +1,5 @@
-﻿using Lerevently.Common.Application.Messaging;
+﻿using Lerevently.Common.Application.EventBus;
+using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Attendance.Application.Abstractions.Authentication;
@@ -10,6 +11,7 @@ using Lerevently.Modules.Attendance.Infrastructure.Attendees;
 using Lerevently.Modules.Attendance.Infrastructure.Authentication;
 using Lerevently.Modules.Attendance.Infrastructure.Database;
 using Lerevently.Modules.Attendance.Infrastructure.Events;
+using Lerevently.Modules.Attendance.Infrastructure.Inbox;
 using Lerevently.Modules.Attendance.Infrastructure.Outbox;
 using Lerevently.Modules.Attendance.Infrastructure.Tickets;
 using Lerevently.Modules.Attendance.Presentation;
@@ -32,6 +34,8 @@ public static class AttendanceModule
         IConfiguration configuration)
     {
         services.AddDomainEventHandlers();
+        
+        services.AddIntegrationEventHandlers();
         
         services.AddInfrastructure(configuration);
 
@@ -58,18 +62,32 @@ public static class AttendanceModule
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Attendance))
                 .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
         
-        
-        services.Configure<OutboxOptions>(configuration.GetSection("Attendance:Outbox"));
-
-        services.ConfigureOptions<ConfigureProcessOutboxJob>();
+        services.AddMyOut_InBoxConfiguration(configuration);
+        services.AddMyRepositories();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AttendanceDbContext>());
 
+        services.AddScoped<IAttendanceContext, AttendanceContext>();
+        
+    }
+    
+    private static void AddMyOut_InBoxConfiguration(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.Configure<OutboxOptions>(configuration.GetSection("Attendance:Outbox"));
+
+        services.ConfigureOptions<ConfigureProcessOutboxJob>();
+        
+        services.Configure<InboxOptions>(configuration.GetSection("Attendance:Inbox"));
+
+        services.ConfigureOptions<ConfigureProcessInboxJob>();
+    }
+    
+    private static void AddMyRepositories(this IServiceCollection services)
+    {
         services.AddScoped<IAttendeeRepository, AttendeeRepository>();
         services.AddScoped<IEventRepository, EventRepository>();
         services.AddScoped<ITicketRepository, TicketRepository>();
-
-        services.AddScoped<IAttendanceContext, AttendanceContext>();
     }
     
     private static void AddDomainEventHandlers(this IServiceCollection services)
@@ -92,6 +110,30 @@ public static class AttendanceModule
             Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
 
             services.Decorate(domainEventHandler, closedIdempotentHandler);
+        }
+    }
+    
+    private static void AddIntegrationEventHandlers(this IServiceCollection services)
+    {
+        Type[] integrationEventHandlers = Presentation.AssemblyReference.Assembly
+            .GetTypes()
+            .Where(t => t.IsAssignableTo(typeof(IIntegrationEventHandler)))
+            .ToArray();
+
+        foreach (Type integrationEventHandler in integrationEventHandlers)
+        {
+            services.TryAddScoped(integrationEventHandler);
+
+            Type integrationEvent = integrationEventHandler
+                .GetInterfaces()
+                .Single(i => i.IsGenericType)
+                .GetGenericArguments()
+                .Single();
+
+            Type closedIdempotentHandler =
+                typeof(IdempotentIntegrationEventHandler<>).MakeGenericType(integrationEvent);
+
+            services.Decorate(integrationEventHandler, closedIdempotentHandler);
         }
     }
 }

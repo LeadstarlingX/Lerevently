@@ -1,4 +1,5 @@
 ﻿using System.Data.Common;
+using Lerevently.Common.Infrastructure.Inbox;
 using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Data;
 using Lerevently.Modules.Ticketing.Domain.Customers;
@@ -42,6 +43,11 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
         
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
+        
+        
+        modelBuilder.ApplyConfiguration(new InboxMessageConfiguration());
+        modelBuilder.ApplyConfiguration(new InboxMessageConsumerConfiguration());
+        
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TicketingDbContext).Assembly);
     }
 }
