@@ -40,6 +40,7 @@ internal class Startup
 
         services.AddInfrastructure(
             [
+                EventsModule.ConfigureConsumers(Configuration),
                 TicketingModule.ConfigureConsumers,
                 AttendanceModule.ConfigureConsumers
             ],

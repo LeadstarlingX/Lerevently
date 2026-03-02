@@ -36,6 +36,7 @@
 
         <PackageVersion Include="MassTransit" Version="8.5.8"/>
         <PackageVersion Include="MassTransit.Abstractions" Version="8.5.8"/>
+        <PackageVersion Include="MassTransit.Redis" Version="8.5.8"/>
 
 
         <PackageVersion Include="Ulid" Version="1.4.1"/>
