@@ -29,7 +29,7 @@ internal sealed class IntegrationEventConsumer<TIntegrationEvent>(IDbConnectionF
 
         const string sql =
             """
-            INSERT INTO ticketing.inbox_messages(id, type, content, occurred_on_utc)
+            INSERT INTO ticketing."InboxMessage"("Id", "Type", "Content", "OccurredOnUtc")
             VALUES (@Id, @Type, @Content::json, @OccurredOnUtc)
             """;
 
