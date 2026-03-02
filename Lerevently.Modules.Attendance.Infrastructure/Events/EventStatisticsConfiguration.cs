@@ -1,0 +1,15 @@
+﻿using Lerevently.Modules.Attendance.Domain.Events;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace Lerevently.Modules.Attendance.Infrastructure.Events;
+
+internal sealed class EventStatisticsConfiguration : IEntityTypeConfiguration<EventStatistics>
+{
+    public void Configure(EntityTypeBuilder<EventStatistics> builder)
+    {
+        builder.HasKey(es => es.EventId);
+
+        builder.Property(es => es.EventId).ValueGeneratedNever();
+    }
+}
