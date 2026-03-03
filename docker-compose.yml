@@ -43,13 +43,13 @@ services:
       - KC_HEALTH_ENABLED=true
     volumes:
       - ./.containers/identity:/opt/jboss/keycloak/standalone/data
-    #      - ./.files/filoshop-realm-export.json:/opt/keycloak/data/import/realm.json
+      - ./.files:/opt/keycloak/data/import/realm.json
     depends_on:
       lerevently.db:
         condition: service_healthy
     ports:
       - "8001:8080"  # <-- 3. FIXED: Internal port is 8080
-    command: start-dev
+    command: start-dev --import-realm
 
 
   lerevently.db:

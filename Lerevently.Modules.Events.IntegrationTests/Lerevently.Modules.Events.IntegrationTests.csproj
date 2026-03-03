@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+
+    <PropertyGroup>
+        
+        <OutputType>Exe</OutputType>
+    
+    </PropertyGroup>
+    
+    <ItemGroup>
+        
+        <PackageReference Include="Bogus" />
+        <PackageReference Include="FluentAssertions" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+        <PackageReference Include="TUnit" />
+
+        <PackageReference Include="Testcontainers.Redis" />
+        <PackageReference Include="Testcontainers.PostgreSql" />
+        <PackageReference Include="Testcontainers.Keycloak" />
+        
+        
+    </ItemGroup>
+
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Lerevently.Api\Lerevently.Api.csproj" />
+    </ItemGroup>
+
+    
+    <ItemGroup>
+      <None Update="Abstractions\lerevently-realm-export.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+          <Link>lerevently-realm-export.json</Link>
+      </None>
+    </ItemGroup>
+    
+    
+</Project>

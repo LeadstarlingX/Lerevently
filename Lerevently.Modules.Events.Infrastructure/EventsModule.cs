@@ -42,7 +42,7 @@ public static class EventsModule
     
     public static Action<IRegistrationConfigurator> ConfigureConsumers(IConfiguration configuration)
     {
-        var redisConnectionString = configuration.GetConnectionString("Redis");
+        var redisConnectionString = configuration.GetConnectionString("Cache");
         
         return registrationConfigurator => registrationConfigurator
             .AddSagaStateMachine<CancelEventSaga, CancelEventState>()

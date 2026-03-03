@@ -14,6 +14,9 @@
     </ItemGroup>
 
     <ItemGroup>
+
+        <InternalsVisibleTo Include="Lerevently.Modules.Events.IntegrationTests"/>
+        
         <Folder Include="Database\Migrations\"/>
     </ItemGroup>
 

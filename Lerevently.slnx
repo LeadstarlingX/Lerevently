@@ -37,6 +37,7 @@
     </Folder>
     <Folder Name="/src/Modules/Events/test/">
         <Project Path="Lerevently.Modules.Events.ArchitectureTests/Lerevently.Modules.Events.ArchitectureTests.csproj" />
+        <Project Path="Lerevently.Modules.Events.UnitTests/Lerevently.Modules.Events.UnitTests.csproj" />
     </Folder>
     <Folder Name="/src/Modules/Ticketing/">
         <Project Path="Lerevently.Modules.Ticketing.Application/Lerevently.Modules.Ticketing.Application.csproj" />
@@ -56,6 +57,7 @@
         <Project Path="Lerevently.Modules.Users.Presentation/Lerevently.Modules.Users.Presentation.csproj" />
     </Folder>
     <Folder Name="/src/Modules/Users/test/">
+        <Project Path="Lerevently.Modules.Events.IntegrationTests/Lerevently.Modules.Events.IntegrationTests.csproj" />
         <Project Path="Lerevently.Modules.Users.ArchitectureTests/Lerevently.Modules.Users.ArchitectureTests.csproj" />
     </Folder>
     <Folder Name="/test/">

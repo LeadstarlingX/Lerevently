@@ -7,4 +7,10 @@
         <ProjectReference Include="..\Lerevently.Modules.Users.Application\Lerevently.Modules.Users.Application.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+
+        <InternalsVisibleTo Include="Lerevently.Modules.Events.IntegrationTests"/>
+
+    </ItemGroup>
+
 </Project>
