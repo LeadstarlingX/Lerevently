@@ -3,14 +3,13 @@ using Lerevently.Modules.Users.Infrastructure.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.Keycloak;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 using TUnit.Core.Interfaces;
 
-namespace Lerevently.Modules.Events.IntegrationTests.Abstractions;
+namespace Lerevently.IntegrationTests.Abstractions;
 
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncInitializer
 {
@@ -19,29 +18,28 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     
     private readonly PostgreSqlContainer _dbContainer =
         new PostgreSqlBuilder("postgres:18.0")
-        .WithDatabase("lerevently")
-        .WithUsername("postgres")
-        .WithPassword("postgres")
-        .Build();
+            .WithDatabase("lerevently")
+            .WithUsername("postgres")
+            .WithPassword("postgres")
+            .Build();
 
     private readonly RedisContainer _redisContainer =
         new RedisBuilder("redis:8.4.0")
-        .Build();
+            .Build();
 
     private readonly KeycloakContainer _keycloakContainer =
         new KeycloakBuilder("keycloak/keycloak:26.4")
-        .WithResourceMapping(
-            new FileInfo("lerevently-realm-export.json"),
-            new FileInfo("/opt/keycloak/data/import/realm.json"))
-        .WithCommand("--import-realm")
-        .Build();
+            .WithResourceMapping(
+                new FileInfo("lerevently-realm-export.json"),
+                new FileInfo("/opt/keycloak/data/import/realm.json"))
+            .WithCommand("--import-realm")
+            .Build();
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("ConnectionStrings:Database", _dbContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings:Cache", _redisContainer.GetConnectionString());
-        
-        
+
         string keycloakAddress = _keycloakContainer.GetBaseAddress();
         string keyCloakRealmUrl = $"{keycloakAddress}realms/lerevently";
 

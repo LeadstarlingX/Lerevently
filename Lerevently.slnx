@@ -1,5 +1,6 @@
 <Solution>
     <Folder Name="/SolutionItems/">
+        <File Path=".github/pull_request_template.md" />
         <File Path=".github/workflows/build.yml" />
         <File Path="Directory.Build.props" />
         <File Path="Directory.Packages.props" />
@@ -62,6 +63,7 @@
     </Folder>
     <Folder Name="/test/">
         <Project Path="Lerevently.ArchitectureTests/Lerevently.ArchitectureTests.csproj" />
+        <Project Path="Lerevently.IntegrationTests/Lerevently.IntegrationTests.csproj" />
     </Folder>
     <Project Path="docker-compose.dcproj">
         <Build />
