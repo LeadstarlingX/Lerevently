@@ -2,6 +2,7 @@
 
 public sealed record EventResponse(
     Guid Id,
+    Guid CategoryId,
     string Title,
     string Description,
     string Location,

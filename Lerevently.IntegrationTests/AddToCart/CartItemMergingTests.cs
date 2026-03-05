@@ -79,7 +79,8 @@ public sealed class CartItemMergingTests : BaseIntegrationTest
     {
         var command = new RegisterUserCommand(Faker.Internet.Email(), Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
         var userResult = await _sender.Send(command);
-        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(15), async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
+        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(15),
+            async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
         return customerResult.Value.Id;
     }
 }

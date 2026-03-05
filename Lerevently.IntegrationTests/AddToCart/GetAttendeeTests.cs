@@ -1,14 +1,14 @@
 using FluentAssertions;
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.IntegrationTests.Abstractions;
-using Lerevently.Modules.Ticketing.Application.Customers.GetCustomer;
+using Lerevently.Modules.Attendance.Application.Attendees.GetAttendee;
 using Lerevently.Modules.Users.Application.Users.RegisterUser;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lerevently.IntegrationTests.RegisterUser;
+namespace Lerevently.IntegrationTests.AddToCart;
 
-public sealed class GetCustomerTests : BaseIntegrationTest
+public sealed class GetAttendeeTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
     private ISender _sender;
@@ -30,20 +30,20 @@ public sealed class GetCustomerTests : BaseIntegrationTest
     }
 
     [Test]
-    public async Task Should_ReturnError_WhenCustomerDoesNotExist()
+    public async Task Should_ReturnError_WhenAttendeeDoesNotExist()
     {
         // Arrange
         var nonExistentUserId = Guid.NewGuid();
 
         // Act
-        Result<CustomerResponse> result = await _sender.Send(new GetCustomerQuery(nonExistentUserId));
+        Result<AttendeeResponse> result = await _sender.Send(new GetAttendeeQuery(nonExistentUserId));
 
         // Assert
         result.IsFailure.Should().BeTrue();
     }
 
     [Test]
-    public async Task Should_ReturnCustomer_WhenUserRegistered()
+    public async Task Should_ReturnAttendee_WhenUserRegistered()
     {
         // Arrange
         var command = new RegisterUserCommand(
@@ -56,9 +56,9 @@ public sealed class GetCustomerTests : BaseIntegrationTest
         userResult.IsSuccess.Should().BeTrue();
 
         // Act
-        Result<CustomerResponse> result = await Poller.WaitAsync(
+        Result<AttendeeResponse> result = await Poller.WaitAsync(
             TimeSpan.FromSeconds(15),
-            async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
+            async () => await _sender.Send(new GetAttendeeQuery(userResult.Value)));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
