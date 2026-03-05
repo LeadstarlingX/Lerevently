@@ -1,16 +1,11 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Lerevently.Modules.Events.IntegrationTests.Abstractions;
-using Lerevently.Modules.Users.Infrastructure.Database;
-using Lerevently.Modules.Users.Infrastructure.Identity;
+using Lerevently.Modules.Users.IntegrationTests.Abstractions;
 using Lerevently.Modules.Users.Presentation.Users;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using TUnit.Core;
 
-namespace Lerevently.Modules.Events.IntegrationTests.Users;
+namespace Lerevently.Modules.Users.IntegrationTests.Users;
 
 public class RegisterUserTests : BaseIntegrationTest
 {

@@ -2,17 +2,13 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Lerevently.Modules.Events.IntegrationTests.Abstractions;
 using Lerevently.Modules.Users.Application.Users.GetUser;
-using Lerevently.Modules.Users.Infrastructure.Database;
-using Lerevently.Modules.Users.Infrastructure.Identity;
+using Lerevently.Modules.Users.IntegrationTests.Abstractions;
 using Lerevently.Modules.Users.Presentation.Users;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
-namespace Lerevently.Modules.Events.IntegrationTests.Users;
+namespace Lerevently.Modules.Users.IntegrationTests.Users;
 
 public class GetUserProfileTests : BaseIntegrationTest
 {

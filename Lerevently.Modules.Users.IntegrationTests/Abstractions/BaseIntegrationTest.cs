@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-namespace Lerevently.Modules.Events.IntegrationTests.Abstractions;
+namespace Lerevently.Modules.Users.IntegrationTests.Abstractions;
 
 public class BaseIntegrationTest : IAsyncDisposable
 {

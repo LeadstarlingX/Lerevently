@@ -3,14 +3,13 @@ using Lerevently.Modules.Users.Infrastructure.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Testcontainers.Keycloak;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
 using TUnit.Core.Interfaces;
 
-namespace Lerevently.Modules.Events.IntegrationTests.Abstractions;
+namespace Lerevently.Modules.Users.IntegrationTests.Abstractions;
 
 public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsyncInitializer
 {

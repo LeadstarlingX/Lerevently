@@ -21,7 +21,7 @@ tasks:
 
   test-all:
     desc: Run all tests in parallel
-    deps: [ test-users, test-ticketing, test-events, test-attendance, test-modules-architecture ]
+    deps: [ test-users, test-ticketing, test-events, test-attendance, test-modules-architecture, users-integration-tests ]
 
   test-users:
     desc: Run tests for Users module
@@ -47,3 +47,9 @@ tasks:
     desc: Run architecture tests (standalone)
     cmds:
       - dotnet run --project Lerevently.ArchitectureTests/Lerevently.ArchitectureTests.csproj --configuration Release --no-build -- --report-trx --report-trx-filename architecture-tests.trx --results-directory ./TestResults/Architecture
+
+
+  users-integration-tests:
+    desc: Run integration tests for Users module
+    cmds:
+      - dotnet run --project Lerevently.Modules.Users.IntegrationTests/Lerevently.Modules.Users.IntegrationTests.csproj --configuration Release --no-build -- --report-trx --report-trx-filename users-integration-tests.trx --results-directory ./TestResults/UsersIntegration

@@ -1,16 +1,13 @@
 ﻿using FluentAssertions;
 using Lerevently.Common.Domain.Abstractions;
-using Lerevently.Modules.Events.IntegrationTests.Abstractions;
 using Lerevently.Modules.Users.Application.Users.RegisterUser;
 using Lerevently.Modules.Users.Application.Users.UpdateUser;
 using Lerevently.Modules.Users.Domain.Users;
-using Lerevently.Modules.Users.Infrastructure.Database;
-using Lerevently.Modules.Users.Infrastructure.Identity;
+using Lerevently.Modules.Users.IntegrationTests.Abstractions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
-namespace Lerevently.Modules.Events.IntegrationTests.Users;
+namespace Lerevently.Modules.Users.IntegrationTests.Users;
 
 public class UpdateUserTests : BaseIntegrationTest
 {

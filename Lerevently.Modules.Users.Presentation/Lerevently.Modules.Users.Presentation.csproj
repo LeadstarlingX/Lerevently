@@ -9,7 +9,7 @@
 
     <ItemGroup>
 
-        <InternalsVisibleTo Include="Lerevently.Modules.Events.IntegrationTests"/>
+        <InternalsVisibleTo Include="Lerevently.Modules.Users.IntegrationTests"/>
 
     </ItemGroup>
 
