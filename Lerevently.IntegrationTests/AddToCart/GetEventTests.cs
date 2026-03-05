@@ -14,15 +14,15 @@ public sealed class GetEventTests : BaseIntegrationTest
     private IServiceScope _scope;
     private ISender _sender;
     private TicketingDbContext _dbContext;
-
+    
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
         _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
         _dbContext = _scope.ServiceProvider.GetRequiredService<TicketingDbContext>();
     }
-
+    
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -41,12 +41,18 @@ public sealed class GetEventTests : BaseIntegrationTest
         await _sender.CreateEventAsync(eventId, Guid.NewGuid(), 100);
 
         // Act
-        var allEventsResult = await _dbContext.Events.ToListAsync();
-        var resultB = allEventsResult.FirstOrDefault(x => x.Id == eventId);
+        var resultB = await Poller.WaitAsync(TimeSpan.FromSeconds(15), async () =>
+        {
+            var eventEntity = await _dbContext.Events.AsNoTracking().FirstOrDefaultAsync(x => x.Id == eventId);
+            
+            if (eventEntity is null)
+                return Result.Failure<Lerevently.Modules.Ticketing.Domain.Events.Event>(Error.Failure("Wait", "Wait"));
+            
+            return Result.Success(eventEntity);
+        });
         
         // Assert
-        resultB.Should().NotBeNull();
-
+        resultB.IsSuccess.Should().BeTrue();
     }
 
     [Test]

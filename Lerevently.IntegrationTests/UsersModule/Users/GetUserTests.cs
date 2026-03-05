@@ -1,25 +1,25 @@
 ﻿using FluentAssertions;
 using Lerevently.Common.Domain.Abstractions;
+using Lerevently.IntegrationTests.Abstractions;
 using Lerevently.Modules.Users.Application.Users.GetUser;
 using Lerevently.Modules.Users.Application.Users.RegisterUser;
 using Lerevently.Modules.Users.Domain.Users;
-using Lerevently.Modules.Users.IntegrationTests.Abstractions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lerevently.Modules.Users.IntegrationTests.Users;
+namespace Lerevently.IntegrationTests.UsersModule.Users;
 
 public class GetUserTests : BaseIntegrationTest
 {
     
     private IServiceScope _scope;
-    private ISender _sender;
+    private ISender Sender;
     
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
     
     
@@ -40,7 +40,7 @@ public class GetUserTests : BaseIntegrationTest
         var userId = Guid.NewGuid();
 
         // Act
-        Result<UserResponse> userResult = await _sender.Send(new GetUserQuery(userId));
+        Result<UserResponse> userResult = await Sender.Send(new GetUserQuery(userId));
 
         // Assert
         userResult.Error.Should().Be(UserErrors.NotFound(userId));
@@ -51,18 +51,18 @@ public class GetUserTests : BaseIntegrationTest
     {
         // Arrange
         var request = new RegisterUserCommand(
-            Faker.Internet.Email(),
+            $"user-{Guid.NewGuid()}@test.com",
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
             Faker.Name.LastName());
         
-        Result<Guid> result = await _sender.Send(request);
+        Result<Guid> result = await Sender.Send(request);
         
         await Assert.That(result.IsSuccess).IsTrue();
         Guid userId = result.Value;
 
         // Act
-        Result<UserResponse> userResult = await _sender.Send(new GetUserQuery(userId));
+        Result<UserResponse> userResult = await Sender.Send(new GetUserQuery(userId));
 
         // Assert
         userResult.IsSuccess.Should().BeTrue();

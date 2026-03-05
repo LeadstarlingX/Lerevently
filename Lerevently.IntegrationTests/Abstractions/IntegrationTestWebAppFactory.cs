@@ -67,6 +67,9 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
         await _dbContainer.StartAsync();
         await _redisContainer.StartAsync();
         await _keycloakContainer.StartAsync();
+
+        // Force the host to start and apply migrations before any tests run
+        using var _ = CreateClient();
     }
 
     public new async Task DisposeAsync()

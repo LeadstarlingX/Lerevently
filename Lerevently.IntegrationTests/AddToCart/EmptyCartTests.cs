@@ -13,15 +13,15 @@ namespace Lerevently.IntegrationTests.AddToCart;
 public sealed class EmptyCartTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    private ISender _sender;
-
+    private ISender Sender;
+    
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-
+    
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -36,7 +36,7 @@ public sealed class EmptyCartTests : BaseIntegrationTest
     {
         var customerId = await RegisterAndGetCustomerAsync();
         
-        Result<Cart> result = await _sender.Send(new GetCartQuery(customerId));
+        Result<Cart> result = await Sender.Send(new GetCartQuery(customerId));
         
         result.IsSuccess.Should().BeTrue();
         result.Value.Items.Should().BeEmpty();
@@ -44,9 +44,15 @@ public sealed class EmptyCartTests : BaseIntegrationTest
 
     private async Task<Guid> RegisterAndGetCustomerAsync()
     {
-        var command = new RegisterUserCommand(Faker.Internet.Email(), Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
-        var userResult = await _sender.Send(command);
-        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(15), async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
+        var command = new RegisterUserCommand($"user-{Guid.NewGuid()}@test.com", Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
+        var userResult = await Sender.Send(command);
+        
+        await Assert.That(userResult.IsSuccess).IsTrue();
+        
+        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(TimeForSpan), async () => await Sender.Send(new GetCustomerQuery(userResult.Value)));
+        
+        await Assert.That(customerResult.IsSuccess).IsTrue();
+        
         return customerResult.Value.Id;
     }
 }

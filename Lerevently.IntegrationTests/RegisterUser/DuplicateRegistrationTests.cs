@@ -10,15 +10,15 @@ namespace Lerevently.IntegrationTests.RegisterUser;
 public sealed class DuplicateRegistrationTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    private ISender _sender;
-
+    private ISender Sender;
+    
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-
+    
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -32,18 +32,18 @@ public sealed class DuplicateRegistrationTests : BaseIntegrationTest
     public async Task Should_ReturnError_WhenEmailIsAlreadyRegistered()
     {
         // Arrange
-        var email = Faker.Internet.Email();
+        var email = $"user-{Guid.NewGuid()}@test.com";
         var command = new RegisterUserCommand(
             email,
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> firstResult = await _sender.Send(command);
+        Result<Guid> firstResult = await Sender.Send(command);
         firstResult.IsSuccess.Should().BeTrue();
 
         // Act
-        Result<Guid> secondResult = await _sender.Send(command);
+        Result<Guid> secondResult = await Sender.Send(command);
 
         // Assert
         secondResult.IsFailure.Should().BeTrue();

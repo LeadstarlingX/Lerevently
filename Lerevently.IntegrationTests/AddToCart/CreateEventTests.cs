@@ -13,17 +13,17 @@ namespace Lerevently.IntegrationTests.AddToCart;
 public sealed class CreateEventTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    private ISender _sender;
-    private EventsDbContext _dbContext;
-
+    private ISender Sender;
+    private EventsDbContext Events_DbContext;
+    
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        _dbContext = _scope.ServiceProvider.GetRequiredService<EventsDbContext>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        Events_DbContext = _scope.ServiceProvider.GetRequiredService<EventsDbContext>();
     }
-
+    
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -38,8 +38,8 @@ public sealed class CreateEventTests : BaseIntegrationTest
     {
         // Arrange
         var category = Category.Create("Test Category");
-        _dbContext.Categories.Add(category);
-        await _dbContext.SaveChangesAsync();
+        Events_DbContext.Categories.Add(category);
+        await Events_DbContext.SaveChangesAsync();
         var categoryId = category.Id;
         
         var command = new CreateEventCommand(
@@ -51,7 +51,7 @@ public sealed class CreateEventTests : BaseIntegrationTest
             DateTime.UtcNow.AddDays(1).AddHours(4));
         
         // Act
-        Result<Guid> result = await _sender.Send(command);
+        Result<Guid> result = await Sender.Send(command);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -59,7 +59,7 @@ public sealed class CreateEventTests : BaseIntegrationTest
         var eventId = result.Value;
 
         // Verify via Query
-        Result<EventResponse> eventResult = await _sender.Send(new GetEventQuery(eventId));
+        Result<EventResponse> eventResult = await Sender.Send(new GetEventQuery(eventId));
         eventResult.IsSuccess.Should().BeTrue();
         eventResult.Value.Title.Should().Be(command.Title);
     }

@@ -13,14 +13,14 @@ public sealed class InventoryReservationTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
     private ISender _sender;
-
+    
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
         _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-
+    
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -34,13 +34,20 @@ public sealed class InventoryReservationTests : BaseIntegrationTest
     private async Task<Guid> RegisterAndGetCustomerAsync()
     {
         var command = new RegisterUserCommand(
-            Faker.Internet.Email(), 
+            $"user-{Guid.NewGuid()}@test.com", 
             Faker.Internet.Password(), 
             Faker.Name.FirstName(), 
             Faker.Name.LastName());
             
         var userResult = await _sender.Send(command);
-        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(15), async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
+        
+        await Assert.That(userResult.IsSuccess).IsTrue();
+        
+        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(TimeForSpan),
+            async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
+        
+        await Assert.That(customerResult.IsSuccess).IsTrue();
+        
         return customerResult.Value.Id;
     }
 }

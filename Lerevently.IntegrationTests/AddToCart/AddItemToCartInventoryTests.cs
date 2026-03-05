@@ -13,14 +13,14 @@ public sealed class AddItemToCartInventoryTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
     private ISender _sender;
-
+    
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
         _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-
+    
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -36,7 +36,7 @@ public sealed class AddItemToCartInventoryTests : BaseIntegrationTest
         // Arrange
         // 1. Register User
         var registerCommand = new RegisterUserCommand(
-            Faker.Internet.Email(),
+            $"user-{Guid.NewGuid()}@test.com",
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
             Faker.Name.LastName());
@@ -46,7 +46,7 @@ public sealed class AddItemToCartInventoryTests : BaseIntegrationTest
 
         // 2. Wait for Customer
         Result<CustomerResponse> customerResult = await Poller.WaitAsync(
-            TimeSpan.FromSeconds(15),
+            TimeSpan.FromSeconds(TimeForSpan),
             async () =>
             {
                 var query = new GetCustomerQuery(userResult.Value);

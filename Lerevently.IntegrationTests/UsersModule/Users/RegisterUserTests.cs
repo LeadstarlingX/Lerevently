@@ -1,11 +1,10 @@
 using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
-using Lerevently.Modules.Users.IntegrationTests.Abstractions;
-using Lerevently.Modules.Users.Presentation.Users;
+using Lerevently.IntegrationTests.Abstractions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lerevently.Modules.Users.IntegrationTests.Users;
+namespace Lerevently.IntegrationTests.UsersModule.Users;
 
 public class RegisterUserTests : BaseIntegrationTest
 {
@@ -15,31 +14,26 @@ public class RegisterUserTests : BaseIntegrationTest
         public static IEnumerable<Func<(string, string, string, string)>> AdditionTestData()
         {
             yield return () => ("", Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
-            yield return () => (Faker.Internet.Email(), "", Faker.Name.FirstName(), Faker.Name.LastName() );
-            yield return () => (Faker.Internet.Email(), "12345", Faker.Name.FirstName(), Faker.Name.LastName());
-            yield return () => (Faker.Internet.Email(), Faker.Internet.Password(), "", Faker.Name.LastName());
-            yield return () => (Faker.Internet.Email(), Faker.Internet.Password(), Faker.Name.FirstName(), "" );
+            yield return () => ($"user-{Guid.NewGuid()}@test.com", "", Faker.Name.FirstName(), Faker.Name.LastName() );
+            yield return () => ($"user-{Guid.NewGuid()}@test.com", "12345", Faker.Name.FirstName(), Faker.Name.LastName());
+            yield return () => ($"user-{Guid.NewGuid()}@test.com", Faker.Internet.Password(), "", Faker.Name.LastName());
+            yield return () => ($"user-{Guid.NewGuid()}@test.com", Faker.Internet.Password(), Faker.Name.FirstName(), "" );
         }
     }
     
-    private IServiceScope _scope;
+    private HttpClient _httpClient;
     
     [Before(Test)]
     public async Task SetupTest()
     {
-        _scope = factory.Services.CreateScope();
+        _httpClient = factory.CreateClient();
     }
-    
     
     [After(Test)]
     public async ValueTask TeardownTest()
     {
-        if (_scope is IAsyncDisposable asyncScope)
-            await asyncScope.DisposeAsync();
-        else
-            _scope.Dispose();
+        _httpClient.Dispose();
     }
-    
 
     [Test]
     [MethodDataSource(typeof(TestDataSources), nameof(TestDataSources.AdditionTestData))]
@@ -50,7 +44,7 @@ public class RegisterUserTests : BaseIntegrationTest
         string lastName)
     {
         // Arrange
-        var request = new RegisterUser.Request
+        var request = new Modules.Users.Presentation.Users.RegisterUser.Request
         {
             Email = email,
             Password = password,
@@ -59,7 +53,7 @@ public class RegisterUserTests : BaseIntegrationTest
         };
 
         // Act
-        HttpResponseMessage response = await HttpClient.PostAsJsonAsync("users/register", request);
+        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("users/register", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -69,7 +63,7 @@ public class RegisterUserTests : BaseIntegrationTest
     public async Task Should_ReturnOk_WhenRequestIsValid()
     {
         // Arrange
-        var request = new RegisterUser.Request
+        var request = new Modules.Users.Presentation.Users.RegisterUser.Request
         {
             Email = "create@test.com",
             Password = Faker.Internet.Password(),
@@ -78,7 +72,7 @@ public class RegisterUserTests : BaseIntegrationTest
         };
 
         // Act
-        HttpResponseMessage response = await HttpClient.PostAsJsonAsync("users/register", request);
+        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("users/register", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -88,7 +82,7 @@ public class RegisterUserTests : BaseIntegrationTest
     public async Task Should_ReturnAccessToken_WhenUserIsRegistered()
     {
         // Arrange
-        var request = new RegisterUser.Request
+        var request = new Modules.Users.Presentation.Users.RegisterUser.Request
         {
             Email = "token@test.com",
             Password = Faker.Internet.Password(),
@@ -96,7 +90,7 @@ public class RegisterUserTests : BaseIntegrationTest
             LastName = Faker.Name.LastName()
         };
 
-        await HttpClient.PostAsJsonAsync("users/register", request);
+        await _httpClient.PostAsJsonAsync("users/register", request);
 
         // Act
         string accessToken = await GetAccessTokenAsync(request.Email, request.Password);

@@ -14,15 +14,15 @@ namespace Lerevently.IntegrationTests.AddToCart;
 public sealed class CartItemMergingTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    private ISender _sender;
-
+    private ISender Sender;
+    
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-
+    
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -38,16 +38,16 @@ public sealed class CartItemMergingTests : BaseIntegrationTest
         // Arrange
         var customerId = await RegisterAndGetCustomerAsync();
         var ticketTypeId = Guid.NewGuid();
-        await _sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId, 100);
+        await Sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId, 100);
 
         // Act
-        await _sender.Send(new AddItemToCartCommand(customerId, ticketTypeId, 5));
-        Result result = await _sender.Send(new AddItemToCartCommand(customerId, ticketTypeId, 5));
+        await Sender.Send(new AddItemToCartCommand(customerId, ticketTypeId, 5));
+        Result result = await Sender.Send(new AddItemToCartCommand(customerId, ticketTypeId, 5));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
 
-        Result<Cart> cartResult = await _sender.Send(new GetCartQuery(customerId));
+        Result<Cart> cartResult = await Sender.Send(new GetCartQuery(customerId));
         cartResult.Value.Items.Should().ContainSingle();
         cartResult.Value.Items.First().Quantity.Should().Be(10);
     }
@@ -59,17 +59,17 @@ public sealed class CartItemMergingTests : BaseIntegrationTest
         var customerId = await RegisterAndGetCustomerAsync();
         var ticketTypeId1 = Guid.NewGuid();
         var ticketTypeId2 = Guid.NewGuid();
-        await _sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId1, 100);
-        await _sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId2, 100);
+        await Sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId1, 100);
+        await Sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId2, 100);
 
         // Act
-        await _sender.Send(new AddItemToCartCommand(customerId, ticketTypeId1, 2));
-        Result result = await _sender.Send(new AddItemToCartCommand(customerId, ticketTypeId2, 3));
+        await Sender.Send(new AddItemToCartCommand(customerId, ticketTypeId1, 2));
+        Result result = await Sender.Send(new AddItemToCartCommand(customerId, ticketTypeId2, 3));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
 
-        Result<Cart> cartResult = await _sender.Send(new GetCartQuery(customerId));
+        Result<Cart> cartResult = await Sender.Send(new GetCartQuery(customerId));
         cartResult.Value.Items.Should().HaveCount(2);
         cartResult.Value.Items.Should().Contain(i => i.TicketTypeId == ticketTypeId1 && i.Quantity == 2);
         cartResult.Value.Items.Should().Contain(i => i.TicketTypeId == ticketTypeId2 && i.Quantity == 3);
@@ -77,10 +77,16 @@ public sealed class CartItemMergingTests : BaseIntegrationTest
 
     private async Task<Guid> RegisterAndGetCustomerAsync()
     {
-        var command = new RegisterUserCommand(Faker.Internet.Email(), Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
-        var userResult = await _sender.Send(command);
-        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(15),
-            async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
+        var command = new RegisterUserCommand($"user-{Guid.NewGuid()}@test.com", Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
+        var userResult = await Sender.Send(command);
+        
+        await Assert.That(userResult.IsSuccess).IsTrue();
+        
+        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(TimeForSpan),
+            async () => await Sender.Send(new GetCustomerQuery(userResult.Value)));
+        
+        await Assert.That(customerResult.IsSuccess).IsTrue();
+        
         return customerResult.Value.Id;
     }
 }

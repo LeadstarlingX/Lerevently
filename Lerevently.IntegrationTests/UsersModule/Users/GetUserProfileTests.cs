@@ -2,39 +2,35 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using FluentAssertions;
+using Lerevently.IntegrationTests.Abstractions;
 using Lerevently.Modules.Users.Application.Users.GetUser;
-using Lerevently.Modules.Users.IntegrationTests.Abstractions;
-using Lerevently.Modules.Users.Presentation.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lerevently.Modules.Users.IntegrationTests.Users;
+namespace Lerevently.IntegrationTests.UsersModule.Users;
 
 public class GetUserProfileTests : BaseIntegrationTest
 {
-    private IServiceScope _scope;
+    private HttpClient _httpClient;
     
     [Before(Test)]
     public async Task SetupTest()
     {
-        _scope = factory.Services.CreateScope();
+        _httpClient = factory.CreateClient();
     }
     
     
     [After(Test)]
     public async ValueTask TeardownTest()
     {
-        if (_scope is IAsyncDisposable asyncScope)
-            await asyncScope.DisposeAsync();
-        else
-            _scope.Dispose();
+        _httpClient.Dispose();
     }
 
     [Test]
     public async Task Should_ReturnUnauthorized_WhenAccessTokenNotProvided()
     {
         // Act
-        HttpResponseMessage response = await HttpClient.GetAsync("users/profile");
+        HttpResponseMessage response = await _httpClient.GetAsync("users/profile");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -45,12 +41,12 @@ public class GetUserProfileTests : BaseIntegrationTest
     {
         // Arrange
         string accessToken = await RegisterUserAndGetAccessTokenAsync("exists@test.com", Faker.Internet.Password());
-        HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             JwtBearerDefaults.AuthenticationScheme,
             accessToken);
 
         // Act
-        HttpResponseMessage response = await HttpClient.GetAsync("users/profile");
+        HttpResponseMessage response = await _httpClient.GetAsync("users/profile");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -61,7 +57,7 @@ public class GetUserProfileTests : BaseIntegrationTest
 
     private async Task<string> RegisterUserAndGetAccessTokenAsync(string email, string password)
     {
-        var request = new RegisterUser.Request
+        var request = new Modules.Users.Presentation.Users.RegisterUser.Request
         {
             Email = email,
             Password = password,
@@ -69,7 +65,7 @@ public class GetUserProfileTests : BaseIntegrationTest
             LastName = Faker.Name.LastName()
         };
 
-        await HttpClient.PostAsJsonAsync("users/register", request);
+        await _httpClient.PostAsJsonAsync("users/register", request);
 
         string accessToken = await GetAccessTokenAsync(request.Email, request.Password);
 

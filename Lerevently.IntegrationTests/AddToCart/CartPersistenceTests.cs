@@ -14,17 +14,17 @@ namespace Lerevently.IntegrationTests.AddToCart;
 public sealed class CartPersistenceTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    private ISender _sender;
-
+    private ISender Sender;
+    
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-
+    
     [After(Test)]
-    public async ValueTask TeardownTest()
+    public async ValueTask Teardown()
     {
         if (_scope is IAsyncDisposable asyncScope)
             await asyncScope.DisposeAsync();
@@ -38,10 +38,10 @@ public sealed class CartPersistenceTests : BaseIntegrationTest
         // Arrange
         var customerId = await RegisterAndGetCustomerAsync();
         var ticketTypeId = Guid.NewGuid();
-        await _sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId, 100);
+        await Sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId, 100);
 
         // Act
-        await _sender.Send(new AddItemToCartCommand(customerId, ticketTypeId, 5));
+        await Sender.Send(new AddItemToCartCommand(customerId, ticketTypeId, 5));
 
         // Simulate new request/scope
         using var newScope = factory.Services.CreateScope();
@@ -57,12 +57,18 @@ public sealed class CartPersistenceTests : BaseIntegrationTest
     private async Task<Guid> RegisterAndGetCustomerAsync()
     {
         var command = new RegisterUserCommand(
-            Faker.Internet.Email(), 
+            $"user-{Guid.NewGuid()}@test.com", 
             Faker.Internet.Password(), 
             Faker.Name.FirstName(), 
             Faker.Name.LastName());
-        var userResult = await _sender.Send(command);
-        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(15), async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
+        var userResult = await Sender.Send(command);
+        
+        await Assert.That(userResult.IsSuccess).IsTrue();
+        
+        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(TimeForSpan), async () => await Sender.Send(new GetCustomerQuery(userResult.Value)));
+        
+        await Assert.That(customerResult.IsSuccess).IsTrue();
+        
         return customerResult.Value.Id;
     }
 }

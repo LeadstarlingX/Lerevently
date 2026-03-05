@@ -14,15 +14,15 @@ namespace Lerevently.IntegrationTests.AddToCart;
 public sealed class GetCartTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    private ISender _sender;
-
+    private ISender Sender;
+    
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-
+    
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -38,36 +38,36 @@ public sealed class GetCartTests : BaseIntegrationTest
         // Arrange
         // 1. Register User
         var registerCommand = new RegisterUserCommand(
-            Faker.Internet.Email(),
+            $"user-{Guid.NewGuid()}@test.com",
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> userResult = await _sender.Send(registerCommand);
+        Result<Guid> userResult = await Sender.Send(registerCommand);
         userResult.IsSuccess.Should().BeTrue();
 
         // 2. Wait for Customer propagation
         Result<CustomerResponse> customerResult = await Poller.WaitAsync(
-            TimeSpan.FromSeconds(15),
+            TimeSpan.FromSeconds(TimeForSpan),
             async () =>
             {
                 var query = new GetCustomerQuery(userResult.Value);
-                return await _sender.Send(query);
+                return await Sender.Send(query);
             });
         customerResult.IsSuccess.Should().BeTrue();
         var customerId = customerResult.Value.Id;
 
         // 3. Create Event and Ticket Type
         var ticketTypeId = Guid.NewGuid();
-        await _sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId, 100);
+        await Sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId, 100);
 
         // 4. Add Item to Cart
         var addCommand = new AddItemToCartCommand(customerId, ticketTypeId, 2);
-        Result addResult = await _sender.Send(addCommand);
+        Result addResult = await Sender.Send(addCommand);
         addResult.IsSuccess.Should().BeTrue();
 
         // Act
-        Result<Cart> cartResult = await _sender.Send(new GetCartQuery(customerId));
+        Result<Cart> cartResult = await Sender.Send(new GetCartQuery(customerId));
 
         // Assert
         cartResult.IsSuccess.Should().BeTrue();

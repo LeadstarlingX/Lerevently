@@ -1,4 +1,9 @@
-﻿using Bogus;
+﻿using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using Bogus;
+using Lerevently.Modules.Attendance.Infrastructure.Database;
+using Lerevently.Modules.Events.Infrastructure.Database;
+using Lerevently.Modules.Ticketing.Infrastructure.Database;
 using Lerevently.Modules.Users.Infrastructure.Database;
 using Lerevently.Modules.Users.Infrastructure.Identity;
 using MediatR;
@@ -7,39 +12,51 @@ using Microsoft.Extensions.Options;
 
 namespace Lerevently.IntegrationTests.Abstractions;
 
-public abstract class BaseIntegrationTest : IAsyncDisposable
+public abstract class BaseIntegrationTest
 {
     protected static readonly Faker Faker = new();
-    private static IServiceScope _scope;
-    protected static ISender Sender;
-    protected static HttpClient HttpClient;
-    private static KeyCloakOptions _options;
-    protected static UsersDbContext DbContext;
+    
+    protected const int TimeForSpan = 30;
     
     [ClassDataSource<IntegrationTestWebAppFactory>(Shared = SharedType.PerAssembly)]
     public static IntegrationTestWebAppFactory factory { get; set; }
-
     
-    [Before(TestSession)]
-    public static void Setup()
+    
+    
+    protected async Task<string> GetAccessTokenAsync(string email, string password)
     {
-        _scope = factory.Services.CreateScope();
-        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        HttpClient = factory.CreateClient();
-        _options = _scope.ServiceProvider.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
-        DbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+        using var scope = factory.Services.CreateScope();
+        var _options = scope.ServiceProvider
+            .GetRequiredService<IOptions<KeyCloakOptions>>().Value;
         
+        using var client = new HttpClient();
+
+        var authRequestParameters = new KeyValuePair<string, string>[]
+        {
+            new("client_id", _options.PublicClientId),
+            new("scope", "openid"),
+            new("grant_type", "password"),
+            new("username", email),
+            new("password", password)
+        };
+
+        using var authRequestContent = new FormUrlEncodedContent(authRequestParameters);
+
+        using var authRequest = new HttpRequestMessage(HttpMethod.Post, new Uri(_options.TokenUrl));
+        authRequest.Content = authRequestContent;
+
+        using HttpResponseMessage authorizationResponse = await client.SendAsync(authRequest);
+
+        authorizationResponse.EnsureSuccessStatusCode();
+
+        AuthToken authToken = await authorizationResponse.Content.ReadFromJsonAsync<AuthToken>();
+
+        return authToken!.AccessToken;
     }
 
-    public virtual async ValueTask DisposeAsync()
+    internal sealed class AuthToken
     {
-        if (_scope is IAsyncDisposable asyncScope)
-        {
-            await asyncScope.DisposeAsync();
-        }
-        else
-        {
-            _scope.Dispose();
-        }
+        [JsonPropertyName("access_token")]
+        public string AccessToken { get; init; }
     }
 }

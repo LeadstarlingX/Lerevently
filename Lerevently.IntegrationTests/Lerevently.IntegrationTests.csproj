@@ -32,6 +32,10 @@
       <ProjectReference Include="..\Lerevently.Api\Lerevently.Api.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="UsersModule\" />
+    </ItemGroup>
+
    
     
     

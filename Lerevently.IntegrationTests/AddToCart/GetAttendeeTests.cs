@@ -11,15 +11,15 @@ namespace Lerevently.IntegrationTests.AddToCart;
 public sealed class GetAttendeeTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    private ISender _sender;
-
+    private ISender Sender;
+    
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-
+    
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -36,7 +36,7 @@ public sealed class GetAttendeeTests : BaseIntegrationTest
         var nonExistentUserId = Guid.NewGuid();
 
         // Act
-        Result<AttendeeResponse> result = await _sender.Send(new GetAttendeeQuery(nonExistentUserId));
+        Result<AttendeeResponse> result = await Sender.Send(new GetAttendeeQuery(nonExistentUserId));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -47,18 +47,18 @@ public sealed class GetAttendeeTests : BaseIntegrationTest
     {
         // Arrange
         var command = new RegisterUserCommand(
-            Faker.Internet.Email(),
+            $"user-{Guid.NewGuid()}@test.com",
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> userResult = await _sender.Send(command);
+        Result<Guid> userResult = await Sender.Send(command);
         userResult.IsSuccess.Should().BeTrue();
 
         // Act
         Result<AttendeeResponse> result = await Poller.WaitAsync(
-            TimeSpan.FromSeconds(15),
-            async () => await _sender.Send(new GetAttendeeQuery(userResult.Value)));
+            TimeSpan.FromSeconds(TimeForSpan),
+            async () => await Sender.Send(new GetAttendeeQuery(userResult.Value)));
 
         // Assert
         result.IsSuccess.Should().BeTrue();

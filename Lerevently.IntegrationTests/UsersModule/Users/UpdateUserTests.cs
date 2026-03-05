@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
 using Lerevently.Common.Domain.Abstractions;
+using Lerevently.IntegrationTests.Abstractions;
 using Lerevently.Modules.Users.Application.Users.RegisterUser;
 using Lerevently.Modules.Users.Application.Users.UpdateUser;
 using Lerevently.Modules.Users.Domain.Users;
-using Lerevently.Modules.Users.IntegrationTests.Abstractions;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lerevently.Modules.Users.IntegrationTests.Users;
+namespace Lerevently.IntegrationTests.UsersModule.Users;
 
 public class UpdateUserTests : BaseIntegrationTest
 {
@@ -22,13 +22,13 @@ public class UpdateUserTests : BaseIntegrationTest
     }
     
     private IServiceScope _scope;
-    private ISender _sender;
+    private ISender Sender;
     
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
     
     
@@ -47,7 +47,7 @@ public class UpdateUserTests : BaseIntegrationTest
     public async Task Should_ReturnError_WhenCommandIsNotValid(UpdateUserCommand command)
     {
         // Act
-        Result result = await _sender.Send(command);
+        Result result = await Sender.Send(command);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -61,7 +61,7 @@ public class UpdateUserTests : BaseIntegrationTest
         var userId = Guid.NewGuid();
 
         // Act
-        Result updateResult = await _sender.Send(
+        Result updateResult = await Sender.Send(
             new UpdateUserCommand(userId, Faker.Name.FirstName(), Faker.Name.LastName()));
 
         // Assert
@@ -72,8 +72,8 @@ public class UpdateUserTests : BaseIntegrationTest
     public async Task Should_ReturnSuccess_WhenUserExists()
     {
         // Arrange
-        Result<Guid> result = await _sender.Send(new RegisterUserCommand(
-            Faker.Internet.Email(),
+        Result<Guid> result = await Sender.Send(new RegisterUserCommand(
+            $"user-{Guid.NewGuid()}@test.com",
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
             Faker.Name.LastName()));
@@ -81,7 +81,7 @@ public class UpdateUserTests : BaseIntegrationTest
         Guid userId = result.Value;
 
         // Act
-        Result updateResult = await _sender.Send(
+        Result updateResult = await Sender.Send(
             new UpdateUserCommand(userId, Faker.Name.FirstName(), Faker.Name.LastName()));
 
         // Assert

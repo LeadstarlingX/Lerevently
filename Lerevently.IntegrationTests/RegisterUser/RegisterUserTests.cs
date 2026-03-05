@@ -15,17 +15,14 @@ namespace Lerevently.IntegrationTests.RegisterUser;
 public class RegisterUserTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    private ISender _sender;
-    private UsersDbContext _dbContext;
-    
+    private ISender Sender;
     
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        _dbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-
+        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+    
         // Fresh DbContext, clean state
     }
     
@@ -46,23 +43,23 @@ public class RegisterUserTests : BaseIntegrationTest
     {
         // Register user
         var command = new RegisterUserCommand(
-            Faker.Internet.Email(),
+            $"user-{Guid.NewGuid()}@test.com",
             Faker.Internet.Password(6),
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> userResult = await _sender.Send(command);
+        Result<Guid> userResult = await Sender.Send(command);
 
         userResult.IsSuccess.Should().BeTrue();
 
         // Get customer
         Result<CustomerResponse> customerResult = await Poller.WaitAsync(
-            TimeSpan.FromSeconds(15),
+            System.TimeSpan.FromSeconds(TimeForSpan),
             async () =>
             {
                 var query = new GetCustomerQuery(userResult.Value);
 
-                Result<CustomerResponse> customerResult = await _sender.Send(query);
+                Result<CustomerResponse> customerResult = await Sender.Send(query);
 
                 return customerResult;
             });
@@ -77,23 +74,23 @@ public class RegisterUserTests : BaseIntegrationTest
     {
         // Register user
         var command = new RegisterUserCommand(
-            Faker.Internet.Email(),
+            $"user-{Guid.NewGuid()}@test.com",
             Faker.Internet.Password(6),
             Faker.Name.FirstName(),
             Faker.Name.LastName());
     
-        Result<Guid> userResult = await _sender.Send(command);
+        Result<Guid> userResult = await Sender.Send(command);
     
         userResult.IsSuccess.Should().BeTrue();
     
         // Get customer
         Result<AttendeeResponse> attendeeResult = await Poller.WaitAsync(
-            TimeSpan.FromSeconds(15),
+            TimeSpan.FromSeconds(TimeForSpan),
             async () =>
             {
                 var query = new GetAttendeeQuery(userResult.Value);
     
-                Result<AttendeeResponse> customerResult = await _sender.Send(query);
+                Result<AttendeeResponse> customerResult = await Sender.Send(query);
     
                 return customerResult;
             });

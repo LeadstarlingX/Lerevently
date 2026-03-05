@@ -59,7 +59,6 @@
     </Folder>
     <Folder Name="/src/Modules/Users/test/">
         <Project Path="Lerevently.Modules.Users.ArchitectureTests/Lerevently.Modules.Users.ArchitectureTests.csproj" />
-        <Project Path="Lerevently.Modules.Users.IntegrationTests/Lerevently.Modules.Users.IntegrationTests.csproj" />
     </Folder>
     <Folder Name="/test/">
         <Project Path="Lerevently.ArchitectureTests/Lerevently.ArchitectureTests.csproj" />

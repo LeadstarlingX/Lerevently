@@ -13,24 +13,24 @@ namespace Lerevently.IntegrationTests.AddToCart;
 
 public sealed class EventCancellationTests : BaseIntegrationTest
 {
-    private IServiceScope _scope;
-    private ISender _sender;
-
-    [Before(Test)]
-    public async Task SetupTest()
-    {
-        _scope = factory.Services.CreateScope();
-        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-    }
-
-    [After(Test)]
-    public async ValueTask TeardownTest()
-    {
-        if (_scope is IAsyncDisposable asyncScope)
-            await asyncScope.DisposeAsync();
-        else
-            _scope.Dispose();
-    }
+    // private IServiceScope _scope;
+    // private ISender _sender;
+    //
+    // [Before(Test)]
+    // public async Task Setup()
+    // {
+    //     _scope = factory.Services.CreateScope();
+    //     _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+    // }
+    //
+    // [After(Test)]
+    // public async ValueTask TeardownTest()
+    // {
+    //     if (_scope is IAsyncDisposable asyncScope)
+    //         await asyncScope.DisposeAsync();
+    //     else
+    //         _scope.Dispose();
+    // }
 
     // [Test]
     // public async Task Should_UpdateEventStatus_WhenCancelled()
@@ -58,7 +58,7 @@ public sealed class EventCancellationTests : BaseIntegrationTest
     //
     //     // Arrange
     //     // 1. Setup User
-    //     var registerCommand = new RegisterUserCommand(Faker.Internet.Email(), Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
+    //     var registerCommand = new RegisterUserCommand($"user-{Guid.NewGuid()}@test.com", Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
     //     var userResult = await _sender.Send(registerCommand);
     //     var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(15), async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
     //     

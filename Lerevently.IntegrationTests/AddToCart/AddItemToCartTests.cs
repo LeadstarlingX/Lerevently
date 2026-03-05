@@ -23,7 +23,7 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
     private ISender _sender;
     
     [Before(Test)]
-    public async Task SetupTest()
+    public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
         _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
@@ -46,7 +46,7 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
     {
         // Register user
         var command = new RegisterUserCommand(
-            Faker.Internet.Email(),
+            $"user-{Guid.NewGuid()}@test.com",
             Faker.Internet.Password(6),
             Faker.Name.FirstName(),
             Faker.Name.LastName());
@@ -57,7 +57,7 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
 
         // Get customer
         Result<CustomerResponse> customerResult = await Poller.WaitAsync(
-            TimeSpan.FromSeconds(15),
+            TimeSpan.FromSeconds(TimeForSpan),
             async () =>
             {
                 var query = new GetCustomerQuery(userResult.Value);
