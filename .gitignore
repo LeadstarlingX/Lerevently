@@ -97,3 +97,4 @@ docker-compose.override.yml
 .DS_Store
 
 /launchSettings.json
+/.files/lerevently-realm-export.json

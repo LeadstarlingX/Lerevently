@@ -18,6 +18,7 @@ using Lerevently.Modules.Attendance.Presentation;
 using Lerevently.Modules.Attendance.Presentation.Attendees;
 using Lerevently.Modules.Attendance.Presentation.Events;
 using Lerevently.Modules.Attendance.Presentation.Tickets;
+using Lerevently.Modules.Events.IntegrationEvents;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -50,6 +51,7 @@ public static class AttendanceModule
         registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>();
         registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>();
         registrationConfigurator.AddConsumer<TicketIssuedIntegrationEventConsumer>();
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>();
     }
 
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)

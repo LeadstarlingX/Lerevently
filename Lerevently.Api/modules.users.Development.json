@@ -1,18 +1,18 @@
 {
   "Users": {
     "Outbox": {
-      "IntervalInSeconds": 15,
+      "IntervalInSeconds": 10,
       "BatchSize": 20
     },
     "Inbox": {
-      "IntervalInSeconds": 15,
+      "IntervalInSeconds": 10,
       "BatchSize": 20
     },
     "KeyCloak": {
       "AdminUrl": "http://localhost:8001/admin/realms/lerevently/",
       "TokenUrl": "http://localhost:8001/realms/lerevently/protocol/openid-connect/token",
       "ConfidentialClientId": "lerevently-confidential-client",
-      "ConfidentialClientSecret": "KqqFjNx0Jl7CHwcpIAlLGNwEExOe2miy",
+      "ConfidentialClientSecret": "7gaIbiPBBnY0dzIeBosoG7zM5J1y9AVQ",
       "PublicClientId": "lerevently-public-client"
     }
   }

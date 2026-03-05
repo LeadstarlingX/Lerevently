@@ -12,6 +12,8 @@ using Lerevently.Modules.Events.Infrastructure.Inbox;
 using Lerevently.Modules.Events.Infrastructure.Outbox;
 using Lerevently.Modules.Events.Infrastructure.TicketTypes;
 using Lerevently.Modules.Events.Presentation;
+using Lerevently.Modules.Events.Presentation.Events.CancelEventSaga;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
@@ -36,6 +38,15 @@ public static class EventsModule
         services.AddInfrastructure(configuration);
 
         return services;
+    }
+    
+    public static Action<IRegistrationConfigurator> ConfigureConsumers(IConfiguration configuration)
+    {
+        var redisConnectionString = configuration.GetConnectionString("Cache");
+        
+        return registrationConfigurator => registrationConfigurator
+            .AddSagaStateMachine<CancelEventSaga, CancelEventState>()
+            .RedisRepository(redisConnectionString);
     }
 
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)

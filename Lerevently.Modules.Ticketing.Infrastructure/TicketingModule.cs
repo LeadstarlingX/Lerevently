@@ -2,6 +2,7 @@
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
+using Lerevently.Modules.Events.IntegrationEvents;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Authentication;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Data;
 using Lerevently.Modules.Ticketing.Application.Abstractions.Payments;
@@ -56,6 +57,7 @@ public static class TicketingModule
         registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>();
         registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>();
         registrationConfigurator.AddConsumer<TicketTypePriceChangedIntegrationEventConsumer>();
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>();
     }
 
 

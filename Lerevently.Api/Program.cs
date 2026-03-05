@@ -3,7 +3,7 @@ using Serilog;
 
 namespace Lerevently.Api;
 
-public static class Program
+public partial class Program
 {
     private static readonly string[] Modules = ["events", "users", "ticketing", "attendance"]; // Add your module names here
 
