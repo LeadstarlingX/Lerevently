@@ -13,5 +13,11 @@
         <ProjectReference Include="..\Lerevently.Modules.Ticketing.Presentation\Lerevently.Modules.Ticketing.Presentation.csproj"/>
 
     </ItemGroup>
+    
+    <ItemGroup>
+        
+        <InternalsVisibleTo Include="Lerevently.IntegrationTests"/>
+        
+    </ItemGroup>
 
 </Project>
