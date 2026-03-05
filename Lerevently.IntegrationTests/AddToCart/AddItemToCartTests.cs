@@ -20,25 +20,13 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
     private const decimal Quantity = 10;
     
     private IServiceScope _scope;
-    private static KeyCloakOptions _options;
-    private static UsersDbContext Users_DbContext;
-    private static EventsDbContext Events_DbContext;
-    private static TicketingDbContext Ticketing_DbContext;
-    private static AttendanceDbContext Attendance_DbContext;
+    private ISender _sender;
     
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        _options = _scope.ServiceProvider.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
-        Users_DbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-        Ticketing_DbContext = _scope.ServiceProvider.GetRequiredService<TicketingDbContext>();
-
-        // Fresh DbContext, clean state
-        Users_DbContext.Users.RemoveRange(Users_DbContext.Users);
-        Ticketing_DbContext.Customers.RemoveRange(Ticketing_DbContext.Customers);
-        await DbContext.SaveChangesAsync();
+        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
     
     
@@ -63,7 +51,7 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> userResult = await Sender.Send(command);
+        Result<Guid> userResult = await _sender.Send(command);
 
         userResult.IsSuccess.Should().BeTrue();
 
@@ -74,7 +62,7 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
             {
                 var query = new GetCustomerQuery(userResult.Value);
 
-                Result<CustomerResponse> customerResult = await Sender.Send(query);
+                Result<CustomerResponse> customerResult = await _sender.Send(query);
 
                 return customerResult;
             });
@@ -85,9 +73,9 @@ public sealed class AddItemToCartTests : BaseIntegrationTest
         CustomerResponse customer = customerResult.Value;
         var ticketTypeId = Guid.NewGuid();
 
-        await Sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId, Quantity);
+        await _sender.CreateEventAsync(Guid.NewGuid(), ticketTypeId, Quantity);
 
-        Result result = await Sender.Send(new AddItemToCartCommand(customer.Id, ticketTypeId, Quantity));
+        Result result = await _sender.Send(new AddItemToCartCommand(customer.Id, ticketTypeId, Quantity));
 
         // Assert
         result.IsSuccess.Should().BeTrue();

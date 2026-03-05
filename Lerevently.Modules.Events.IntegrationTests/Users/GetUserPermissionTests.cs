@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿﻿using FluentAssertions;
 using Lerevently.Common.Application.Authorization;
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.IntegrationTests.Abstractions;
@@ -15,23 +15,18 @@ namespace Lerevently.Modules.Events.IntegrationTests.Users;
 
 public class GetUserPermissionTests : BaseIntegrationTest
 {
-    
     private IServiceScope _scope;
-    protected ISender Sender;
-    private static KeyCloakOptions _options;
-    protected UsersDbContext DbContext;
+    private ISender _sender;
+    private UsersDbContext _dbContext;
     
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        _options = _scope.ServiceProvider.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
-        DbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        _dbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
 
         // Fresh DbContext, clean state
-        DbContext.Users.RemoveRange(DbContext.Users);
-        await DbContext.SaveChangesAsync();
     }
     
     
@@ -51,7 +46,7 @@ public class GetUserPermissionTests : BaseIntegrationTest
         string identityId = Guid.NewGuid().ToString();
 
         // Act
-        Result<PermissionsResponse> permissionsResult = await Sender.Send(new GetUserPermissionsQuery(identityId));
+        Result<PermissionsResponse> permissionsResult = await _sender.Send(new GetUserPermissionsQuery(identityId));
 
         // Assert
         permissionsResult.Error.Should().Be(UserErrors.NotFound(identityId));
@@ -61,16 +56,16 @@ public class GetUserPermissionTests : BaseIntegrationTest
     public async Task Should_ReturnPermissions_WhenUserExists()
     {
         // Arrange
-        Result<Guid> result = await Sender.Send(new RegisterUserCommand(
+        Result<Guid> result = await _sender.Send(new RegisterUserCommand(
             Faker.Internet.Email(),
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
             Faker.Name.LastName()));
 
-        string identityId = DbContext.Users.Single(u => u.Id == result.Value).IdentityId;
+        string identityId = _dbContext.Users.Single(u => u.Id == result.Value).IdentityId;
 
         // Act
-        Result<PermissionsResponse> permissionsResult = await Sender.Send(new GetUserPermissionsQuery(identityId));
+        Result<PermissionsResponse> permissionsResult = await _sender.Send(new GetUserPermissionsQuery(identityId));
 
         // Assert
         permissionsResult.IsSuccess.Should().BeTrue();

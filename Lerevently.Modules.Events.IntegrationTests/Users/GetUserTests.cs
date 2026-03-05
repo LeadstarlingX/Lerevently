@@ -16,21 +16,13 @@ public class GetUserTests : BaseIntegrationTest
 {
     
     private IServiceScope _scope;
-    protected ISender Sender;
-    private static KeyCloakOptions _options;
-    protected UsersDbContext DbContext;
+    private ISender _sender;
     
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        _options = _scope.ServiceProvider.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
-        DbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-
-        // Fresh DbContext, clean state
-        DbContext.Users.RemoveRange(DbContext.Users);
-        await DbContext.SaveChangesAsync();
+        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
     
     
@@ -51,7 +43,7 @@ public class GetUserTests : BaseIntegrationTest
         var userId = Guid.NewGuid();
 
         // Act
-        Result<UserResponse> userResult = await Sender.Send(new GetUserQuery(userId));
+        Result<UserResponse> userResult = await _sender.Send(new GetUserQuery(userId));
 
         // Assert
         userResult.Error.Should().Be(UserErrors.NotFound(userId));
@@ -67,13 +59,13 @@ public class GetUserTests : BaseIntegrationTest
             Faker.Name.FirstName(),
             Faker.Name.LastName());
         
-        Result<Guid> result = await Sender.Send(request);
+        Result<Guid> result = await _sender.Send(request);
         
         await Assert.That(result.IsSuccess).IsTrue();
         Guid userId = result.Value;
 
         // Act
-        Result<UserResponse> userResult = await Sender.Send(new GetUserQuery(userId));
+        Result<UserResponse> userResult = await _sender.Send(new GetUserQuery(userId));
 
         // Assert
         userResult.IsSuccess.Should().BeTrue();

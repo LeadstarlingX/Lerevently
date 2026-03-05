@@ -17,21 +17,11 @@ namespace Lerevently.Modules.Events.IntegrationTests.Users;
 public class GetUserProfileTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    protected ISender Sender;
-    private static KeyCloakOptions _options;
-    protected UsersDbContext DbContext;
     
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        _options = _scope.ServiceProvider.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
-        DbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-
-        // Fresh DbContext, clean state
-        DbContext.Users.RemoveRange(DbContext.Users);
-        await DbContext.SaveChangesAsync();
     }
     
     

@@ -25,21 +25,13 @@ public class UpdateUserTests : BaseIntegrationTest
     }
     
     private IServiceScope _scope;
-    protected ISender Sender;
-    private static KeyCloakOptions _options;
-    protected UsersDbContext DbContext;
+    private ISender _sender;
     
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        _options = _scope.ServiceProvider.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
-        DbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
-
-        // Fresh DbContext, clean state
-        DbContext.Users.RemoveRange(DbContext.Users);
-        await DbContext.SaveChangesAsync();
+        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
     
     
@@ -58,7 +50,7 @@ public class UpdateUserTests : BaseIntegrationTest
     public async Task Should_ReturnError_WhenCommandIsNotValid(UpdateUserCommand command)
     {
         // Act
-        Result result = await Sender.Send(command);
+        Result result = await _sender.Send(command);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -72,7 +64,7 @@ public class UpdateUserTests : BaseIntegrationTest
         var userId = Guid.NewGuid();
 
         // Act
-        Result updateResult = await Sender.Send(
+        Result updateResult = await _sender.Send(
             new UpdateUserCommand(userId, Faker.Name.FirstName(), Faker.Name.LastName()));
 
         // Assert
@@ -83,7 +75,7 @@ public class UpdateUserTests : BaseIntegrationTest
     public async Task Should_ReturnSuccess_WhenUserExists()
     {
         // Arrange
-        Result<Guid> result = await Sender.Send(new RegisterUserCommand(
+        Result<Guid> result = await _sender.Send(new RegisterUserCommand(
             Faker.Internet.Email(),
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
@@ -92,7 +84,7 @@ public class UpdateUserTests : BaseIntegrationTest
         Guid userId = result.Value;
 
         // Act
-        Result updateResult = await Sender.Send(
+        Result updateResult = await _sender.Send(
             new UpdateUserCommand(userId, Faker.Name.FirstName(), Faker.Name.LastName()));
 
         // Assert

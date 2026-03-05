@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿﻿using FluentAssertions;
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.IntegrationTests.Abstractions;
 using Lerevently.Modules.Attendance.Application.Attendees.GetAttendee;
@@ -14,24 +14,19 @@ namespace Lerevently.IntegrationTests.RegisterUser;
 
 public class RegisterUserTests : BaseIntegrationTest
 {
-    
     private IServiceScope _scope;
-    protected ISender Sender;
-    private static KeyCloakOptions _options;
-    protected UsersDbContext DbContext;
+    private ISender _sender;
+    private UsersDbContext _dbContext;
     
     
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
-        Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        _options = _scope.ServiceProvider.GetRequiredService<IOptions<KeyCloakOptions>>().Value;
-        DbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
+        _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
+        _dbContext = _scope.ServiceProvider.GetRequiredService<UsersDbContext>();
 
         // Fresh DbContext, clean state
-        DbContext.Users.RemoveRange(DbContext.Users);
-        await DbContext.SaveChangesAsync();
     }
     
     
@@ -56,7 +51,7 @@ public class RegisterUserTests : BaseIntegrationTest
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> userResult = await Sender.Send(command);
+        Result<Guid> userResult = await _sender.Send(command);
 
         userResult.IsSuccess.Should().BeTrue();
 
@@ -67,7 +62,7 @@ public class RegisterUserTests : BaseIntegrationTest
             {
                 var query = new GetCustomerQuery(userResult.Value);
 
-                Result<CustomerResponse> customerResult = await Sender.Send(query);
+                Result<CustomerResponse> customerResult = await _sender.Send(query);
 
                 return customerResult;
             });
@@ -87,7 +82,7 @@ public class RegisterUserTests : BaseIntegrationTest
             Faker.Name.FirstName(),
             Faker.Name.LastName());
     
-        Result<Guid> userResult = await Sender.Send(command);
+        Result<Guid> userResult = await _sender.Send(command);
     
         userResult.IsSuccess.Should().BeTrue();
     
@@ -98,7 +93,7 @@ public class RegisterUserTests : BaseIntegrationTest
             {
                 var query = new GetAttendeeQuery(userResult.Value);
     
-                Result<AttendeeResponse> customerResult = await Sender.Send(query);
+                Result<AttendeeResponse> customerResult = await _sender.Send(query);
     
                 return customerResult;
             });
@@ -108,5 +103,3 @@ public class RegisterUserTests : BaseIntegrationTest
         attendeeResult.Value.Should().NotBeNull();
     }
 }
-
-
