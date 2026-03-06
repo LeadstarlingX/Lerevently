@@ -4,7 +4,8 @@ namespace Lerevently.IntegrationTests.Abstractions;
 
 internal static class Poller
 {
-    private static readonly Error Timeout = Error.Failure("Poller.Timeout", "The poller has time out");
+    private static readonly Error Timeout = Error.Failure("Poller.Timeout",
+        "The poller has timed out");
 
     internal static async Task<Result<T>> WaitAsync<T>(TimeSpan timeout, Func<Task<Result<T>>> func)
     {

@@ -14,7 +14,7 @@ internal sealed class EventTicketsArchivedDomainEventHandler(IEventBus eventBus)
     {
         await eventBus.PublishAsync(
             new EventTicketsArchivedIntegrationEvent(
-                domainEvent.EventId,
+                domainEvent.Id,
                 domainEvent.OccurredAtUtc,
                 domainEvent.EventId),
             cancellationToken);

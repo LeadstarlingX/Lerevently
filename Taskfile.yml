@@ -50,6 +50,6 @@ tasks:
 
 
   integration-tests:
-    desc: Run integration tests for Users module
+    desc: Run integration tests for All the modules together
     cmds:
       - dotnet run --project Lerevently.IntegrationTests/Lerevently.IntegrationTests.csproj --configuration Release --no-build -- --report-trx --report-trx-filename integration-tests.trx --results-directory ./TestResults/SystemIntegration

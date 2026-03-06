@@ -44,11 +44,11 @@ public static class InfrastructureConfiguration
         SqlMapper.AddTypeHandler(new GenericArrayHandler<string>());
 
 
-        services.AddQuartz(configuratior =>
+        services.AddQuartz(configurator =>
         {
             var scheduler = Guid.NewGuid();
-            configuratior.SchedulerId = $"default-id-{scheduler}";
-            configuratior.SchedulerName = $"default-name-{scheduler}";
+            configurator.SchedulerId = $"default-id-{scheduler}";
+            configurator.SchedulerName = $"default-name-{scheduler}";
         });
         
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);

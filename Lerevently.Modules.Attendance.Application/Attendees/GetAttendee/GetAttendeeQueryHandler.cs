@@ -7,7 +7,7 @@ using Lerevently.Modules.Attendance.Domain.Attendees;
 
 namespace Lerevently.Modules.Attendance.Application.Attendees.GetAttendee;
 
-internal sealed class GetAttendeeQueryQueryHandler(IDbConnectionFactory dbConnectionFactory)
+internal sealed class GetAttendeeQueryHandler(IDbConnectionFactory dbConnectionFactory)
     : IQueryHandler<GetAttendeeQuery, AttendeeResponse>
 {
     public async Task<Result<AttendeeResponse>> Handle(GetAttendeeQuery request, CancellationToken cancellationToken)

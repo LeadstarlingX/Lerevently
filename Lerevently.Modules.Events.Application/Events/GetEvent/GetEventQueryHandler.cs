@@ -3,7 +3,6 @@ using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.Events;
-using MediatR;
 
 namespace Lerevently.Modules.Events.Application.Events.GetEvent;
 
@@ -60,7 +59,7 @@ internal sealed class GetEventQueryHandler(IDbConnectionFactory dbConnectionFact
 
         if (!eventsDictionary.TryGetValue(request.EventId, out EventResponse eventResponse))
         {
-            return Result.Failure<EventResponse>(EventErrors.NotFound(request.EventId));
+            return Result.Failure<EventResponse?>(EventErrors.NotFound(request.EventId));
         }
 
         return eventResponse;
