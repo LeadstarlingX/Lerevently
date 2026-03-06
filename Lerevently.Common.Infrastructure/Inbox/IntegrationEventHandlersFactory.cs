@@ -14,11 +14,11 @@ public static class IntegrationEventHandlersFactory
         IServiceProvider serviceProvider,
         Assembly assembly)
     {
-        Type[] integrationEventHandlerTypes = HandlersDictionary.GetOrAdd(
+        var integrationEventHandlerTypes = HandlersDictionary.GetOrAdd(
             $"{assembly.GetName().Name}-{type.Name}",
             _ =>
             {
-                Type[] integrationEventHandlers = assembly.GetTypes()
+                var integrationEventHandlers = assembly.GetTypes()
                     .Where(t => t.IsAssignableTo(typeof(IIntegrationEventHandler<>).MakeGenericType(type)))
                     .ToArray();
 
@@ -26,9 +26,9 @@ public static class IntegrationEventHandlersFactory
             });
 
         List<IIntegrationEventHandler> handlers = [];
-        foreach (Type integrationEventHandlerType in integrationEventHandlerTypes)
+        foreach (var integrationEventHandlerType in integrationEventHandlerTypes)
         {
-            object integrationEventHandler = serviceProvider.GetRequiredService(integrationEventHandlerType);
+            var integrationEventHandler = serviceProvider.GetRequiredService(integrationEventHandlerType);
 
             handlers.Add((integrationEventHandler as IIntegrationEventHandler)!);
         }

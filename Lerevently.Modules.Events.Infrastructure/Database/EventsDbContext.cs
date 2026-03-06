@@ -21,13 +21,13 @@ public sealed class EventsDbContext(DbContextOptions<EventsDbContext> options) :
     {
         modelBuilder.HasDefaultSchema(Schemas.Events);
 
-        
+
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
-        
+
         modelBuilder.ApplyConfiguration(new InboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new InboxMessageConsumerConfiguration());
-        
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(EventsDbContext).Assembly);
     }
 }

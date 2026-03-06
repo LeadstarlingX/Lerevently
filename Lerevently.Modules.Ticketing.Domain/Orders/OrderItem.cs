@@ -2,7 +2,6 @@
 
 public sealed class OrderItem
 {
-    
 #pragma warning disable CS8618
     private OrderItem()
     {

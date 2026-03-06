@@ -4,7 +4,6 @@ namespace Lerevently.Modules.Ticketing.Domain.Customers;
 
 public sealed class Customer : Entity
 {
-    
 #pragma warning disable CS8618
     private Customer()
     {

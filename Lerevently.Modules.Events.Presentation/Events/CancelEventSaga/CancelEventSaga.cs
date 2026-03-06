@@ -6,23 +6,14 @@ namespace Lerevently.Modules.Events.Presentation.Events.CancelEventSaga;
 
 public sealed class CancelEventSaga : MassTransitStateMachine<CancelEventState>
 {
-    public State CancellationStarted { get; private set; }
-    public State PaymentsRefunded { get; private set; }
-    public State TicketsArchived { get; private set; }
-
-    public Event<EventCanceledIntegrationEvent> EventCanceled { get; private set; }
-    public Event<EventPaymentsRefundedIntegrationEvent> EventPaymentsRefunded { get; private set; }
-    public Event<EventTicketsArchivedIntegrationEvent> EventTicketsArchived { get; private set; }
-    public Event EventCancellationCompleted { get; private set; }
-
     public CancelEventSaga()
     {
-        Event(() => EventCanceled, 
+        Event(() => EventCanceled,
             c => c.CorrelateById(m => m.Message.EventId));
-       
+
         Event(() => EventPaymentsRefunded,
             c => c.CorrelateById(m => m.Message.EventId));
-        
+
         Event(() => EventTicketsArchived,
             c => c.CorrelateById(m => m.Message.EventId));
 
@@ -65,4 +56,13 @@ public sealed class CancelEventSaga : MassTransitStateMachine<CancelEventState>
                         context.Saga.CorrelationId))
                 .Finalize());
     }
+
+    public State CancellationStarted { get; private set; }
+    public State PaymentsRefunded { get; private set; }
+    public State TicketsArchived { get; private set; }
+
+    public Event<EventCanceledIntegrationEvent> EventCanceled { get; private set; }
+    public Event<EventPaymentsRefundedIntegrationEvent> EventPaymentsRefunded { get; private set; }
+    public Event<EventTicketsArchivedIntegrationEvent> EventTicketsArchived { get; private set; }
+    public Event EventCancellationCompleted { get; private set; }
 }

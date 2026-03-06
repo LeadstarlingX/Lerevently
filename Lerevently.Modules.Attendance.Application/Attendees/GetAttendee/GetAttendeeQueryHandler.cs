@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Dapper;
+﻿using Dapper;
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
@@ -12,7 +11,7 @@ internal sealed class GetAttendeeQueryHandler(IDbConnectionFactory dbConnectionF
 {
     public async Task<Result<AttendeeResponse>> Handle(GetAttendeeQuery request, CancellationToken cancellationToken)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         const string sql =
             $"""
@@ -25,12 +24,9 @@ internal sealed class GetAttendeeQueryHandler(IDbConnectionFactory dbConnectionF
              WHERE "Id" = @CustomerId
              """;
 
-        AttendeeResponse? customer = await connection.QuerySingleOrDefaultAsync<AttendeeResponse>(sql, request);
+        var customer = await connection.QuerySingleOrDefaultAsync<AttendeeResponse>(sql, request);
 
-        if (customer is null)
-        {
-            return Result.Failure<AttendeeResponse>(AttendeeErrors.NotFound(request.CustomerId));
-        }
+        if (customer is null) return Result.Failure<AttendeeResponse>(AttendeeErrors.NotFound(request.CustomerId));
 
         return customer;
     }

@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Lerevently.Common.Domain.Abstractions;
 using Lerevently.IntegrationTests.Abstractions;
 using Lerevently.Modules.Ticketing.Application.Carts.AddItemToCart;
 using Lerevently.Modules.Ticketing.Application.Customers.GetCustomer;
@@ -13,14 +12,14 @@ public sealed class CartCapacityTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
     private ISender _sender;
-    
+
     [Before(Test)]
     public async Task Setup()
     {
         _scope = factory.Services.CreateScope();
         _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-    
+
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -41,7 +40,7 @@ public sealed class CartCapacityTests : BaseIntegrationTest
 
         // Act
         // Try to add exactly 5 tickets
-        Result result = await _sender.Send(new AddItemToCartCommand(customerId, ticketTypeId, 5));
+        var result = await _sender.Send(new AddItemToCartCommand(customerId, ticketTypeId, 5));
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -50,18 +49,19 @@ public sealed class CartCapacityTests : BaseIntegrationTest
     private async Task<Guid> RegisterAndGetCustomerAsync()
     {
         var command = new RegisterUserCommand(
-            $"user-{Guid.NewGuid()}@test.com", 
-            Faker.Internet.Password(), 
-            Faker.Name.FirstName(), 
+            $"user-{Guid.NewGuid()}@test.com",
+            Faker.Internet.Password(),
+            Faker.Name.FirstName(),
             Faker.Name.LastName());
         var userResult = await _sender.Send(command);
 
         await Assert.That(userResult.IsSuccess).IsTrue();
-        
-        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(TimeForSpan), async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
-        
+
+        var customerResult = await Poller.WaitAsync(TimeSpan.FromSeconds(TimeForSpan),
+            async () => await _sender.Send(new GetCustomerQuery(userResult.Value)));
+
         await Assert.That(customerResult.IsSuccess).IsTrue();
-        
+
         return customerResult.Value.Id;
     }
 }

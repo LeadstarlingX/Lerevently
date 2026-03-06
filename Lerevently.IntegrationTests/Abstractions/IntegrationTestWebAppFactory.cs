@@ -15,16 +15,12 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 {
     // Obsolete constructors will be removed in future versions, keep the parameter constructor
     //  it's enough to pass the image.
-    
+
     private readonly PostgreSqlContainer _dbContainer =
         new PostgreSqlBuilder("postgres:18.0")
             .WithDatabase("lerevently")
             .WithUsername("postgres")
             .WithPassword("postgres")
-            .Build();
-
-    private readonly RedisContainer _redisContainer =
-        new RedisBuilder("redis:8.4.0")
             .Build();
 
     private readonly KeycloakContainer _keycloakContainer =
@@ -35,13 +31,27 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
             .WithCommand("--import-realm")
             .Build();
 
+    private readonly RedisContainer _redisContainer =
+        new RedisBuilder("redis:8.4.0")
+            .Build();
+
+    public async Task InitializeAsync()
+    {
+        await _dbContainer.StartAsync();
+        await _redisContainer.StartAsync();
+        await _keycloakContainer.StartAsync();
+
+        // Force the host to start and apply migrations before any tests run
+        using var _ = CreateClient();
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("ConnectionStrings:Database", _dbContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings:Cache", _redisContainer.GetConnectionString());
 
-        string keycloakAddress = _keycloakContainer.GetBaseAddress();
-        string keyCloakRealmUrl = $"{keycloakAddress}realms/lerevently";
+        var keycloakAddress = _keycloakContainer.GetBaseAddress();
+        var keyCloakRealmUrl = $"{keycloakAddress}realms/lerevently";
 
         Environment.SetEnvironmentVariable(
             "Authentication:MetadataAddress",
@@ -60,16 +70,6 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
                 o.ConfidentialClientSecret = "7gaIbiPBBnY0dzIeBosoG7zM5J1y9AVQ";
             });
         });
-    }
-
-    public async Task InitializeAsync()
-    {
-        await _dbContainer.StartAsync();
-        await _redisContainer.StartAsync();
-        await _keycloakContainer.StartAsync();
-
-        // Force the host to start and apply migrations before any tests run
-        using var _ = CreateClient();
     }
 
     public new async Task DisposeAsync()

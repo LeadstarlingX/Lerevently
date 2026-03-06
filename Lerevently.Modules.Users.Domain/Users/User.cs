@@ -11,7 +11,7 @@ public sealed class User : Entity
     {
     }
 #pragma warning restore CS8618
-    
+
     public Guid Id { get; private set; }
 
     public string Email { get; private set; }

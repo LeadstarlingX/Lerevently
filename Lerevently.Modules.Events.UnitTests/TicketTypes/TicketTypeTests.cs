@@ -14,9 +14,9 @@ public class TicketTypeTests : BaseTest
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> eventResult = Event.Create(
+        var eventResult = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -41,9 +41,9 @@ public class TicketTypeTests : BaseTest
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> eventResult = Event.Create(
+        var eventResult = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -58,13 +58,13 @@ public class TicketTypeTests : BaseTest
             Faker.Random.String(),
             Faker.Random.Decimal());
 
-        TicketType ticketType = result.Value;
+        var ticketType = result.Value;
 
         //Act
         ticketType.UpdatePrice(Faker.Random.Decimal());
 
         //Assert
-        TicketTypePriceChangedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<TicketTypePriceChangedDomainEvent>(ticketType);
 
         domainEvent.TicketTypeId.Should().Be(ticketType.Id);

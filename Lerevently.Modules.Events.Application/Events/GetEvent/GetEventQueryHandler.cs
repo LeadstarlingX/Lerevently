@@ -38,29 +38,20 @@ internal sealed class GetEventQueryHandler(IDbConnectionFactory dbConnectionFact
             sql,
             (@event, ticketType) =>
             {
-                if (eventsDictionary.TryGetValue(@event.Id, out EventResponse? existingEvent))
-                {
+                if (eventsDictionary.TryGetValue(@event.Id, out var existingEvent))
                     @event = existingEvent;
-                }
                 else
-                {
                     eventsDictionary.Add(@event.Id, @event);
-                }
 
-                if (ticketType is not null)
-                {
-                    @event.TicketTypes.Add(ticketType);
-                }
+                if (ticketType is not null) @event.TicketTypes.Add(ticketType);
 
                 return @event;
             },
             request,
             splitOn: nameof(TicketTypeResponse.TicketTypeId));
 
-        if (!eventsDictionary.TryGetValue(request.EventId, out EventResponse eventResponse))
-        {
+        if (!eventsDictionary.TryGetValue(request.EventId, out var eventResponse))
             return Result.Failure<EventResponse?>(EventErrors.NotFound(request.EventId));
-        }
 
         return eventResponse;
     }

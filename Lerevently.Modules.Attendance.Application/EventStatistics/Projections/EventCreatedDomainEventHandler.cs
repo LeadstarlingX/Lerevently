@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Dapper;
+﻿using Dapper;
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Modules.Attendance.Domain.Events;
@@ -13,7 +12,7 @@ internal sealed class EventCreatedDomainEventHandler(IDbConnectionFactory dbConn
         EventCreatedDomainEvent domainEvent,
         CancellationToken cancellationToken = default)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         const string sql =
             """

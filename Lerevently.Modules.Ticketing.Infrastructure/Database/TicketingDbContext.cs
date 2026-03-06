@@ -40,14 +40,14 @@ public sealed class TicketingDbContext(DbContextOptions<TicketingDbContext> opti
     {
         modelBuilder.HasDefaultSchema(Schemas.Ticketing);
 
-        
+
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
-        
-        
+
+
         modelBuilder.ApplyConfiguration(new InboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new InboxMessageConsumerConfiguration());
-        
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(TicketingDbContext).Assembly);
     }
 }

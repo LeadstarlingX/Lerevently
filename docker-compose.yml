@@ -39,7 +39,7 @@ services:
       - KC_DB_URL=jdbc:postgresql://lerevently.db:5432/lereventlydb_docker
       - KC_DB_USERNAME=postgres
       - KC_DB_PASSWORD=postgres
-        
+
       - KC_HEALTH_ENABLED=true
     volumes:
       - ./.containers/identity:/opt/jboss/keycloak/standalone/data

@@ -5,7 +5,6 @@ namespace Lerevently.Modules.Events.Domain.Events;
 
 public sealed class Event : Entity
 {
-    
 #pragma warning disable CS8618
     private Event()
     {

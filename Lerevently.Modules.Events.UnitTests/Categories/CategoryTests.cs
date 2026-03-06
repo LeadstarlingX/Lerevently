@@ -14,7 +14,7 @@ public class CategoryTests : BaseTest
         Result<Category> result = Category.Create(Faker.Music.Genre());
 
         //Assert
-        CategoryCreatedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<CategoryCreatedDomainEvent>(result.Value);
 
         domainEvent.CategoryId.Should().Be(result.Value.Id);
@@ -26,13 +26,13 @@ public class CategoryTests : BaseTest
         //Arrange
         Result<Category> result = Category.Create(Faker.Music.Genre());
 
-        Category category = result.Value;
+        var category = result.Value;
 
         //Act
         category.Archive();
 
         //Assert
-        CategoryArchivedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<CategoryArchivedDomainEvent>(category);
 
         domainEvent.CategoryId.Should().Be(category.Id);
@@ -43,16 +43,16 @@ public class CategoryTests : BaseTest
     {
         //Arrange
         Result<Category> result = Category.Create(Faker.Music.Genre());
-        Category category = result.Value;
+        var category = result.Value;
         category.ClearDomainEvents();
 
-        string newName = Faker.Music.Genre();
+        var newName = Faker.Music.Genre();
 
         //Act
         category.ChangeName(newName);
-        
+
         //Assert
-        CategoryNameChangedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<CategoryNameChangedDomainEvent>(category);
 
         domainEvent.CategoryId.Should().Be(category.Id);

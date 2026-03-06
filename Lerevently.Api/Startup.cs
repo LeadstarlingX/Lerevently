@@ -87,9 +87,8 @@ internal class Startup
             {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-            
-            endpoints.MapEndpoints(); // endpoints is IEndpointRouteBuilder
 
+            endpoints.MapEndpoints(); // endpoints is IEndpointRouteBuilder
         });
 
         // app.UseHttpsRedirection();

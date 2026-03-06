@@ -5,21 +5,20 @@ using FluentAssertions;
 using Lerevently.IntegrationTests.Abstractions;
 using Lerevently.Modules.Users.Application.Users.GetUser;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Lerevently.IntegrationTests.UsersModule.Users;
 
 public class GetUserProfileTests : BaseIntegrationTest
 {
     private HttpClient _httpClient;
-    
+
     [Before(Test)]
     public async Task SetupTest()
     {
         _httpClient = factory.CreateClient();
     }
-    
-    
+
+
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -30,7 +29,7 @@ public class GetUserProfileTests : BaseIntegrationTest
     public async Task Should_ReturnUnauthorized_WhenAccessTokenNotProvided()
     {
         // Act
-        HttpResponseMessage response = await _httpClient.GetAsync("users/profile");
+        var response = await _httpClient.GetAsync("users/profile");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
@@ -40,18 +39,18 @@ public class GetUserProfileTests : BaseIntegrationTest
     public async Task Should_ReturnOk_WhenUserExists()
     {
         // Arrange
-        string accessToken = await RegisterUserAndGetAccessTokenAsync("exists@test.com", Faker.Internet.Password());
+        var accessToken = await RegisterUserAndGetAccessTokenAsync("exists@test.com", Faker.Internet.Password());
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
             JwtBearerDefaults.AuthenticationScheme,
             accessToken);
 
         // Act
-        HttpResponseMessage response = await _httpClient.GetAsync("users/profile");
+        var response = await _httpClient.GetAsync("users/profile");
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        UserResponse? user = await response.Content.ReadFromJsonAsync<UserResponse>();
+        var user = await response.Content.ReadFromJsonAsync<UserResponse>();
         user.Should().NotBeNull();
     }
 
@@ -67,7 +66,7 @@ public class GetUserProfileTests : BaseIntegrationTest
 
         await _httpClient.PostAsJsonAsync("users/register", request);
 
-        string accessToken = await GetAccessTokenAsync(request.Email, request.Password);
+        var accessToken = await GetAccessTokenAsync(request.Email, request.Password);
 
         return accessToken;
     }

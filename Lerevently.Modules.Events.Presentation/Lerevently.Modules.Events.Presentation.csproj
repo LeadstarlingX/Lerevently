@@ -2,12 +2,12 @@
 
 
     <ItemGroup>
-        
-        <PackageReference Include="MassTransit" />
-        
+
+        <PackageReference Include="MassTransit"/>
+
         <ProjectReference Include="..\Lerevently.Common.Presentation\Lerevently.Common.Presentation.csproj"/>
         <ProjectReference Include="..\Lerevently.Modules.Events.Application\Lerevently.Modules.Events.Application.csproj"/>
-        <ProjectReference Include="..\Lerevently.Modules.Ticketing.IntegrationEvents\Lerevently.Modules.Ticketing.IntegrationEvents.csproj" />
+        <ProjectReference Include="..\Lerevently.Modules.Ticketing.IntegrationEvents\Lerevently.Modules.Ticketing.IntegrationEvents.csproj"/>
 
     </ItemGroup>
 

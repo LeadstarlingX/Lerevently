@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Dapper;
+﻿using Dapper;
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
@@ -14,7 +13,7 @@ internal sealed class GetEventStatisticsQueryHandler(IDbConnectionFactory dbConn
         GetEventStatisticsQuery request,
         CancellationToken cancellationToken)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         const string sql =
             $"""
@@ -33,13 +32,11 @@ internal sealed class GetEventStatisticsQueryHandler(IDbConnectionFactory dbConn
              WHERE "EventId" = @EventId
              """;
 
-        EventStatisticsResponse? eventStatistics =
+        var eventStatistics =
             await connection.QuerySingleOrDefaultAsync<EventStatisticsResponse>(sql, request);
 
         if (eventStatistics is null)
-        {
             return Result.Failure<EventStatisticsResponse>(EventErrors.NotFound(request.EventId));
-        }
 
         return eventStatistics;
     }

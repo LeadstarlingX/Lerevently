@@ -5,7 +5,6 @@ namespace Lerevently.Modules.Attendance.Domain.Attendees;
 
 public sealed class Attendee : Entity
 {
-    
 #pragma warning disable CS8618
     private Attendee()
     {

@@ -1,11 +1,11 @@
 ﻿using System.Data;
-using System.Data.Common;
 using Dapper;
 using Lerevently.Common.Application.Clock;
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.EventBus;
 using Lerevently.Common.Infrastructure.Inbox;
 using Lerevently.Common.Infrastructure.Serialization;
+using Lerevently.Modules.Attendance.Presentation;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -28,32 +28,30 @@ internal sealed class ProcessInboxJob(
     {
         logger.LogInformation("{Module} - Beginning to process inbox messages", ModuleName);
 
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
-        await using DbTransaction transaction = await connection.BeginTransactionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
 
-        IReadOnlyList<InboxMessageResponse> inboxMessages = await GetInboxMessagesAsync(connection, transaction);
+        var inboxMessages = await GetInboxMessagesAsync(connection, transaction);
 
-        foreach (InboxMessageResponse inboxMessage in inboxMessages)
+        foreach (var inboxMessage in inboxMessages)
         {
             Exception? exception = null;
 
             try
             {
-                IIntegrationEvent integrationEvent = JsonConvert.DeserializeObject<IIntegrationEvent>(
+                var integrationEvent = JsonConvert.DeserializeObject<IIntegrationEvent>(
                     inboxMessage.Content,
                     SerializerSettings.Instance)!;
 
-                using IServiceScope scope = serviceScopeFactory.CreateScope();
+                using var scope = serviceScopeFactory.CreateScope();
 
-                IEnumerable<IIntegrationEventHandler> handlers = IntegrationEventHandlersFactory.GetHandlers(
+                var handlers = IntegrationEventHandlersFactory.GetHandlers(
                     integrationEvent.GetType(),
                     scope.ServiceProvider,
-                    Presentation.AssemblyReference.Assembly);
+                    AssemblyReference.Assembly);
 
-                foreach (IIntegrationEventHandler integrationEventHandler in handlers)
-                {
+                foreach (var integrationEventHandler in handlers)
                     await integrationEventHandler.Handle(integrationEvent, context.CancellationToken);
-                }
             }
             catch (Exception caughtException)
             {
@@ -78,7 +76,7 @@ internal sealed class ProcessInboxJob(
         IDbConnection connection,
         IDbTransaction transaction)
     {
-        string sql =
+        var sql =
             $"""
              SELECT
                 "Id" AS {nameof(InboxMessageResponse.Id)},
@@ -90,7 +88,7 @@ internal sealed class ProcessInboxJob(
              FOR UPDATE
              """;
 
-        IEnumerable<InboxMessageResponse> inboxMessages = await connection.QueryAsync<InboxMessageResponse>(
+        var inboxMessages = await connection.QueryAsync<InboxMessageResponse>(
             sql,
             transaction: transaction);
 
@@ -119,7 +117,7 @@ internal sealed class ProcessInboxJob(
                 ProcessedOnUtc = dateTimeProvider.UtcNow,
                 Error = exception?.ToString()
             },
-            transaction: transaction);
+            transaction);
     }
 
     internal sealed record InboxMessageResponse(Guid Id, string Content);

@@ -1,5 +1,4 @@
 ﻿using Lerevently.Common.Application.Messaging;
-using MediatR;
 
 namespace Lerevently.Modules.Events.Application.Events.GetEvent;
 

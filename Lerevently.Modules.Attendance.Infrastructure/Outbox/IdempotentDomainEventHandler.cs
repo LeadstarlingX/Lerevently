@@ -15,14 +15,11 @@ internal sealed class IdempotentDomainEventHandler<TDomainEvent>(
 {
     public override async Task Handle(TDomainEvent domainEvent, CancellationToken cancellationToken = default)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
         var outboxMessageConsumer = new OutboxMessageConsumer(domainEvent.Id, decorated.GetType().Name);
 
-        if (await OutboxConsumerExistsAsync(connection, outboxMessageConsumer))
-        {
-            return;
-        }
+        if (await OutboxConsumerExistsAsync(connection, outboxMessageConsumer)) return;
 
         await decorated.Handle(domainEvent, cancellationToken);
 
@@ -33,7 +30,7 @@ internal sealed class IdempotentDomainEventHandler<TDomainEvent>(
         DbConnection dbConnection,
         OutboxMessageConsumer outboxMessageConsumer)
     {
-        const string sql = 
+        const string sql =
             """
             SELECT EXISTS(
                 SELECT 1

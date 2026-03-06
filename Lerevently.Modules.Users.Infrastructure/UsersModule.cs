@@ -31,7 +31,7 @@ public static class UsersModule
         services.AddDomainEventHandlers();
 
         services.AddIntegrationEventHandlers();
-        
+
         services.AddInfrastructure(configuration);
 
         services.AddEndpoints(AssemblyReference.Assembly);
@@ -52,10 +52,9 @@ public static class UsersModule
 
         services.AddMyOut_InBoxConfiguration(configuration);
         services.AddMyKeyCloack(configuration);
-        
+
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<UsersDbContext>());
-        
     }
 
     private static void AddMyOut_InBoxConfiguration(this IServiceCollection services,
@@ -64,12 +63,12 @@ public static class UsersModule
         services.Configure<OutboxOptions>(configuration.GetSection("Users:Outbox"));
 
         services.ConfigureOptions<ConfigureProcessOutboxJob>();
-        
+
         services.Configure<InboxOptions>(configuration.GetSection("Users:Inbox"));
 
         services.ConfigureOptions<ConfigureProcessInboxJob>();
     }
-    
+
     private static void AddMyKeyCloack(this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -91,49 +90,49 @@ public static class UsersModule
             })
             .AddHttpMessageHandler<KeyCloakAuthDelegatingHandler>();
     }
-    
-    
+
+
     private static void AddDomainEventHandlers(this IServiceCollection services)
     {
-        Type[] domainEventHandlers = Application.AssemblyReference.Assembly
+        var domainEventHandlers = Application.AssemblyReference.Assembly
             .GetTypes()
             .Where(t => t.IsAssignableTo(typeof(IDomainEventHandler)))
             .ToArray();
 
-        foreach (Type domainEventHandler in domainEventHandlers)
+        foreach (var domainEventHandler in domainEventHandlers)
         {
             services.TryAddScoped(domainEventHandler);
 
-            Type domainEvent = domainEventHandler
+            var domainEvent = domainEventHandler
                 .GetInterfaces()
                 .Single(i => i.IsGenericType)
                 .GetGenericArguments()
                 .Single();
 
-            Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
+            var closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
 
             services.Decorate(domainEventHandler, closedIdempotentHandler);
         }
     }
-    
+
     private static void AddIntegrationEventHandlers(this IServiceCollection services)
     {
-        Type[] integrationEventHandlers = Presentation.AssemblyReference.Assembly
+        var integrationEventHandlers = AssemblyReference.Assembly
             .GetTypes()
             .Where(t => t.IsAssignableTo(typeof(IIntegrationEventHandler)))
             .ToArray();
 
-        foreach (Type integrationEventHandler in integrationEventHandlers)
+        foreach (var integrationEventHandler in integrationEventHandlers)
         {
             services.TryAddScoped(integrationEventHandler);
 
-            Type integrationEvent = integrationEventHandler
+            var integrationEvent = integrationEventHandler
                 .GetInterfaces()
                 .Single(i => i.IsGenericType)
                 .GetGenericArguments()
                 .Single();
 
-            Type closedIdempotentHandler =
+            var closedIdempotentHandler =
                 typeof(IdempotentIntegrationEventHandler<>).MakeGenericType(integrationEvent);
 
             services.Decorate(integrationEventHandler, closedIdempotentHandler);

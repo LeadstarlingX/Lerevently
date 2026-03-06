@@ -1,6 +1,5 @@
 ﻿using Bogus;
 using FluentAssertions;
-using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Ticketing.Application.Events.CreateEvent;
 using MediatR;
 
@@ -24,7 +23,7 @@ internal static class CommandHelpers
             "USD",
             quantity);
 
-        Result result = await sender.Send(new CreateEventCommand(
+        var result = await sender.Send(new CreateEventCommand(
             eventId,
             faker.Music.Genre(),
             faker.Music.Genre(),

@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
 using Lerevently.Modules.Events.UnitTests.Abstractions;
@@ -13,11 +12,11 @@ public class EventTests : BaseTest
     {
         // Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.Now;
-        DateTime endsAtUtc = startsAtUtc.AddMinutes(-1);
+        var startsAtUtc = DateTime.Now;
+        var endsAtUtc = startsAtUtc.AddMinutes(-1);
 
         // Act
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -34,10 +33,10 @@ public class EventTests : BaseTest
     {
         // Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.Now;
+        var startsAtUtc = DateTime.Now;
 
         // Act
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -45,10 +44,10 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         // Assert
-        EventCreatedDomainEvent domainEvent = AssertDomainEventWasPublished<EventCreatedDomainEvent>(@event);
+        var domainEvent = AssertDomainEventWasPublished<EventCreatedDomainEvent>(@event);
 
         domainEvent.EventId.Should().Be(@event.Id);
     }
@@ -58,9 +57,9 @@ public class EventTests : BaseTest
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -68,12 +67,12 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         @event.Publish();
 
         //Act
-        Result publishResult = @event.Publish();
+        var publishResult = @event.Publish();
 
         //Assert
         publishResult.Error.Should().Be(EventErrors.NotDraft);
@@ -85,9 +84,9 @@ public class EventTests : BaseTest
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -95,13 +94,13 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         //Act
         @event.Publish();
 
         //Assert
-        EventPublishedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<EventPublishedDomainEvent>(@event);
 
         domainEvent.EventId.Should().Be(@event.Id);
@@ -112,9 +111,9 @@ public class EventTests : BaseTest
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -122,13 +121,13 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         //Act
         @event.Reschedule(startsAtUtc.AddDays(1), startsAtUtc.AddDays(2));
 
         //Assert
-        EventRescheduledDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<EventRescheduledDomainEvent>(@event);
 
         domainEvent.EventId.Should().Be(@event.Id);
@@ -139,9 +138,9 @@ public class EventTests : BaseTest
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -149,13 +148,13 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         //Act
         @event.Cancel(startsAtUtc.AddMinutes(-1));
 
         //Assert
-        EventCanceledDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<EventCanceledDomainEvent>(@event);
 
         domainEvent.EventId.Should().Be(@event.Id);
@@ -166,9 +165,9 @@ public class EventTests : BaseTest
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -176,12 +175,12 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         @event.Cancel(startsAtUtc.AddMinutes(-1));
 
         //Act
-        Result cancelResult = @event.Cancel(startsAtUtc.AddMinutes(-1));
+        var cancelResult = @event.Cancel(startsAtUtc.AddMinutes(-1));
 
         //Assert
         cancelResult.Error.Should().Be(EventErrors.AlreadyCanceled);
@@ -192,9 +191,9 @@ public class EventTests : BaseTest
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -202,10 +201,10 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         //Act
-        Result cancelResult = @event.Cancel(startsAtUtc.AddMinutes(1));
+        var cancelResult = @event.Cancel(startsAtUtc.AddMinutes(1));
 
         //Assert
         cancelResult.Error.Should().Be(EventErrors.AlreadyStarted);

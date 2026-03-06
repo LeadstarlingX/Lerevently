@@ -21,13 +21,13 @@ public sealed class AttendanceDbContext(DbContextOptions<AttendanceDbContext> op
     {
         modelBuilder.HasDefaultSchema(Schemas.Attendance);
 
-        
+
         modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new OutboxMessageConsumerConfiguration());
-        
+
         modelBuilder.ApplyConfiguration(new InboxMessageConfiguration());
         modelBuilder.ApplyConfiguration(new InboxMessageConsumerConfiguration());
-        
+
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AttendanceDbContext).Assembly);
     }
 }

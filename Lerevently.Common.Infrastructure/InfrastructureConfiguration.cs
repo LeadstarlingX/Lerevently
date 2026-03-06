@@ -50,7 +50,7 @@ public static class InfrastructureConfiguration
             configurator.SchedulerId = $"default-id-{scheduler}";
             configurator.SchedulerName = $"default-name-{scheduler}";
         });
-        
+
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
 
         /// To solve the problem of not being able to resolve the connection multiplexer when

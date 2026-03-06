@@ -30,20 +30,20 @@ public static class EventsModule
         IConfiguration configuration)
     {
         services.AddDomainEventHandlers();
-        
+
         services.AddIntegrationEventHandlers();
-        
+
         services.AddEndpoints(AssemblyReference.Assembly);
 
         services.AddInfrastructure(configuration);
 
         return services;
     }
-    
+
     public static Action<IRegistrationConfigurator> ConfigureConsumers(IConfiguration configuration)
     {
         var redisConnectionString = configuration.GetConnectionString("Cache");
-        
+
         return registrationConfigurator => registrationConfigurator
             .AddSagaStateMachine<CancelEventSaga, CancelEventState>()
             .RedisRepository(redisConnectionString);
@@ -61,21 +61,20 @@ public static class EventsModule
                     npgsqlOptions => npgsqlOptions
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Events))
                 .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
-        
+
         services.AddMyOut_InBoxConfiguration(configuration);
         services.AddMyRepositories();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<EventsDbContext>());
-
     }
-    
+
     private static void AddMyOut_InBoxConfiguration(this IServiceCollection services,
         IConfiguration configuration)
     {
         services.Configure<OutboxOptions>(configuration.GetSection("Events:Outbox"));
 
         services.ConfigureOptions<ConfigureProcessOutboxJob>();
-        
+
         services.Configure<InboxOptions>(configuration.GetSection("Events:Inbox"));
 
         services.ConfigureOptions<ConfigureProcessInboxJob>();
@@ -87,48 +86,48 @@ public static class EventsModule
         services.AddScoped<ITicketTypeRepository, TicketTypeRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
     }
-    
+
     private static void AddDomainEventHandlers(this IServiceCollection services)
     {
-        Type[] domainEventHandlers = Application.AssemblyReference.Assembly
+        var domainEventHandlers = Application.AssemblyReference.Assembly
             .GetTypes()
             .Where(t => t.IsAssignableTo(typeof(IDomainEventHandler)))
             .ToArray();
 
-        foreach (Type domainEventHandler in domainEventHandlers)
+        foreach (var domainEventHandler in domainEventHandlers)
         {
             services.TryAddScoped(domainEventHandler);
 
-            Type domainEvent = domainEventHandler
+            var domainEvent = domainEventHandler
                 .GetInterfaces()
                 .Single(i => i.IsGenericType)
                 .GetGenericArguments()
                 .Single();
 
-            Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
+            var closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
 
             services.Decorate(domainEventHandler, closedIdempotentHandler);
         }
     }
-    
+
     private static void AddIntegrationEventHandlers(this IServiceCollection services)
     {
-        Type[] integrationEventHandlers = Presentation.AssemblyReference.Assembly
+        var integrationEventHandlers = AssemblyReference.Assembly
             .GetTypes()
             .Where(t => t.IsAssignableTo(typeof(IIntegrationEventHandler)))
             .ToArray();
 
-        foreach (Type integrationEventHandler in integrationEventHandlers)
+        foreach (var integrationEventHandler in integrationEventHandlers)
         {
             services.TryAddScoped(integrationEventHandler);
 
-            Type integrationEvent = integrationEventHandler
+            var integrationEvent = integrationEventHandler
                 .GetInterfaces()
                 .Single(i => i.IsGenericType)
                 .GetGenericArguments()
                 .Single();
 
-            Type closedIdempotentHandler =
+            var closedIdempotentHandler =
                 typeof(IdempotentIntegrationEventHandler<>).MakeGenericType(integrationEvent);
 
             services.Decorate(integrationEventHandler, closedIdempotentHandler);
