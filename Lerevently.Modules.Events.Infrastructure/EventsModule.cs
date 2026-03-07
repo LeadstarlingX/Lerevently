@@ -4,7 +4,7 @@ using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Presentation.Endpoints;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
-using Lerevently.Modules.Events.Domain.TicktTypes;
+using Lerevently.Modules.Events.Domain.TicketTypes;
 using Lerevently.Modules.Events.Infrastructure.Categories;
 using Lerevently.Modules.Events.Infrastructure.Database;
 using Lerevently.Modules.Events.Infrastructure.Events;

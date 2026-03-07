@@ -11,6 +11,7 @@ public abstract class BaseIntegrationTest
 {
     protected const int TimeForSpan = 30;
     protected static readonly Faker Faker = new();
+    
 
     [ClassDataSource<IntegrationTestWebAppFactory>(Shared = SharedType.PerAssembly)]
     public static IntegrationTestWebAppFactory factory { get; set; }

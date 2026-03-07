@@ -2,7 +2,7 @@
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
-using Lerevently.Modules.Events.Domain.TicktTypes;
+using Lerevently.Modules.Events.Domain.TicketTypes;
 using Lerevently.Modules.Events.UnitTests.Abstractions;
 
 namespace Lerevently.Modules.Events.UnitTests.TicketTypes;

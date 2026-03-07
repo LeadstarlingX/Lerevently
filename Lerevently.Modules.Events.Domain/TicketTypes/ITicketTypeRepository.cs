@@ -1,4 +1,4 @@
-﻿namespace Lerevently.Modules.Events.Domain.TicktTypes;
+﻿namespace Lerevently.Modules.Events.Domain.TicketTypes;
 
 public interface ITicketTypeRepository
 {

@@ -1,9 +1,12 @@
 ﻿using Lerevently.Api;
+using Lerevently.Common.Application.Clock;
 using Lerevently.Modules.Users.Infrastructure.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using NSubstitute;
 using Testcontainers.Keycloak;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
@@ -15,6 +18,8 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
 {
     // Obsolete constructors will be removed in future versions, keep the parameter constructor
     //  it's enough to pass the image.
+    
+    public readonly IDateTimeProvider DateTimeProviderMock = Substitute.For<IDateTimeProvider>();
 
     private readonly PostgreSqlContainer _dbContainer =
         new PostgreSqlBuilder("postgres:18.0")
@@ -46,7 +51,20 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
-    {
+    {   
+        
+        builder.ConfigureTestServices(services =>
+        {
+            services.RemoveAll(typeof(IDateTimeProvider));
+            
+            services.AddScoped<IDateTimeProvider>(_ =>
+            {
+                var mock = Substitute.For<IDateTimeProvider>();
+                mock.UtcNow.Returns(_ => DateTime.UtcNow);
+                return mock;
+            });
+        });
+        
         Environment.SetEnvironmentVariable("ConnectionStrings:Database", _dbContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings:Cache", _redisContainer.GetConnectionString());
 

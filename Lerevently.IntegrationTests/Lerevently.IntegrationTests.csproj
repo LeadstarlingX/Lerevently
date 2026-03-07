@@ -13,6 +13,7 @@
         <PackageReference Include="FluentAssertions"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
         <PackageReference Include="TUnit"/>
+        <PackageReference Include="NSubstitute"/>
 
         <PackageReference Include="Testcontainers.Redis"/>
         <PackageReference Include="Testcontainers.PostgreSql"/>
@@ -33,6 +34,9 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Folder Include="AttendanceModule\" />
+        <Folder Include="EventsModule\" />
+        <Folder Include="TicketingModule\" />
         <Folder Include="UsersModule\"/>
     </ItemGroup>
 

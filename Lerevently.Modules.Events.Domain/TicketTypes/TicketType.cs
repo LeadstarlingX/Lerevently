@@ -1,7 +1,7 @@
 ﻿using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.Events;
 
-namespace Lerevently.Modules.Events.Domain.TicktTypes;
+namespace Lerevently.Modules.Events.Domain.TicketTypes;
 
 public sealed class TicketType : Entity
 {

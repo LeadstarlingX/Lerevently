@@ -1,6 +1,6 @@
 ﻿using Lerevently.Common.Application.EventBus;
 using Lerevently.Common.Application.Messaging;
-using Lerevently.Modules.Events.Domain.TicktTypes;
+using Lerevently.Modules.Events.Domain.TicketTypes;
 using Lerevently.Modules.Events.IntegrationEvents;
 
 namespace Lerevently.Modules.Events.Application.TicketTypes.UpdateTicketTypePrice;

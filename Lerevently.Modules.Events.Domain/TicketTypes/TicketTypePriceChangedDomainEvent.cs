@@ -1,6 +1,6 @@
 ﻿using Lerevently.Common.Domain.Abstractions;
 
-namespace Lerevently.Modules.Events.Domain.TicktTypes;
+namespace Lerevently.Modules.Events.Domain.TicketTypes;
 
 public sealed class TicketTypePriceChangedDomainEvent(Guid ticketTypeId, decimal price) : DomainEvent
 {

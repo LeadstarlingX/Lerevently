@@ -3,7 +3,7 @@ using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Modules.Events.Application.Abstractions.Data;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
-using Lerevently.Modules.Events.Domain.TicktTypes;
+using Lerevently.Modules.Events.Domain.TicketTypes;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lerevently.Modules.Events.Infrastructure.Database;

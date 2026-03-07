@@ -20,12 +20,15 @@ internal sealed class GetCategoryQueryHandler(IDbConnectionFactory dbConnectionF
                  "Name" AS {nameof(CategoryResponse.Name)},
                  "IsArchived" AS {nameof(CategoryResponse.IsArchived)}
              FROM events."Categories"
-             WHERE id = @CategoryId
+             WHERE "Id" = @CategoryId
              """;
 
-        var category = await connection.QuerySingleOrDefaultAsync<CategoryResponse>(sql, request);
+        var category = await connection.QuerySingleOrDefaultAsync<CategoryResponse?>(sql, request);
 
-        if (category is null) return Result.Failure<CategoryResponse>(CategoryErrors.NotFound(request.CategoryId));
+        if (category is null)
+        {
+            return Result.Failure<CategoryResponse>(CategoryErrors.NotFound(request.CategoryId));
+        }
 
         return category;
     }
