@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+
+
+        <PackageReference Include="Bogus"/>
+        <PackageReference Include="TUnit"/>
+        <PackageReference Include="FluentAssertions"/>
+
+
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Lerevently.Modules.Ticketing.Domain\Lerevently.Modules.Ticketing.Domain.csproj" />
+    </ItemGroup>
+
+</Project>

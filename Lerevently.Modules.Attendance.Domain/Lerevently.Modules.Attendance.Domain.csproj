@@ -8,6 +8,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Lerevently.Common.Domain\Lerevently.Common.Domain.csproj"/>
+
+
+        <InternalsVisibleTo Include="Lerevently.Modules.Attendance.UnitTests"/>
+        
     </ItemGroup>
 
 </Project>

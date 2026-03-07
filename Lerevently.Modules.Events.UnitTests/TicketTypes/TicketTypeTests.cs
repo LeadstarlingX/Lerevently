@@ -10,7 +10,7 @@ namespace Lerevently.Modules.Events.UnitTests.TicketTypes;
 public class TicketTypeTests : BaseTest
 {
     [Test]
-    public void Create_ShouldReturnValue_WhenTicketTypeIsCreated()
+    public async Task Create_ShouldReturnValue_WhenTicketTypeIsCreated()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
@@ -33,11 +33,11 @@ public class TicketTypeTests : BaseTest
             Faker.Random.Decimal());
 
         //Assert
-        result.Value.Should().NotBeNull();
+        await Assert.That(result.Value).IsNotNull();
     }
 
     [Test]
-    public void UpdatePrice_ShouldRaiseDomainEvent_WhenTicketTypeIsUpdated()
+    public async Task UpdatePrice_ShouldRaiseDomainEvent_WhenTicketTypeIsUpdated()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
@@ -67,6 +67,6 @@ public class TicketTypeTests : BaseTest
         var domainEvent =
             AssertDomainEventWasPublished<TicketTypePriceChangedDomainEvent>(ticketType);
 
-        domainEvent.TicketTypeId.Should().Be(ticketType.Id);
+        await Assert.That(domainEvent.TicketTypeId).IsEqualTo(ticketType.Id);
     }
 }

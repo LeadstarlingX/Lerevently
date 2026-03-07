@@ -8,7 +8,7 @@ namespace Lerevently.Modules.Events.UnitTests.Categories;
 public class CategoryTests : BaseTest
 {
     [Test]
-    public void Create_ShouldRaiseDomainEvent_WhenCategoryIsCreated()
+    public async Task Create_ShouldRaiseDomainEvent_WhenCategoryIsCreated()
     {
         //Act
         Result<Category> result = Category.Create(Faker.Music.Genre());
@@ -18,10 +18,12 @@ public class CategoryTests : BaseTest
             AssertDomainEventWasPublished<CategoryCreatedDomainEvent>(result.Value);
 
         domainEvent.CategoryId.Should().Be(result.Value.Id);
+        await Assert.That(domainEvent.CategoryId).IsEqualTo(result.Value.Id);
+
     }
 
     [Test]
-    public void Archive_ShouldRaiseDomainEvent_WhenCategoryIsArchived()
+    public async Task Archive_ShouldRaiseDomainEvent_WhenCategoryIsArchived()
     {
         //Arrange
         Result<Category> result = Category.Create(Faker.Music.Genre());
@@ -35,11 +37,13 @@ public class CategoryTests : BaseTest
         var domainEvent =
             AssertDomainEventWasPublished<CategoryArchivedDomainEvent>(category);
 
-        domainEvent.CategoryId.Should().Be(category.Id);
+        await Assert.That(domainEvent.CategoryId).IsEqualTo(category.Id);
+
+        
     }
 
     [Test]
-    public void ChangeName_ShouldRaiseDomainEvent_WhenCategoryNameIsChanged()
+    public async Task ChangeName_ShouldRaiseDomainEvent_WhenCategoryNameIsChanged()
     {
         //Arrange
         Result<Category> result = Category.Create(Faker.Music.Genre());
@@ -55,6 +59,7 @@ public class CategoryTests : BaseTest
         var domainEvent =
             AssertDomainEventWasPublished<CategoryNameChangedDomainEvent>(category);
 
-        domainEvent.CategoryId.Should().Be(category.Id);
+        await Assert.That(domainEvent.CategoryId).IsEqualTo(category.Id);
+
     }
 }

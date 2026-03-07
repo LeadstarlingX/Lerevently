@@ -21,7 +21,7 @@ public sealed class Payment : Entity
 
     public string Currency { get; private set; }
 
-    public decimal? AmountRefunded { get; private set; }
+    public decimal? AmountRefunded { get; private set; } = 0;
 
     public DateTime CreatedAtUtc { get; private set; }
 
