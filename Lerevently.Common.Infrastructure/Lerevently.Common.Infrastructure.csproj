@@ -6,6 +6,15 @@
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design"/>
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer"/>
+        
+        
+        <PackageReference Include="OpenTelemetry.Extensions.Hosting"/>
+        <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.Http"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore"/>
+        <PackageReference Include="Npgsql.OpenTelemetry"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis"/>
+        <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore"/>
 
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>

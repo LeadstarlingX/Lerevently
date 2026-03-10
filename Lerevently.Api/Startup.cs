@@ -1,5 +1,7 @@
 ﻿using HealthChecks.UI.Client;
 using Lerevently.Api.Extensions;
+using Lerevently.Api.Middleware;
+using Lerevently.Api.OpenTelemetry;
 using Lerevently.Common.Application;
 using Lerevently.Common.Infrastructure;
 using Lerevently.Common.Presentation.Endpoints;
@@ -39,6 +41,7 @@ internal class Startup
         ]);
 
         services.AddInfrastructure(
+            DiagnosticsConfig.ServiceName,
             [
                 EventsModule.ConfigureConsumers(Configuration),
                 TicketingModule.ConfigureConsumers,
@@ -90,6 +93,8 @@ internal class Startup
 
             endpoints.MapEndpoints(); // endpoints is IEndpointRouteBuilder
         });
+
+        app.UseLogContextTraceLogging();
 
         // app.UseHttpsRedirection();
 
