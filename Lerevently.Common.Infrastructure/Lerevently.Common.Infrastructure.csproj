@@ -15,11 +15,13 @@
         <PackageReference Include="Npgsql.OpenTelemetry"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.StackExchangeRedis"/>
         <PackageReference Include="OpenTelemetry.Instrumentation.EntityFrameworkCore"/>
+        <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq"/>
 
 
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
         <PackageReference Include="MassTransit"/>
         <PackageReference Include="MassTransit.Redis"/>
+        <PackageReference Include="MassTransit.RabbitMQ"/>
         <PackageReference Include="Quartz.Extensions.Hosting"/>
         <PackageReference Include="Scrutor"/>
 

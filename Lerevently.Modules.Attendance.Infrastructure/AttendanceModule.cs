@@ -45,13 +45,18 @@ public static class AttendanceModule
         return services;
     }
 
-    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)
+    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator, string instanceId)
     {
-        registrationConfigurator.AddConsumer<UserRegisteredIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<TicketIssuedIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>();
+        registrationConfigurator.AddConsumer<UserRegisteredIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<TicketIssuedIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>()
+            .Endpoint(x => x.InstanceId = instanceId);
     }
 
     private static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)

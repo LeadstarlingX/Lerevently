@@ -40,12 +40,14 @@ public static class EventsModule
         return services;
     }
 
-    public static Action<IRegistrationConfigurator> ConfigureConsumers(IConfiguration configuration)
+    public static Action<IRegistrationConfigurator, string> ConfigureConsumers(IConfiguration configuration)
     {
         var redisConnectionString = configuration.GetConnectionString("Cache");
 
-        return registrationConfigurator => registrationConfigurator
+        return (registrationConfigurator, instanceId) => registrationConfigurator
             .AddSagaStateMachine<CancelEventSaga, CancelEventState>()
+            
+            .Endpoint(x => x.InstanceId = instanceId)
             .RedisRepository(redisConnectionString);
     }
 

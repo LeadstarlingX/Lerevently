@@ -1,5 +1,7 @@
 ﻿using Lerevently.Api.Extensions;
 using Lerevently.Api.Middleware;
+using Lerevently.Common.Infrastructure.EventBus;
+using RabbitMQ.Client;
 
 namespace Lerevently.Api;
 
@@ -26,12 +28,18 @@ internal static class DependencyInjection
 
     private static IServiceCollection AddMyHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
-        var keyCloakHealthUrl = configuration.GetKeyCloakHealthUrl();
+
+        var temp = new RabbitMqSettings(configuration.GetConnectionString("Queue")!);
 
         services.AddHealthChecks()
             .AddNpgSql(configuration.GetConnectionString("Database")!)
             .AddRedis(configuration.GetConnectionString("Cache")!)
-            .AddKeyCloak(keyCloakHealthUrl);
+            .AddRabbitMQ(sp =>
+            {
+                var factory = new ConnectionFactory { Uri = new Uri(temp.Host) };
+                return factory.CreateConnectionAsync();
+            })
+            .AddUrlGroup(new Uri(configuration["KeyCloak:HealthUrl"]!), HttpMethod.Get, "keycloak");
 
         return services;
     }

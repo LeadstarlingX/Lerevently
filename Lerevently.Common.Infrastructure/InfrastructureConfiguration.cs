@@ -8,6 +8,7 @@ using Lerevently.Common.Infrastructure.Authorization;
 using Lerevently.Common.Infrastructure.Caching;
 using Lerevently.Common.Infrastructure.Clock;
 using Lerevently.Common.Infrastructure.Data;
+using Lerevently.Common.Infrastructure.EventBus;
 using Lerevently.Common.Infrastructure.Outbox;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
@@ -26,10 +27,11 @@ public static class InfrastructureConfiguration
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
         string serviceName,
-        Action<IRegistrationConfigurator>[] moduleConfigureConsumers,
+        Action<IRegistrationConfigurator, string>[] moduleConfigureConsumers,
         IConfiguration configuration)
     {
         var databaseConnectionString = configuration.GetConnectionString("Database")!;
+        var rabbitMqSettings = new RabbitMqSettings(configuration.GetConnectionString("Queue")!);
 
         var npgsqlDataSource = new NpgsqlDataSourceBuilder(databaseConnectionString).Build();
         services.TryAddSingleton(npgsqlDataSource);
@@ -77,11 +79,21 @@ public static class InfrastructureConfiguration
 
         services.AddMassTransit(configure =>
         {
-            foreach (var configureConsumer in moduleConfigureConsumers) configureConsumer(configure);
+            string instanceId = serviceName.ToLowerInvariant().Replace('.', '-');
+            foreach (var configureConsumer in moduleConfigureConsumers) configureConsumer(configure, instanceId);
 
             configure.SetKebabCaseEndpointNameFormatter();
 
-            configure.UsingInMemory((context, cfg) => { cfg.ConfigureEndpoints(context); });
+            configure.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(new Uri(rabbitMqSettings.Host), h =>
+                {
+                    h.Username(rabbitMqSettings.Username);
+                    h.Password(rabbitMqSettings.Password);
+                });
+                
+                cfg.ConfigureEndpoints(context);
+            });
         });
         
         services.AddOpenTelemetry()

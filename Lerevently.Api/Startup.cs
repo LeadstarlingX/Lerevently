@@ -34,7 +34,7 @@ internal class Startup
         Console.WriteLine($"\n******** Using connection string: {conn} ********\n");
 
         services.AddApplication([
-            AssemblyReference.Assembly,
+            Modules.Events.Application.AssemblyReference.Assembly,
             Modules.Users.Application.AssemblyReference.Assembly,
             Modules.Ticketing.Application.AssemblyReference.Assembly,
             Modules.Attendance.Application.AssemblyReference.Assembly

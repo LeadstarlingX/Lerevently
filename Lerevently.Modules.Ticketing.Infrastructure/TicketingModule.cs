@@ -51,13 +51,18 @@ public static class TicketingModule
         return services;
     }
 
-    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)
+    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator, string instanceId)
     {
-        registrationConfigurator.AddConsumer<UserRegisteredIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<TicketTypePriceChangedIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>();
+        registrationConfigurator.AddConsumer<UserRegisteredIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<TicketTypePriceChangedIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>()
+            .Endpoint(x => x.InstanceId = instanceId);
     }
 
 

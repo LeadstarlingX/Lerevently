@@ -23,6 +23,9 @@ services:
       
       lerevently.identity:
         condition: service_started
+        
+      lerevently.queue:
+        condition: service_healthy
     
     restart: always
 
@@ -98,3 +101,25 @@ services:
       - "4318:4318"   # OTLP HTTP
       - "16686:16686"
     restart: always
+  
+  lerevently.queue:
+    image: rabbitmq:management-alpine
+    container_name: Lerevently.Queue
+    hostname: lerevently-queue
+    volumes:
+      - ./.containers/queue/data:/var/lib/rabbitmq
+      - ./.containers/queue/log:/var/log/rabbitmq
+        
+    environment:
+      RABBIT_DEFAULT_USER: "guest"
+      RABBIT_DEFAULT_PASS: "guest"
+    ports:
+        - "5672:5672"   # AMQP
+        - "15672:15672" # Management UI
+    restart: always
+    
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
