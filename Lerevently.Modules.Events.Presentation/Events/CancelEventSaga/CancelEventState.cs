@@ -4,7 +4,7 @@ namespace Lerevently.Modules.Events.Presentation.Events.CancelEventSaga;
 
 public sealed class CancelEventState : SagaStateMachineInstance, ISagaVersion
 {
-    public string CurrentState { get; set; }
+    public string CurrentState { get; set; } = string.Empty;
 
     public int CancellationCompletedStatus { get; set; }
 

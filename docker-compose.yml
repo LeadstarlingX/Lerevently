@@ -72,7 +72,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-  
+    
   lerevently.seq:
     image: datalust/seq:2025.2
     container_name: Lerevently.Seq

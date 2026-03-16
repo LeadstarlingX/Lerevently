@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using NSubstitute;
 using Testcontainers.Keycloak;
 using Testcontainers.PostgreSql;
+using Testcontainers.RabbitMq;
 using Testcontainers.Redis;
 using TUnit.Core.Interfaces;
 
@@ -39,12 +40,20 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     private readonly RedisContainer _redisContainer =
         new RedisBuilder("redis:8.4.0")
             .Build();
+    
+    private readonly RabbitMqContainer _rabbitMqContainer =
+        new RabbitMqBuilder()
+            .WithImage("rabbitmq:management-alpine")
+            .WithUsername("guest")
+            .WithPassword("guest")
+            .Build();
 
     public async Task InitializeAsync()
     {
         await _dbContainer.StartAsync();
         await _redisContainer.StartAsync();
         await _keycloakContainer.StartAsync();
+        await _rabbitMqContainer.StartAsync();
 
         // Force the host to start and apply migrations before any tests run
         using var _ = CreateClient();
@@ -67,7 +76,9 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
         
         Environment.SetEnvironmentVariable("ConnectionStrings:Database", _dbContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("ConnectionStrings:Cache", _redisContainer.GetConnectionString());
-
+        Environment.SetEnvironmentVariable("ConnectionStrings:Queue", _rabbitMqContainer.GetConnectionString());
+        
+        
         var keycloakAddress = _keycloakContainer.GetBaseAddress();
         var keyCloakRealmUrl = $"{keycloakAddress}realms/lerevently";
 
@@ -95,5 +106,6 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
         await _dbContainer.StopAsync();
         await _redisContainer.StopAsync();
         await _keycloakContainer.StopAsync();
+        await _rabbitMqContainer.StopAsync();
     }
 }
