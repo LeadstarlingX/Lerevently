@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
 using Lerevently.Modules.Events.UnitTests.Abstractions;
@@ -9,15 +8,15 @@ namespace Lerevently.Modules.Events.UnitTests.Events;
 public class EventTests : BaseTest
 {
     [Test]
-    public void Create_ShouldReturnFailure_WhenEndDatePrecedesStartDate()
+    public async Task Create_ShouldReturnFailure_WhenEndDatePrecedesStartDate()
     {
         // Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.Now;
-        DateTime endsAtUtc = startsAtUtc.AddMinutes(-1);
+        var startsAtUtc = DateTime.Now;
+        var endsAtUtc = startsAtUtc.AddMinutes(-1);
 
         // Act
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -26,18 +25,18 @@ public class EventTests : BaseTest
             endsAtUtc);
 
         // Assert
-        result.Error.Should().Be(EventErrors.EndDatePrecedesStartDate);
+        await Assert.That(result.Error).IsEqualTo(EventErrors.EndDatePrecedesStartDate);
     }
 
     [Test]
-    public void Create_ShouldRaiseDomainEvent_WhenEventCreated()
+    public async Task Create_ShouldRaiseDomainEvent_WhenEventCreated()
     {
         // Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.Now;
+        var startsAtUtc = DateTime.Now;
 
         // Act
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -45,22 +44,22 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         // Assert
-        EventCreatedDomainEvent domainEvent = AssertDomainEventWasPublished<EventCreatedDomainEvent>(@event);
+        var domainEvent = AssertDomainEventWasPublished<EventCreatedDomainEvent>(@event);
 
-        domainEvent.EventId.Should().Be(@event.Id);
+        await Assert.That(domainEvent.EventId).IsEqualTo(@event.Id);
     }
 
     [Test]
-    public void Publish_ShouldReturnFailure_WhenEventNotDraft()
+    public async Task Publish_ShouldReturnFailure_WhenEventNotDraft()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -68,26 +67,26 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         @event.Publish();
 
         //Act
-        Result publishResult = @event.Publish();
+        var publishResult = @event.Publish();
 
         //Assert
-        publishResult.Error.Should().Be(EventErrors.NotDraft);
+        await Assert.That(publishResult.Error).IsEqualTo(EventErrors.NotDraft);
     }
 
 
     [Test]
-    public void Publish_ShouldRaiseDomainEvent_WhenEventPublished()
+    public async Task Publish_ShouldRaiseDomainEvent_WhenEventPublished()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -95,26 +94,28 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         //Act
         @event.Publish();
 
         //Assert
-        EventPublishedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<EventPublishedDomainEvent>(@event);
 
         domainEvent.EventId.Should().Be(@event.Id);
+        await Assert.That(domainEvent.EventId).IsEqualTo(@event.Id);
+
     }
 
     [Test]
-    public void Reschedule_ShouldRaiseDomainEvent_WhenEventRescheduled()
+    public async Task Reschedule_ShouldRaiseDomainEvent_WhenEventRescheduled()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -122,26 +123,27 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         //Act
         @event.Reschedule(startsAtUtc.AddDays(1), startsAtUtc.AddDays(2));
 
         //Assert
-        EventRescheduledDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<EventRescheduledDomainEvent>(@event);
 
-        domainEvent.EventId.Should().Be(@event.Id);
+        await Assert.That(domainEvent.EventId).IsEqualTo(@event.Id);
+
     }
 
     [Test]
-    public void Cancel_ShouldRaiseDomainEvent_WhenEventCanceled()
+    public async Task Cancel_ShouldRaiseDomainEvent_WhenEventCanceled()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -149,26 +151,27 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         //Act
         @event.Cancel(startsAtUtc.AddMinutes(-1));
 
         //Assert
-        EventCanceledDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<EventCanceledDomainEvent>(@event);
 
-        domainEvent.EventId.Should().Be(@event.Id);
+        await Assert.That(domainEvent.EventId).IsEqualTo(@event.Id);
+
     }
 
     [Test]
-    public void Cancel_ShouldReturnFailure_WhenEventAlreadyCanceled()
+    public async Task Cancel_ShouldReturnFailure_WhenEventAlreadyCanceled()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -176,25 +179,26 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         @event.Cancel(startsAtUtc.AddMinutes(-1));
 
         //Act
-        Result cancelResult = @event.Cancel(startsAtUtc.AddMinutes(-1));
+        var cancelResult = @event.Cancel(startsAtUtc.AddMinutes(-1));
 
         //Assert
-        cancelResult.Error.Should().Be(EventErrors.AlreadyCanceled);
+        await Assert.That(cancelResult.Error).IsEqualTo(EventErrors.AlreadyCanceled);
+
     }
 
     [Test]
-    public void Cancel_ShouldReturnFailure_WhenEventAlreadyStarted()
+    public async Task Cancel_ShouldReturnFailure_WhenEventAlreadyStarted()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> result = Event.Create(
+        var result = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -202,12 +206,12 @@ public class EventTests : BaseTest
             startsAtUtc,
             null);
 
-        Event @event = result.Value;
+        var @event = result.Value;
 
         //Act
-        Result cancelResult = @event.Cancel(startsAtUtc.AddMinutes(1));
+        var cancelResult = @event.Cancel(startsAtUtc.AddMinutes(1));
 
         //Assert
-        cancelResult.Error.Should().Be(EventErrors.AlreadyStarted);
+        await Assert.That(cancelResult.Error).IsEqualTo(EventErrors.AlreadyStarted);
     }
 }

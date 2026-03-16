@@ -13,9 +13,9 @@ namespace Lerevently.IntegrationTests.AddToCart;
 public sealed class CreateEventTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
-    private ISender Sender;
     private EventsDbContext Events_DbContext;
-    
+    private ISender Sender;
+
     [Before(Test)]
     public async Task Setup()
     {
@@ -23,7 +23,7 @@ public sealed class CreateEventTests : BaseIntegrationTest
         Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
         Events_DbContext = _scope.ServiceProvider.GetRequiredService<EventsDbContext>();
     }
-    
+
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -41,7 +41,7 @@ public sealed class CreateEventTests : BaseIntegrationTest
         Events_DbContext.Categories.Add(category);
         await Events_DbContext.SaveChangesAsync();
         var categoryId = category.Id;
-        
+
         var command = new CreateEventCommand(
             categoryId,
             Faker.Lorem.Sentence(),
@@ -49,13 +49,13 @@ public sealed class CreateEventTests : BaseIntegrationTest
             Faker.Address.City(),
             DateTime.UtcNow.AddDays(1),
             DateTime.UtcNow.AddDays(1).AddHours(4));
-        
+
         // Act
-        Result<Guid> result = await Sender.Send(command);
+        var result = await Sender.Send(command);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        
+
         var eventId = result.Value;
 
         // Verify via Query

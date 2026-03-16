@@ -2,7 +2,7 @@
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
-using Lerevently.Modules.Events.Domain.TicktTypes;
+using Lerevently.Modules.Events.Domain.TicketTypes;
 
 namespace Lerevently.Modules.Events.Application.TicketTypes.GetTicketType;
 

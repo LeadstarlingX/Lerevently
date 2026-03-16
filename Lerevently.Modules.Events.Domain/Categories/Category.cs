@@ -4,7 +4,6 @@ namespace Lerevently.Modules.Events.Domain.Categories;
 
 public sealed class Category : Entity
 {
-    
 #pragma warning disable CS8618
     private Category()
     {

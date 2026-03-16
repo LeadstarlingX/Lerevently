@@ -11,27 +11,17 @@ namespace Lerevently.IntegrationTests.UsersModule.Users;
 
 public class UpdateUserTests : BaseIntegrationTest
 {
-    public static class TestDataSources
-    {
-        public static IEnumerable<Func<UpdateUserCommand>> AdditionTestData()
-        {
-            yield return () => new UpdateUserCommand(Guid.Empty, Faker.Name.FirstName(), Faker.Name.LastName());
-            yield return () => new UpdateUserCommand(Guid.NewGuid(), "", Faker.Name.LastName());
-            yield return () => new UpdateUserCommand(Guid.NewGuid(), Faker.Name.FirstName(), "");
-        }
-    }
-    
     private IServiceScope _scope;
     private ISender Sender;
-    
+
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
         Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-    
-    
+
+
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -40,14 +30,14 @@ public class UpdateUserTests : BaseIntegrationTest
         else
             _scope.Dispose();
     }
-    
+
 
     [Test]
     [MethodDataSource(typeof(TestDataSources), nameof(TestDataSources.AdditionTestData))]
     public async Task Should_ReturnError_WhenCommandIsNotValid(UpdateUserCommand command)
     {
         // Act
-        Result result = await Sender.Send(command);
+        var result = await Sender.Send(command);
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -61,7 +51,7 @@ public class UpdateUserTests : BaseIntegrationTest
         var userId = Guid.NewGuid();
 
         // Act
-        Result updateResult = await Sender.Send(
+        var updateResult = await Sender.Send(
             new UpdateUserCommand(userId, Faker.Name.FirstName(), Faker.Name.LastName()));
 
         // Assert
@@ -72,19 +62,29 @@ public class UpdateUserTests : BaseIntegrationTest
     public async Task Should_ReturnSuccess_WhenUserExists()
     {
         // Arrange
-        Result<Guid> result = await Sender.Send(new RegisterUserCommand(
+        var result = await Sender.Send(new RegisterUserCommand(
             $"user-{Guid.NewGuid()}@test.com",
             Faker.Internet.Password(),
             Faker.Name.FirstName(),
             Faker.Name.LastName()));
 
-        Guid userId = result.Value;
+        var userId = result.Value;
 
         // Act
-        Result updateResult = await Sender.Send(
+        var updateResult = await Sender.Send(
             new UpdateUserCommand(userId, Faker.Name.FirstName(), Faker.Name.LastName()));
 
         // Assert
         updateResult.IsSuccess.Should().BeTrue();
+    }
+
+    public static class TestDataSources
+    {
+        public static IEnumerable<Func<UpdateUserCommand>> AdditionTestData()
+        {
+            yield return () => new UpdateUserCommand(Guid.Empty, Faker.Name.FirstName(), Faker.Name.LastName());
+            yield return () => new UpdateUserCommand(Guid.NewGuid(), "", Faker.Name.LastName());
+            yield return () => new UpdateUserCommand(Guid.NewGuid(), Faker.Name.FirstName(), "");
+        }
     }
 }

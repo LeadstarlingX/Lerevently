@@ -1,17 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 
-    
-    
-    
     <ItemGroup>
-        
-        
-        <PackageReference Include="Bogus" />
-        <PackageReference Include="TUnit" />
-        <PackageReference Include="FluentAssertions" />
-        
-      <ProjectReference Include="..\Lerevently.Modules.Events.Domain\Lerevently.Modules.Events.Domain.csproj" />
+
+
+        <PackageReference Include="Bogus"/>
+        <PackageReference Include="TUnit"/>
+        <PackageReference Include="FluentAssertions"/>
+
+        <ProjectReference Include="..\Lerevently.Modules.Events.Domain\Lerevently.Modules.Events.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -2,6 +2,7 @@ using FluentAssertions;
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.IntegrationTests.Abstractions;
 using Lerevently.Modules.Events.Application.Events.GetEvent;
+using Lerevently.Modules.Ticketing.Domain.Events;
 using Lerevently.Modules.Ticketing.Infrastructure.Database;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,10 @@ namespace Lerevently.IntegrationTests.AddToCart;
 
 public sealed class GetEventTests : BaseIntegrationTest
 {
+    private TicketingDbContext _dbContext;
     private IServiceScope _scope;
     private ISender _sender;
-    private TicketingDbContext _dbContext;
-    
+
     [Before(Test)]
     public async Task Setup()
     {
@@ -22,7 +23,7 @@ public sealed class GetEventTests : BaseIntegrationTest
         _sender = _scope.ServiceProvider.GetRequiredService<ISender>();
         _dbContext = _scope.ServiceProvider.GetRequiredService<TicketingDbContext>();
     }
-    
+
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -44,13 +45,13 @@ public sealed class GetEventTests : BaseIntegrationTest
         var resultB = await Poller.WaitAsync(TimeSpan.FromSeconds(15), async () =>
         {
             var eventEntity = await _dbContext.Events.AsNoTracking().FirstOrDefaultAsync(x => x.Id == eventId);
-            
+
             if (eventEntity is null)
-                return Result.Failure<Lerevently.Modules.Ticketing.Domain.Events.Event>(Error.Failure("Wait", "Wait"));
-            
+                return Result.Failure<Event>(Error.Failure("Wait", "Wait"));
+
             return Result.Success(eventEntity);
         });
-        
+
         // Assert
         resultB.IsSuccess.Should().BeTrue();
     }

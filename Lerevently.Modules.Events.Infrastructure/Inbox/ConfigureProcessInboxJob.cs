@@ -10,7 +10,7 @@ internal sealed class ConfigureProcessInboxJob(IOptions<InboxOptions> outboxOpti
 
     public void Configure(QuartzOptions options)
     {
-        string jobName = typeof(ProcessInboxJob).FullName!;
+        var jobName = typeof(ProcessInboxJob).FullName!;
 
         options
             .AddJob<ProcessInboxJob>(configure => configure.WithIdentity(jobName))

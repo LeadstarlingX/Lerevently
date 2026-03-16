@@ -29,8 +29,8 @@ internal sealed class UpdateUserProfile : IEndpoint
 
     private sealed class Request
     {
-        public string FirstName { get; init; } = string.Empty;
+        public string FirstName { get; } = string.Empty;
 
-        public string LastName { get; init; } = string.Empty;
+        public string LastName { get; } = string.Empty;
     }
 }

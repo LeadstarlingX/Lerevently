@@ -1,5 +1,4 @@
 using FluentAssertions;
-using Lerevently.Common.Domain.Abstractions;
 using Lerevently.IntegrationTests.Abstractions;
 using Lerevently.Modules.Ticketing.Application.Customers.GetCustomer;
 using Lerevently.Modules.Users.Application.Users.RegisterUser;
@@ -12,14 +11,14 @@ public sealed class GetCustomerTests : BaseIntegrationTest
 {
     private IServiceScope _scope;
     private ISender Sender;
-    
+
     [Before(Test)]
     public async Task SetupTest()
     {
         _scope = factory.Services.CreateScope();
         Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
     }
-    
+
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -36,7 +35,7 @@ public sealed class GetCustomerTests : BaseIntegrationTest
         var nonExistentUserId = Guid.NewGuid();
 
         // Act
-        Result<CustomerResponse> result = await Sender.Send(new GetCustomerQuery(nonExistentUserId));
+        var result = await Sender.Send(new GetCustomerQuery(nonExistentUserId));
 
         // Assert
         result.IsFailure.Should().BeTrue();
@@ -52,11 +51,11 @@ public sealed class GetCustomerTests : BaseIntegrationTest
             Faker.Name.FirstName(),
             Faker.Name.LastName());
 
-        Result<Guid> userResult = await Sender.Send(command);
+        var userResult = await Sender.Send(command);
         userResult.IsSuccess.Should().BeTrue();
 
         // Act
-        Result<CustomerResponse> result = await Poller.WaitAsync(
+        var result = await Poller.WaitAsync(
             TimeSpan.FromSeconds(TimeForSpan),
             async () => await Sender.Send(new GetCustomerQuery(userResult.Value)));
 

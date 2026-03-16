@@ -4,7 +4,6 @@ namespace Lerevently.Modules.Ticketing.Domain.Events;
 
 public sealed class TicketType : Entity
 {
-    
 #pragma warning disable CS8618
     private TicketType()
     {

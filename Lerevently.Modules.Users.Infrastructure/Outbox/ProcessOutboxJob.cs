@@ -1,12 +1,11 @@
 ﻿using System.Data;
-using System.Data.Common;
 using Dapper;
 using Lerevently.Common.Application.Clock;
 using Lerevently.Common.Application.Data;
-using Lerevently.Common.Application.Messaging;
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Common.Infrastructure.Outbox;
 using Lerevently.Common.Infrastructure.Serialization;
+using Lerevently.Modules.Users.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -29,31 +28,28 @@ internal sealed class ProcessOutboxJob(
     {
         logger.LogInformation("{Module} - Beginning to process outbox messages", ModuleName);
 
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
-        await using DbTransaction transaction = await connection.BeginTransactionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var transaction = await connection.BeginTransactionAsync();
 
-        IReadOnlyList<OutboxMessageResponse> outboxMessages = await GetOutboxMessagesAsync(connection, transaction);
+        var outboxMessages = await GetOutboxMessagesAsync(connection, transaction);
 
-        foreach (OutboxMessageResponse outboxMessage in outboxMessages)
+        foreach (var outboxMessage in outboxMessages)
         {
             Exception? exception = null;
             try
             {
-                IDomainEvent domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(
+                var domainEvent = JsonConvert.DeserializeObject<IDomainEvent>(
                     outboxMessage.Content,
                     SerializerSettings.Instance)!;
 
-                using IServiceScope scope = serviceScopeFactory.CreateScope();
+                using var scope = serviceScopeFactory.CreateScope();
 
-                IEnumerable<IDomainEventHandler> domainEventHandlers = DomainEventHandlersFactory.GetHandlers(
+                var domainEventHandlers = DomainEventHandlersFactory.GetHandlers(
                     domainEvent.GetType(),
                     scope.ServiceProvider,
-                    Application.AssemblyReference.Assembly);
+                    AssemblyReference.Assembly);
 
-                foreach (IDomainEventHandler domainEventHandler in domainEventHandlers)
-                {
-                    await domainEventHandler.Handle(domainEvent);
-                }
+                foreach (var domainEventHandler in domainEventHandlers) await domainEventHandler.Handle(domainEvent);
             }
             catch (Exception caughtException)
             {
@@ -78,7 +74,7 @@ internal sealed class ProcessOutboxJob(
         IDbConnection connection,
         IDbTransaction transaction)
     {
-        string sql =
+        var sql =
             $"""
              SELECT
                 "Id" AS {nameof(OutboxMessageResponse.Id)},
@@ -90,7 +86,7 @@ internal sealed class ProcessOutboxJob(
              FOR UPDATE
              """;
 
-        IEnumerable<OutboxMessageResponse> outboxMessages = await connection.QueryAsync<OutboxMessageResponse>(
+        var outboxMessages = await connection.QueryAsync<OutboxMessageResponse>(
             sql,
             transaction: transaction);
 
@@ -119,7 +115,7 @@ internal sealed class ProcessOutboxJob(
                 ProcessedOnUtc = dateTimeProvider.UtcNow,
                 Error = exception?.ToString()
             },
-            transaction: transaction);
+            transaction);
     }
 
     internal sealed record OutboxMessageResponse(Guid Id, string Content);

@@ -1,5 +1,7 @@
 ﻿using HealthChecks.UI.Client;
 using Lerevently.Api.Extensions;
+using Lerevently.Api.Middleware;
+using Lerevently.Api.OpenTelemetry;
 using Lerevently.Common.Application;
 using Lerevently.Common.Infrastructure;
 using Lerevently.Common.Presentation.Endpoints;
@@ -32,13 +34,14 @@ internal class Startup
         Console.WriteLine($"\n******** Using connection string: {conn} ********\n");
 
         services.AddApplication([
-            AssemblyReference.Assembly,
+            Modules.Events.Application.AssemblyReference.Assembly,
             Modules.Users.Application.AssemblyReference.Assembly,
             Modules.Ticketing.Application.AssemblyReference.Assembly,
             Modules.Attendance.Application.AssemblyReference.Assembly
         ]);
 
         services.AddInfrastructure(
+            DiagnosticsConfig.ServiceName,
             [
                 EventsModule.ConfigureConsumers(Configuration),
                 TicketingModule.ConfigureConsumers,
@@ -87,10 +90,11 @@ internal class Startup
             {
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-            
-            endpoints.MapEndpoints(); // endpoints is IEndpointRouteBuilder
 
+            endpoints.MapEndpoints(); // endpoints is IEndpointRouteBuilder
         });
+
+        app.UseLogContextTraceLogging();
 
         // app.UseHttpsRedirection();
 

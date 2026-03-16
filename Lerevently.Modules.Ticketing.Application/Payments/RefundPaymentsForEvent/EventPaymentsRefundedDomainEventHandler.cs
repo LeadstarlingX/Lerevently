@@ -6,7 +6,7 @@ using Lerevently.Modules.Ticketing.IntegrationEvents;
 namespace Lerevently.Modules.Ticketing.Application.Payments.RefundPaymentsForEvent;
 
 internal sealed class EventPaymentsRefundedDomainEventHandler(IEventBus eventBus)
-     : DomainEventHandler<EventPaymentsRefundedDomainEvent>
+    : DomainEventHandler<EventPaymentsRefundedDomainEvent>
 {
     public override async Task Handle(
         EventPaymentsRefundedDomainEvent domainEvent,

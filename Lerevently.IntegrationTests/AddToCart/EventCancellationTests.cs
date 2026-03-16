@@ -1,13 +1,4 @@
-using FluentAssertions;
-using Lerevently.Common.Domain.Abstractions;
 using Lerevently.IntegrationTests.Abstractions;
-using Lerevently.Modules.Events.Application.Events.CancelEvent;
-using Lerevently.Modules.Events.Application.Events.GetEvent;
-using Lerevently.Modules.Ticketing.Application.Carts.AddItemToCart;
-using Lerevently.Modules.Ticketing.Application.Customers.GetCustomer;
-using Lerevently.Modules.Users.Application.Users.RegisterUser;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Lerevently.IntegrationTests.AddToCart;
 

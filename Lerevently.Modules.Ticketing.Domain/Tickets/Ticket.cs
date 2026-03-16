@@ -6,7 +6,6 @@ namespace Lerevently.Modules.Ticketing.Domain.Tickets;
 
 public sealed class Ticket : Entity
 {
-    
 #pragma warning disable CS8618
     private Ticket()
     {

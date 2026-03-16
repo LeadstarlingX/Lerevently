@@ -9,36 +9,37 @@
 
     <ItemGroup>
 
-        <PackageReference Include="Bogus" />
-        <PackageReference Include="FluentAssertions" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
-        <PackageReference Include="TUnit" />
+        <PackageReference Include="Bogus"/>
+        <PackageReference Include="FluentAssertions"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
+        <PackageReference Include="TUnit"/>
+        <PackageReference Include="NSubstitute"/>
 
-        <PackageReference Include="Testcontainers.Redis" />
-        <PackageReference Include="Testcontainers.PostgreSql" />
-        <PackageReference Include="Testcontainers.Keycloak" />
+        <PackageReference Include="Testcontainers.Redis"/>
+        <PackageReference Include="Testcontainers.PostgreSql"/>
+        <PackageReference Include="Testcontainers.Keycloak"/>
+        <PackageReference Include="Testcontainers.RabbitMq"/>
 
 
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="lerevently-realm-export.json">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-          <Link>lerevently-realm-export.json</Link>
-      </None>
+        <None Update="lerevently-realm-export.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+            <Link>lerevently-realm-export.json</Link>
+        </None>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Lerevently.Api\Lerevently.Api.csproj" />
+        <ProjectReference Include="..\Lerevently.Api\Lerevently.Api.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UsersModule\" />
+        <Folder Include="AttendanceModule\" />
+        <Folder Include="EventsModule\" />
+        <Folder Include="TicketingModule\" />
+        <Folder Include="UsersModule\"/>
     </ItemGroup>
-
-   
-    
-    
 
 
 </Project>

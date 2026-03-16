@@ -1,4 +1,5 @@
-﻿using Lerevently.Common.Domain.Abstractions;
+﻿using System.Diagnostics;
+using Lerevently.Common.Domain.Abstractions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Serilog.Context;
@@ -18,6 +19,9 @@ internal sealed class RequestLoggingPipelineBehavior<TRequest, TResponse>(
     {
         var moduleName = GetModuleName(typeof(TRequest).FullName!);
         var requestName = typeof(TRequest).Name;
+        
+        Activity.Current?.SetTag("request.module", moduleName);
+        Activity.Current?.SetTag("request.name", requestName);
 
         using (LogContext.PushProperty("Module", moduleName))
         {

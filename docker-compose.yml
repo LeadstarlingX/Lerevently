@@ -23,6 +23,9 @@ services:
       
       lerevently.identity:
         condition: service_started
+        
+      lerevently.queue:
+        condition: service_healthy
     
     restart: always
 
@@ -39,7 +42,7 @@ services:
       - KC_DB_URL=jdbc:postgresql://lerevently.db:5432/lereventlydb_docker
       - KC_DB_USERNAME=postgres
       - KC_DB_PASSWORD=postgres
-        
+
       - KC_HEALTH_ENABLED=true
     volumes:
       - ./.containers/identity:/opt/jboss/keycloak/standalone/data
@@ -69,7 +72,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-  
+    
   lerevently.seq:
     image: datalust/seq:2025.2
     container_name: Lerevently.Seq
@@ -88,3 +91,35 @@ services:
     restart: always
     ports:
       - "6379:6379"
+        
+        
+  lerevently.jaeger:
+    image: jaegertracing/all-in-one:1.49
+    container_name: Lerevently.Jaeger
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+      - "16686:16686"
+    restart: always
+  
+  lerevently.queue:
+    image: rabbitmq:management-alpine
+    container_name: Lerevently.Queue
+    hostname: lerevently-queue
+    volumes:
+      - ./.containers/queue/data:/var/lib/rabbitmq
+      - ./.containers/queue/log:/var/log/rabbitmq
+        
+    environment:
+      RABBIT_DEFAULT_USER: "guest"
+      RABBIT_DEFAULT_PASS: "guest"
+    ports:
+        - "5672:5672"   # AMQP
+        - "15672:15672" # Management UI
+    restart: always
+    
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5

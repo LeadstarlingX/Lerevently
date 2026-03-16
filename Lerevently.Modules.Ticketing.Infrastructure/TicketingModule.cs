@@ -41,9 +41,9 @@ public static class TicketingModule
         IConfiguration configuration)
     {
         services.AddDomainEventHandlers();
-        
+
         services.AddIntegrationEventHandlers();
-        
+
         services.AddInfrastructure(configuration);
 
         services.AddEndpoints(AssemblyReference.Assembly);
@@ -51,13 +51,18 @@ public static class TicketingModule
         return services;
     }
 
-    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator)
+    public static void ConfigureConsumers(IRegistrationConfigurator registrationConfigurator, string instanceId)
     {
-        registrationConfigurator.AddConsumer<UserRegisteredIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<TicketTypePriceChangedIntegrationEventConsumer>();
-        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>();
+        registrationConfigurator.AddConsumer<UserRegisteredIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<UserProfileUpdatedIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<EventPublishedIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<TicketTypePriceChangedIntegrationEventConsumer>()
+            .Endpoint(x => x.InstanceId = instanceId);
+        registrationConfigurator.AddConsumer<IntegrationEventConsumer<EventCancellationStartedIntegrationEvent>>()
+            .Endpoint(x => x.InstanceId = instanceId);
     }
 
 
@@ -70,30 +75,29 @@ public static class TicketingModule
                     npgsqlOptions => npgsqlOptions
                         .MigrationsHistoryTable(HistoryRepository.DefaultTableName, Schemas.Ticketing))
                 .AddInterceptors(sp.GetRequiredService<InsertOutboxMessagesInterceptor>()));
-        
+
         services.AddMyOut_InBoxConfiguration(configuration);
         services.AddMyRepositories();
-        
+
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<TicketingDbContext>());
 
         services.AddScoped<ICustomerContext, CustomerContext>();
         services.AddSingleton<CartService>();
         services.AddSingleton<IPaymentService, PaymentService>();
-        
     }
-    
+
     private static void AddMyOut_InBoxConfiguration(this IServiceCollection services,
         IConfiguration configuration)
     {
         services.Configure<OutboxOptions>(configuration.GetSection("Ticketing:Outbox"));
 
         services.ConfigureOptions<ConfigureProcessOutboxJob>();
-        
+
         services.Configure<InboxOptions>(configuration.GetSection("Ticketing:Inbox"));
 
         services.ConfigureOptions<ConfigureProcessInboxJob>();
     }
-    
+
     private static void AddMyRepositories(this IServiceCollection services)
     {
         services.AddScoped<ICustomerRepository, CustomerRepository>();
@@ -103,48 +107,48 @@ public static class TicketingModule
         services.AddScoped<ITicketRepository, TicketRepository>();
         services.AddScoped<IPaymentRepository, PaymentRepository>();
     }
-    
+
     private static void AddDomainEventHandlers(this IServiceCollection services)
     {
-        Type[] domainEventHandlers = Application.AssemblyReference.Assembly
+        var domainEventHandlers = Application.AssemblyReference.Assembly
             .GetTypes()
             .Where(t => t.IsAssignableTo(typeof(IDomainEventHandler)))
             .ToArray();
 
-        foreach (Type domainEventHandler in domainEventHandlers)
+        foreach (var domainEventHandler in domainEventHandlers)
         {
             services.TryAddScoped(domainEventHandler);
 
-            Type domainEvent = domainEventHandler
+            var domainEvent = domainEventHandler
                 .GetInterfaces()
                 .Single(i => i.IsGenericType)
                 .GetGenericArguments()
                 .Single();
 
-            Type closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
+            var closedIdempotentHandler = typeof(IdempotentDomainEventHandler<>).MakeGenericType(domainEvent);
 
             services.Decorate(domainEventHandler, closedIdempotentHandler);
         }
     }
-    
+
     private static void AddIntegrationEventHandlers(this IServiceCollection services)
     {
-        Type[] integrationEventHandlers = Presentation.AssemblyReference.Assembly
+        var integrationEventHandlers = AssemblyReference.Assembly
             .GetTypes()
             .Where(t => t.IsAssignableTo(typeof(IIntegrationEventHandler)))
             .ToArray();
 
-        foreach (Type integrationEventHandler in integrationEventHandlers)
+        foreach (var integrationEventHandler in integrationEventHandlers)
         {
             services.TryAddScoped(integrationEventHandler);
 
-            Type integrationEvent = integrationEventHandler
+            var integrationEvent = integrationEventHandler
                 .GetInterfaces()
                 .Single(i => i.IsGenericType)
                 .GetGenericArguments()
                 .Single();
 
-            Type closedIdempotentHandler =
+            var closedIdempotentHandler =
                 typeof(IdempotentIntegrationEventHandler<>).MakeGenericType(integrationEvent);
 
             services.Decorate(integrationEventHandler, closedIdempotentHandler);

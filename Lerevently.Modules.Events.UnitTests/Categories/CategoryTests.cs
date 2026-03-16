@@ -8,53 +8,58 @@ namespace Lerevently.Modules.Events.UnitTests.Categories;
 public class CategoryTests : BaseTest
 {
     [Test]
-    public void Create_ShouldRaiseDomainEvent_WhenCategoryIsCreated()
+    public async Task Create_ShouldRaiseDomainEvent_WhenCategoryIsCreated()
     {
         //Act
         Result<Category> result = Category.Create(Faker.Music.Genre());
 
         //Assert
-        CategoryCreatedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<CategoryCreatedDomainEvent>(result.Value);
 
         domainEvent.CategoryId.Should().Be(result.Value.Id);
+        await Assert.That(domainEvent.CategoryId).IsEqualTo(result.Value.Id);
+
     }
 
     [Test]
-    public void Archive_ShouldRaiseDomainEvent_WhenCategoryIsArchived()
+    public async Task Archive_ShouldRaiseDomainEvent_WhenCategoryIsArchived()
     {
         //Arrange
         Result<Category> result = Category.Create(Faker.Music.Genre());
 
-        Category category = result.Value;
+        var category = result.Value;
 
         //Act
         category.Archive();
 
         //Assert
-        CategoryArchivedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<CategoryArchivedDomainEvent>(category);
 
-        domainEvent.CategoryId.Should().Be(category.Id);
+        await Assert.That(domainEvent.CategoryId).IsEqualTo(category.Id);
+
+        
     }
 
     [Test]
-    public void ChangeName_ShouldRaiseDomainEvent_WhenCategoryNameIsChanged()
+    public async Task ChangeName_ShouldRaiseDomainEvent_WhenCategoryNameIsChanged()
     {
         //Arrange
         Result<Category> result = Category.Create(Faker.Music.Genre());
-        Category category = result.Value;
+        var category = result.Value;
         category.ClearDomainEvents();
 
-        string newName = Faker.Music.Genre();
+        var newName = Faker.Music.Genre();
 
         //Act
         category.ChangeName(newName);
-        
+
         //Assert
-        CategoryNameChangedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<CategoryNameChangedDomainEvent>(category);
 
-        domainEvent.CategoryId.Should().Be(category.Id);
+        await Assert.That(domainEvent.CategoryId).IsEqualTo(category.Id);
+
     }
 }

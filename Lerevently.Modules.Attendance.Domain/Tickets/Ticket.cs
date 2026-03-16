@@ -6,12 +6,11 @@ namespace Lerevently.Modules.Attendance.Domain.Tickets;
 
 public sealed class Ticket : Entity
 {
-    
-#pragma warning disable CS8618 
+#pragma warning disable CS8618
     private Ticket()
     {
     }
-#pragma warning restore CS8618 
+#pragma warning restore CS8618
 
     public Guid Id { get; private set; }
 

@@ -1,4 +1,4 @@
-﻿using Lerevently.Modules.Events.Domain.TicktTypes;
+﻿using Lerevently.Modules.Events.Domain.TicketTypes;
 using Lerevently.Modules.Events.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 

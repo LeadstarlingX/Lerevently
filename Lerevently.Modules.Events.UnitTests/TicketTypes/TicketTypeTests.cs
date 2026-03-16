@@ -2,7 +2,7 @@
 using Lerevently.Common.Domain.Abstractions;
 using Lerevently.Modules.Events.Domain.Categories;
 using Lerevently.Modules.Events.Domain.Events;
-using Lerevently.Modules.Events.Domain.TicktTypes;
+using Lerevently.Modules.Events.Domain.TicketTypes;
 using Lerevently.Modules.Events.UnitTests.Abstractions;
 
 namespace Lerevently.Modules.Events.UnitTests.TicketTypes;
@@ -10,13 +10,13 @@ namespace Lerevently.Modules.Events.UnitTests.TicketTypes;
 public class TicketTypeTests : BaseTest
 {
     [Test]
-    public void Create_ShouldReturnValue_WhenTicketTypeIsCreated()
+    public async Task Create_ShouldReturnValue_WhenTicketTypeIsCreated()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> eventResult = Event.Create(
+        var eventResult = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -33,17 +33,17 @@ public class TicketTypeTests : BaseTest
             Faker.Random.Decimal());
 
         //Assert
-        result.Value.Should().NotBeNull();
+        await Assert.That(result.Value).IsNotNull();
     }
 
     [Test]
-    public void UpdatePrice_ShouldRaiseDomainEvent_WhenTicketTypeIsUpdated()
+    public async Task UpdatePrice_ShouldRaiseDomainEvent_WhenTicketTypeIsUpdated()
     {
         //Arrange
         var category = Category.Create(Faker.Music.Genre());
-        DateTime startsAtUtc = DateTime.UtcNow;
+        var startsAtUtc = DateTime.UtcNow;
 
-        Result<Event> eventResult = Event.Create(
+        var eventResult = Event.Create(
             category,
             Faker.Music.Genre(),
             Faker.Music.Genre(),
@@ -58,15 +58,15 @@ public class TicketTypeTests : BaseTest
             Faker.Random.String(),
             Faker.Random.Decimal());
 
-        TicketType ticketType = result.Value;
+        var ticketType = result.Value;
 
         //Act
         ticketType.UpdatePrice(Faker.Random.Decimal());
 
         //Assert
-        TicketTypePriceChangedDomainEvent domainEvent =
+        var domainEvent =
             AssertDomainEventWasPublished<TicketTypePriceChangedDomainEvent>(ticketType);
 
-        domainEvent.TicketTypeId.Should().Be(ticketType.Id);
+        await Assert.That(domainEvent.TicketTypeId).IsEqualTo(ticketType.Id);
     }
 }

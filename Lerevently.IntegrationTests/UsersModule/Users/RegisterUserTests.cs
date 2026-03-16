@@ -2,33 +2,19 @@ using System.Net;
 using System.Net.Http.Json;
 using FluentAssertions;
 using Lerevently.IntegrationTests.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Lerevently.IntegrationTests.UsersModule.Users;
 
 public class RegisterUserTests : BaseIntegrationTest
 {
-
-    public static class TestDataSources
-    {
-        public static IEnumerable<Func<(string, string, string, string)>> AdditionTestData()
-        {
-            yield return () => ("", Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
-            yield return () => ($"user-{Guid.NewGuid()}@test.com", "", Faker.Name.FirstName(), Faker.Name.LastName() );
-            yield return () => ($"user-{Guid.NewGuid()}@test.com", "12345", Faker.Name.FirstName(), Faker.Name.LastName());
-            yield return () => ($"user-{Guid.NewGuid()}@test.com", Faker.Internet.Password(), "", Faker.Name.LastName());
-            yield return () => ($"user-{Guid.NewGuid()}@test.com", Faker.Internet.Password(), Faker.Name.FirstName(), "" );
-        }
-    }
-    
     private HttpClient _httpClient;
-    
+
     [Before(Test)]
     public async Task SetupTest()
     {
         _httpClient = factory.CreateClient();
     }
-    
+
     [After(Test)]
     public async ValueTask TeardownTest()
     {
@@ -53,7 +39,7 @@ public class RegisterUserTests : BaseIntegrationTest
         };
 
         // Act
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("users/register", request);
+        var response = await _httpClient.PostAsJsonAsync("users/register", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
@@ -72,7 +58,7 @@ public class RegisterUserTests : BaseIntegrationTest
         };
 
         // Act
-        HttpResponseMessage response = await _httpClient.PostAsJsonAsync("users/register", request);
+        var response = await _httpClient.PostAsJsonAsync("users/register", request);
 
         // Assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -93,9 +79,24 @@ public class RegisterUserTests : BaseIntegrationTest
         await _httpClient.PostAsJsonAsync("users/register", request);
 
         // Act
-        string accessToken = await GetAccessTokenAsync(request.Email, request.Password);
+        var accessToken = await GetAccessTokenAsync(request.Email, request.Password);
 
         // Assert
         accessToken.Should().NotBeEmpty();
+    }
+
+    public static class TestDataSources
+    {
+        public static IEnumerable<Func<(string, string, string, string)>> AdditionTestData()
+        {
+            yield return () => ("", Faker.Internet.Password(), Faker.Name.FirstName(), Faker.Name.LastName());
+            yield return () => ($"user-{Guid.NewGuid()}@test.com", "", Faker.Name.FirstName(), Faker.Name.LastName());
+            yield return () =>
+                ($"user-{Guid.NewGuid()}@test.com", "12345", Faker.Name.FirstName(), Faker.Name.LastName());
+            yield return () =>
+                ($"user-{Guid.NewGuid()}@test.com", Faker.Internet.Password(), "", Faker.Name.LastName());
+            yield return () =>
+                ($"user-{Guid.NewGuid()}@test.com", Faker.Internet.Password(), Faker.Name.FirstName(), "");
+        }
     }
 }

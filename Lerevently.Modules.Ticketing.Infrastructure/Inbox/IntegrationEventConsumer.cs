@@ -1,5 +1,4 @@
-﻿using System.Data.Common;
-using Dapper;
+﻿using Dapper;
 using Lerevently.Common.Application.Data;
 using Lerevently.Common.Application.EventBus;
 using Lerevently.Common.Infrastructure.Inbox;
@@ -15,9 +14,9 @@ internal sealed class IntegrationEventConsumer<TIntegrationEvent>(IDbConnectionF
 {
     public async Task Consume(ConsumeContext<TIntegrationEvent> context)
     {
-        await using DbConnection connection = await dbConnectionFactory.GetDbConnectionAsync();
+        await using var connection = await dbConnectionFactory.GetDbConnectionAsync();
 
-        TIntegrationEvent integrationEvent = context.Message;
+        var integrationEvent = context.Message;
 
         var inboxMessage = new InboxMessage
         {
